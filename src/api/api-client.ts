@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL =  'asetaapi-production.up.railway.app/api';
+const baseURL =  'https://asetaapi-production.up.railway.app/api';
 
 export const apiClient = axios.create({
   baseURL,

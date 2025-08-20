@@ -24,8 +24,8 @@ export const authApi = {
 		await apiClient.post('/auth/login?useCookies=true&useSessionCookies=false', credentials);
   },
 
-	loginGoogle: async (): Promise<void> => {
-		await apiClient.post('/auth/login-google');
+	loginGoogle: (): void => {
+  	window.location.href = "https://asetaapi-production.up.railway.app/api/auth/login-google";
 	},
 
   register: async (credentials: RegisterRequest): Promise<void> => {

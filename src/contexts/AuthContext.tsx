@@ -4,7 +4,7 @@ import { authApi, type LoginRequest, type RegisterRequest, type User } from '../
 
 interface AuthContextType {
   user: User | null;
-	loginGoogle: () => Promise<void>;
+	loginGoogle: () => void;
   login: (request: LoginRequest) => Promise<void>;
   register: (request : RegisterRequest) => Promise<void>;
 	me: () => Promise<void>;
@@ -19,8 +19,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		await authApi.login(request);
 	};
 
-	const loginGoogle = async () => {
-		await authApi.loginGoogle();
+	const loginGoogle = () => {
+		authApi.loginGoogle();
 	};
 
   const register = async (request: RegisterRequest) => {
