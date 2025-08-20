@@ -25,7 +25,7 @@ export const authApi = {
   },
 
 	loginGoogle: async (): Promise<void> => {
-		await apiClient.post('signin-google');
+		await apiClient.post('/auth/login-google');
 	},
 
   register: async (credentials: RegisterRequest): Promise<void> => {
