@@ -5,10 +5,12 @@ import LoginPage from './Pages/LoginPage'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage/>} />
-      <Route path="/register" element={<RegisterPage/>} />
-    </Routes> 
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage/>} />
+        <Route path="/register" element={<RegisterPage/>} />
+      </Routes>
+    </BrowserRouter> 
   )
 }
 
