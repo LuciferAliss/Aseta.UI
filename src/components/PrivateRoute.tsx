@@ -1,4 +1,3 @@
-// src/components/PrivateRoute.tsx
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Flex, Spinner } from '@chakra-ui/react';
@@ -8,7 +7,7 @@ const PrivateRoute = () => {
 
   if (isLoading) {
     return (
-      <Flex
+      <Flex 
         height="100vh"
         width="100%"
         alignItems="center"

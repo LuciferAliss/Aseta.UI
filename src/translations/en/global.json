@@ -1,44 +1,47 @@
 {
 	"registerPage": {
-			"heading": "Register",
-			"email": "Email",
-			"password": "Password",
-			"confirmPassword": "Confirm Password",
-			"register": "Sign Up",
-			"haveAccount": "Already have an account? ",
-			"login": "Login",
-			"validate": {
-				"passwordsDoNotMatch": "Passwords do not match.",
-				"minLength": "Password must be at least 6 characters long.",
-				"lowercase": "Password must contain at least one lowercase letter.",
-				"uppercase": "Password must contain at least one uppercase letter.",
-				"number": "Password must contain at least one number.",
-				"specialChar": "Password must contain at least one special character."
-			},
-			"toast": {
-				"successTitle": "Registration successful",
-				"successDescription": "We've sent a confirmation link to your email.",
-				"errorTitle": "An error occurred",
-				"badRequestDescription": "Invalid data for registration.",
-				"serverErrorDescription": "Server error. Please try again later."
-			}
+    "heading": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "register": "Sign Up",
+    "haveAccount": "Already have an account? ",
+    "login": "Login",
+    "validate": {
+      "passwordsDoNotMatch": "Passwords do not match.",
+      "minLength": "Password must be at least 6 characters long.",
+      "lowercase": "Password must contain at least one lowercase letter.",
+      "uppercase": "Password must contain at least one uppercase letter.",
+      "number": "Password must contain at least one number.",
+      "specialChar": "Password must contain at least one special character."
+    },
+    "toast": {
+      "successTitle": "Registration successful",
+      "successDescription": "We've sent a confirmation link to your email.",
+      "errorTitle": "An error occurred",
+      "badRequestDescription": "Invalid data for registration.",
+      "serverErrorDescription": "Server error. Please try again later."
+    }
 	},
 	"loginPage": {
-			"heading": "Login",
-			"email": "Email",
-			"password": "Password",
-			"login": "Sign In",
-			"rememberMe" : "Remember Me",
-			"noAccount": "Don't have an account?",
-			"register": "Register",
-			"toast": {
-        "successTitle": "Login Successful",
-        "successDescription": "Welcome!",
-        "errorTitle": "An error occurred",
-        "badRequestDescription": "Incorrect email or password.",
-        "serverErrorDescription": "Server error. Please try again later.",
-        "lockedOutDescription": "Your account has been locked.",
-        "notAllowedDescription": "You have not confirmed your email."
-			}
-	}
+    "heading": "Login",
+    "email": "Email",
+    "password": "Password",
+    "login": "Sign In",
+    "rememberMe" : "Remember Me",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "toast": {
+      "successTitle": "Login Successful",
+      "successDescription": "Welcome!",
+      "errorTitle": "An error occurred",
+      "badRequestDescription": "Incorrect email or password.",
+      "serverErrorDescription": "Server error. Please try again later.",
+      "lockedOutDescription": "Your account has been locked.",
+      "notAllowedDescription": "You have not confirmed your email."
+    }
+	},
+  "MainPage": {
+    "heading": "Main Page"
+  }
 }

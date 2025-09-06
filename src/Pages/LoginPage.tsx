@@ -18,7 +18,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import type { HttpError } from '../types/HttpError';
-import ThemeChangeButton from '../components/ThameChangeButton';
+import ThemeChangeButton from '../components/ThemeChangeButton';
 import LanguageChangeButton from '../components/LanguageChangeButton';
 import PasswordInput from '../components/auth/PasswordInput';
 

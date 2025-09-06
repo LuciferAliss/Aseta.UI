@@ -20,7 +20,7 @@ import { ValidError } from '../types/auth/ValidError';
 import { HttpStatusCode } from 'axios';
 import PasswordInput from '../components/auth/PasswordInput';
 import LanguageChangeButton from '../components/LanguageChangeButton';
-import ThemeChangeButton from '../components/ThameChangeButton';
+import ThemeChangeButton from '../components/ThemeChangeButton';
 
 const RegisterPage = () => {
   const toast = useToast();
