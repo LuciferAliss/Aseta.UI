@@ -1,16 +1,15 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Flex } from '@chakra-ui/react';
 import './App.css'
-import RegisterPage from './Pages/RegisterPage'
-import LoginPage from './Pages/LoginPage'
+import AppRouter from './routes/AppRouter';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/register" element={<RegisterPage/>} />
-      </Routes>
-    </BrowserRouter> 
+    <Flex 
+      h={'100vh'} 
+      w={'100vw'}
+    >
+      <AppRouter />
+    </Flex>
   )
 }
 

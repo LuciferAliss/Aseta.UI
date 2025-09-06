@@ -1,38 +1,25 @@
-import { apiClient } from './api-client';
-
-export interface User {
-  id: string;
-  userName: string;
-  email: string;
-  createdAt: Date;
-  lastLogin: Date;
-  isBlocked: boolean;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-}
+import apiClient from '../api/axios';
+import type { LoginRequest, RegisterRequest } from '../types/auth/auth';
+import type { User } from '../types/auth/user';
 
 export const authApi = {
-  login: async (credentials: LoginRequest): Promise<void> => {
-		await apiClient.post('/auth/login?useCookies=true&useSessionCookies=false', credentials);
+  login: async (request: LoginRequest, rememberMe: boolean) => {
+    if (rememberMe) {
+      await apiClient.post('/auth/login?useCookies=true', request);  
+    } else {
+      await apiClient.post('/auth/login?useSessionCookies=true', request);  
+    }
   },
 
-	loginGoogle: (): void => {
-  	window.location.href = "https://asetaapi-production.up.railway.app/api/auth/login-google";
-	},
-
-  register: async (credentials: RegisterRequest): Promise<void> => {
-		await apiClient.post('/auth/register', credentials);
+  register: async (request: RegisterRequest) => {
+    await apiClient.post('/auth/register', request);
   },
 
-	me: async (): Promise<User> => {
-		return await apiClient.get('/auth/me');
-	},
+  logout: async () => {
+    await apiClient.post('/auth/logout');
+  },
+
+  ping: async () : Promise<User> => {
+    return await apiClient.get('/auth/pingauth');
+  }
 };

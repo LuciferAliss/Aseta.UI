@@ -1,0 +1,44 @@
+{
+  "registerPage": {
+    "heading": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "register": "Зарегистрироваться",
+    "haveAccount": "Уже есть аккаунт? ",
+    "login": "Войти",
+    "validate": {
+      "passwordsDoNotMatch": "Пароли не совпадают.",
+      "minLength": "Пароль должен быть не менее 6 символов.",
+      "lowercase": "Пароль должен содержать хотя бы одну строчную букву.",
+      "uppercase": "Пароль должен содержать хотя бы одну заглавную букву.",
+      "number": "Пароль должен содержать хотя бы одну цифру.",
+      "specialChar": "Пароль должен содержать хотя бы один специальный символ."
+    },
+    "toast": {
+      "successTitle": "Регистрация прошла успешно",
+      "successDescription": "Мы отправили ссылку для подтверждения на вашу почту.",
+      "errorTitle": "Произошла ошибка",
+      "badRequestDescription": "Некорректные данные для регистрации.",
+      "serverErrorDescription": "Ошибка на сервере. Пожалуйста, попробуйте позже."
+    }
+  },
+  "loginPage": {
+    "heading": "Вход",
+    "email": "Email",
+    "password": "Пароль",
+    "login": "Войти",
+    "rememberMe" : "Запомни меня",
+    "noAccount": "Нет аккаунта?",
+    "register": "Зарегистрироваться",
+    "toast": {
+      "successTitle": "Вход выполнен успешно",
+      "successDescription": "Добро пожаловать!",
+      "errorTitle": "Произошла ошибка",
+      "badRequestDescription": "Email или пароль введены неверно.",
+      "serverErrorDescription": "Ошибка на сервере. Пожалуйста, попробуйте позже.",
+      "lockedOutDescription" : "Ваш аккаунт заблокирован.",
+      "notAllowedDescription": "Вы не потвердели свою email."
+    }
+  }
+}
