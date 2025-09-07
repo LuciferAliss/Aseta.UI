@@ -1,5 +1,6 @@
 {
 	"registerPage": {
+    "back": "Back to main page",
     "heading": "Register",
     "email": "Email",
     "password": "Password",
@@ -24,6 +25,7 @@
     }
 	},
 	"loginPage": {
+    "back": "Back to main page",
     "heading": "Login",
     "email": "Email",
     "password": "Password",
@@ -40,8 +42,63 @@
       "lockedOutDescription": "Your account has been locked.",
       "notAllowedDescription": "You have not confirmed your email."
     }
-	},
-  "MainPage": {
-    "heading": "Main Page"
+  },
+  "header": {
+    "profile": "Profile",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "mainPage": {
+    "createButton": "Create Inventory",
+    "latest": {
+      "name": "Name",
+      "description": "Description",
+      "creatorName": "Creator Name",
+      "title": "Latest Inventories",
+      "endOfList": "End of List"
+    },
+    "popular": {
+      "title": "Top 5 Inventories by number of Items",
+      "name": "Name",
+      "creatorName": "Creator Name"
+    },
+    "tags": {
+      "title": "Tag Cloud"
+    }
+  },
+  "createPage": {
+    "title": "Create New Inventory",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g., 'Collection of Ancient Coins'",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe your inventory, its purpose, or contents.",
+    "imageUrlLabel": "Image URL",
+    "imageUrlHelper": "Optional. A direct link to an image representing the inventory.",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Select a category...",
+    "publicLabel": "Make this inventory public?",
+    "createButton": "Create Inventory",
+    "submittingButton": "Creating...",
+    "imageLabel": "Image",
+    "imageHelper": "Optional. Drag and drop an image or click to select.",
+    "toast": {
+      "categoriesErrorTitle": "Failed to load categories",
+      "categoriesErrorDescription": "Please refresh the page to try again.",
+      "validationErrorTitle": "Incomplete Form",
+      "validationErrorDescription": "Please fill in all required fields (Name and Category).",
+      "successTitle": "Inventory Created",
+      "successDescription": "Your new inventory has been successfully created.",
+      "submitErrorTitle": "Creation Failed",
+      "submitErrorDescription": "An error occurred while creating the inventory. Please try again.",
+      "errorTitle": "An error occurred",
+      "errorDescription" : "Please try again later."
+    }
+  },
+  "imageUpload": {
+    "previewAlt": "Image preview",
+    "removeAriaLabel": "Remove image",
+    "dropActive": "Drop the image here...",
+    "prompt": "Drag and drop an image here",
+    "orClick": "or click to select a file"
   }
 }

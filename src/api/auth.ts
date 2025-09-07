@@ -1,13 +1,13 @@
 import apiClient from '../api/axios';
-import type { LoginRequest, RegisterRequest } from '../types/auth/auth';
-import type { User } from '../types/auth/user';
+import type { LoginRequest, RegisterRequest } from '../types/auth';
+import type { User } from '../types/auth';
 
 export const authApi = {
   login: async (request: LoginRequest, rememberMe: boolean) => {
     if (rememberMe) {
-      await apiClient.post('/auth/login?useCookies=true', request);  
-    } else {
       await apiClient.post('/auth/login?useSessionCookies=true', request);  
+    } else {
+      await apiClient.post('/auth/login?useCookies=true', request);  
     }
   },
 

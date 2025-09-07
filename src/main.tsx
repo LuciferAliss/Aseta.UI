@@ -13,7 +13,7 @@ import i18next from 'i18next'
 import { I18nextProvider } from 'react-i18next'
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-
+import { InventoryProvider } from './context/InventoryContext.tsx'
 
 i18next
   .use(LanguageDetector)
@@ -41,8 +41,10 @@ createRoot(document.getElementById('root')!).render(
     <ChakraProvider>
       <I18nextProvider i18n={i18next}>
         <AuthProvider>
-          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-          <App />
+          <InventoryProvider>
+            <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+              <App />
+          </InventoryProvider>
         </AuthProvider>
       </I18nextProvider>
     </ChakraProvider>

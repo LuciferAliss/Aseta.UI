@@ -1,5 +1,3 @@
-// src/components/layout/Header.tsx
-
 import {
   Box,
   Flex,
@@ -38,17 +36,17 @@ const NavLink = ({ children, to }: { children: React.ReactNode; to: string }) =>
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isAuthenticated, logoutAuth } = useAuth();
-  const { t } = useTranslation();
+  const [ t ] = useTranslation("global");
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logoutAuth();
-    navigate('/login');
+  const handleLogout = async () => {
+    await logoutAuth();
+    navigate('/');
   };
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.5', 'gray.900')} px={4} w="100%" position="fixed" top="0" zIndex={10} boxShadow="md">
+      <Box bg={useColorModeValue('gray.50', 'gray.900')} px={4} w="100%" position="fixed" top="0" zIndex={10} boxShadow="md">
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -102,9 +100,6 @@ export default function Header() {
                 <>
                   <Button as={RouterLink} to="/login" colorScheme="teal" variant="solid" width="full">
                     {t('header.login')}
-                  </Button>
-                  <Button as={RouterLink} to="/register" colorScheme="teal" variant="ghost" width="full">
-                    {t('header.register')}
                   </Button>
                 </>
               )}

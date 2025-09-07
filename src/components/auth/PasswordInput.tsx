@@ -1,7 +1,7 @@
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { IconButton, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useState } from "react";
-import type { PasswordInputProps } from "../../types/auth/passwordInputProps";
+import type { PasswordInputProps } from "../../types/auth";
 
 const PasswordInput = ({ value, onChange }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);

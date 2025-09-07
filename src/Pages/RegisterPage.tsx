@@ -9,18 +9,16 @@ import {
   useToast,
   Text,
   Link as ChakraLink,
-  useColorModeValue,
-  Flex
+  useColorModeValue
 } from '@chakra-ui/react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
-import { ValidError } from '../types/auth/ValidError';
+import { useEffect, useState } from 'react';
+import { ValidError } from '../types/auth';
 import { HttpStatusCode } from 'axios';
 import PasswordInput from '../components/auth/PasswordInput';
-import LanguageChangeButton from '../components/LanguageChangeButton';
-import ThemeChangeButton from '../components/ThemeChangeButton';
+import Header from '../components/Header';
 
 const RegisterPage = () => {
   const toast = useToast();
@@ -30,7 +28,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const { registerAuth, isLoading } = useAuth();
+  const { registerAuth, isAuthenticated, isLoading } = useAuth();
 
   const [ t ] = useTranslation("global");
 
@@ -110,9 +108,15 @@ const RegisterPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <VStack w={'100%'}>
-
+      <Header />
       <Box 
         onSubmit={handleSubmit} 
         p={[4, 6, 8]}
@@ -154,11 +158,6 @@ const RegisterPage = () => {
           </Text>
         </VStack>
       </Box>
-
-      <Flex w='100%' justifyContent='flex-end' gap={4} alignItems='center' marginBottom={4} marginEnd={4} >
-        <ThemeChangeButton />
-        <LanguageChangeButton />
-      </Flex>
 
     </VStack>
   );

@@ -1,5 +1,6 @@
 {
   "registerPage": {
+    "back": "Вернуться на главную страницу",
     "heading": "Регистрация",
     "email": "Email",
     "password": "Пароль",
@@ -24,6 +25,7 @@
     }
   },
   "loginPage": {
+    "back": "Вернуться на главную страницу",
     "heading": "Вход",
     "email": "Email",
     "password": "Пароль",
@@ -40,5 +42,63 @@
       "lockedOutDescription" : "Ваш аккаунт заблокирован.",
       "notAllowedDescription": "Вы не потвердели свою email."
     }
+  },
+  "header": {
+    "profile": "Профиль",
+    "logout": "Выход",
+    "login": "Вход"
+  },
+  "mainPage": {
+    "createButton": "Создать инвентарь",
+    "latest": {
+      "name": "Название",
+      "description": "Описание",
+      "creatorName": "Автор",
+      "title": "Последние инвентари",
+      "endOfList" : "Конец списка"
+    },
+    "popular": {
+      "title": "Топ 5 инвентарей по количеству предметов",
+      "name": "Название",
+      "creatorName": "Автор"
+    },
+    "tags": {
+      "title": "Облако тегов"
+    }
+  },
+  "createPage": {
+    "title": "Создание новой инвентаризации",
+    "nameLabel": "Название",
+    "namePlaceholder": "Например, 'Коллекция старинных монет'",
+    "descriptionLabel": "Описание",
+    "descriptionPlaceholder": "Опишите вашу инвентаризацию, её назначение или содержимое.",
+    "imageUrlLabel": "URL изображения",
+    "imageUrlHelper": "Необязательно. Прямая ссылка на изображение.",
+    "categoryLabel": "Категория",
+    "categoryPlaceholder": "Выберите категорию...",
+    "publicLabel": "Сделать эту инвентаризацию публичной?",
+    "createButton": "Создать инвентаризацию",
+    "submittingButton": "Создание...",
+    "imageLabel": "Изображение",
+    "imageHelper": "Необязательно. Перетащите изображение сюда или нажмите для выбора.",
+    "toast": {
+      "categoriesErrorTitle": "Не удалось загрузить категории",
+      "categoriesErrorDescription": "Пожалуйста, обновите страницу, чтобы попробовать снова.",
+      "validationErrorTitle": "Форма не заполнена",
+      "validationErrorDescription": "Пожалуйста, заполните все обязательные поля (Название и Категория).",
+      "successTitle": "Инвентаризация создана",
+      "successDescription": "Ваша новая инвентаризация была успешно создана.",
+      "submitErrorTitle": "Ошибка создания",
+      "submitErrorDescription": "Произошла ошибка при создании инвентаризации. Пожалуйста, попробуйте снова.",
+      "errorTitle": "Произошла ошибка",
+      "errorDescription" : "Ошибка на сервере. Пожалуйста, попробуйте позже."
+    }
+  },
+  "imageUpload": {
+    "previewAlt": "Предпросмотр изображения",
+    "removeAriaLabel": "Удалить изображение",
+    "dropActive": "Отпустите изображение здесь...",
+    "prompt": "Перетащите изображение сюда",
+    "orClick": "или нажмите для выбора файла"
   }
 }

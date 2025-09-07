@@ -10,17 +10,15 @@ import {
   Text,
   Link as ChakraLink,
   useColorModeValue,
-  Flex,
   Checkbox,
 } from '@chakra-ui/react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { HttpError } from '../types/HttpError';
-import ThemeChangeButton from '../components/ThemeChangeButton';
-import LanguageChangeButton from '../components/LanguageChangeButton';
 import PasswordInput from '../components/auth/PasswordInput';
+import Header from '../components/Header';
 
 const LoginPage = () => {
   const toast = useToast();
@@ -30,7 +28,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const { loginAuth, checkAuthStatus, isLoading } = useAuth();
+  const { loginAuth, checkAuthStatus, isLoading, isAuthenticated } = useAuth();
   
   const [ t ] = useTranslation("global");
 
@@ -93,9 +91,15 @@ const LoginPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <VStack w={'100%'}>
-
+      <Header />
       <Box
         onSubmit={handleSubmit} 
         p={[4, 6, 8]}
@@ -135,11 +139,6 @@ const LoginPage = () => {
           </Text>
         </VStack>
       </Box>
-
-      <Flex w='100%' justifyContent='flex-end' gap={4} alignItems='center' marginBottom={4} marginEnd={4} >
-        <ThemeChangeButton />
-        <LanguageChangeButton />
-      </Flex>
 
     </VStack>
   );

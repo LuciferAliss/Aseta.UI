@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, type ReactNode } from 'react';
-import { type User} from '../types/auth/user';
-import type { LoginRequest, RegisterRequest } from '../types/auth/auth';
+import { type User} from '../types/auth';
+import type { LoginRequest, RegisterRequest } from '../types/auth';
 import { authApi } from '../api/auth';
 
 interface AuthContextType {
@@ -20,10 +20,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const loginAuth = async (loginRequest: LoginRequest, rememberMe: boolean) => {
+  const loginAuth = async (loginRequest: LoginRequest, rememberMe: boolean) : Promise<void> => {
     setIsLoading(true);
-    await authApi.login(loginRequest, rememberMe);
-    setIsLoading(false);
+    try {
+      await authApi.login(loginRequest, rememberMe);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const registerAuth = async (registerRequest: RegisterRequest) => {
@@ -41,8 +44,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await authApi.logout();
       setUser(null);
       setIsAuthenticated(false);
-    } catch (error) {
-      console.error('Logout failed:', error);
     } finally {
       setIsLoading(false);
     }
@@ -69,6 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     checkAuth();
   }, [])
+  
   return (
     <AuthContext.Provider value={{ user, isLoading, isAuthenticated, loginAuth, registerAuth, logoutAuth, checkAuthStatus }}>
       {children}
