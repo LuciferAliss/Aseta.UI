@@ -112,14 +112,46 @@
       "notFound": "Inventory not found.",
       "generic": "An error occurred."
     },
+    "elementsTab": {
+      "createdAt" : "Created At",
+      "updatedAt" : "Updated At",
+      "createdBy" : "Created By",
+      "updatedBy" : "Updated By",
+      "customId" : "ID"
+    },
+    "fieldsTab": {
+      "heading": "Manage Custom Fields",
+      "fieldName": "Field Name",
+      "fieldNamePlaceholder": "e.g., 'Color', 'Condition'",
+      "fieldType": "Field Type",
+      "addField": "Add Field",
+      "createdFields": "Created Fields",
+      "noFields": "No custom fields have been added yet.",
+      "toast": {
+        "successTitle": "Field Created",
+        "successDeleteTitle": "Field Deleted"
+      }
+    },
     "tabs": {
       "elements": "Elements",
       "discussions": "Discussions",
-      "settings": "General Settings",
+      "settings": "Settings",
       "customId": "Custom ID",
       "access": "Access",
       "fields": "Fields",
       "statistics": "Statistics"
+    },
+    "fields": {
+      "text" : "Text",
+      "textarea" : "Textarea",
+      "number" : "Number",
+      "checkbox" : "Checkbox",
+      "date" : "Date",
+      "checkboxDescription": "Checkboxes for boolean values.",
+      "dateDescription": "For dates and timestamps.",
+      "numberDescription": "For numerical values.",
+      "textareaDescription": "For large text blocks.",
+      "textDescription": "For single-line text input."
     },
     "elements": {
       "addItem": "Add Item",

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useInventory } from "../hooks/useInventory";
@@ -10,38 +10,47 @@ import { FiTag, FiClock, FiGrid } from 'react-icons/fi';
 import ElementsTab from "../components/inventory/ElementsTab";
 import DiscussionsTab from "../components/inventory/DiscussionsTab";
 import SettingsTab from "../components/inventory/SettingsTab";
+import FieldsTab from "../components/inventory/FieldsTab";
 
 const InventoryPage = () => {
   const { t, i18n } = useTranslation('global');
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const { getInventory } = useInventory();
+  const { getInventory, getUserRoleInventory } = useInventory();
   const navigator = useNavigate();
   
-  const [inventory, setInventory] = useState<Inventory | null>(null);
+  const [userRole, setUserRole] = useState<string>('');
+  const [inventory, setInventory] = useState<Inventory>();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!id) {
-      setIsLoading(false);
-      return;
-    }
+  const [tabIndex, setTabIndex] = useState(0);
 
-    const fetchInventory = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getInventory(id);
-        setInventory(data);
-      } catch (err) {
-        console.error("Failed to fetch inventory:", err);
-        navigator('/');
-      } finally {
-        setIsLoading(false);
+  const canEdit = user?.role === 'Admin' || userRole === 'Owner' || userRole === 'Editor';
+
+  const fetchInventory = useCallback(async () => {
+    if (!id) return;
+    try {
+      const data = await getInventory(id);
+      setInventory(data);
+      if (user) {
+        const userRole = await getUserRoleInventory(id);
+        setUserRole(userRole);
       }
-    };
-    
-    fetchInventory();
-  }, [id, getInventory, t]);
+    } catch (err) {
+      console.error("Failed to fetch inventory:", err);
+      navigator('/');
+    }
+  }, [id, getInventory, navigator]);
+
+
+  useEffect(() => {
+    const initialFetch = async () => {
+      setIsLoading(true);
+      await fetchInventory();
+      setIsLoading(false);
+    }
+    initialFetch();
+  }, [id]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(i18n.language, {
@@ -53,7 +62,7 @@ const InventoryPage = () => {
     return (
       <>
         <Headers />
-        <Center h="80vh"><Spinner size="xl" /></Center>
+        <Center w='100%'><Spinner size="xl" /></Center>
       </>
     );
   }
@@ -88,7 +97,6 @@ const InventoryPage = () => {
               objectFit="cover"
               borderRadius="lg"
               boxShadow="lg"
-              fallbackSrc='https://via.placeholder.com/200'
             />
           </Box>
 
@@ -137,20 +145,33 @@ const InventoryPage = () => {
           </VStack>
         </Flex>
 
-        <Tabs colorScheme="teal" isLazy>
+        <Tabs colorScheme="teal" isLazy onChange={(index) => setTabIndex(index)} index={tabIndex}>
           <TabList>
             <Tab>{t('inventoryPage.tabs.elements')}</Tab>
+            <Tab>{t('inventoryPage.tabs.fields')}</Tab>
             <Tab>{t('inventoryPage.tabs.discussions')}</Tab>
             <Tab>{t('inventoryPage.tabs.settings')}</Tab>
             <Tab>{t('inventoryPage.tabs.customId')}</Tab>
             <Tab>{t('inventoryPage.tabs.access')}</Tab>
-            <Tab>{t('inventoryPage.tabs.fields')}</Tab>
             <Tab>{t('inventoryPage.tabs.statistics')}</Tab>
-          </TabList>
-
-          <TabPanels>
+          </TabList>            
+            
+          <TabPanels> 
             <TabPanel>
-              <ElementsTab inventoryId={inventory.id} customFields={inventory.CustomFieldsDefinition || []} />
+              {inventory && (
+                <ElementsTab 
+                  inventoryId={inventory.id} 
+                  customFields={inventory.customFieldsDefinition}
+                  canEdit={canEdit}
+                />
+              )}
+            </TabPanel>
+            <TabPanel>
+              {inventory && (
+                <FieldsTab customFields={inventory.customFieldsDefinition} 
+                  inventoryId={inventory.id}
+                  onFieldsUpdate={fetchInventory}  />
+              )}
             </TabPanel>
             <TabPanel>
               <DiscussionsTab inventoryId={inventory.id} />
@@ -168,11 +189,7 @@ const InventoryPage = () => {
                 <AccessTab />
               </TabPanel>
             )}
-            {isOwner && (
-              <TabPanel>
-                <FieldsTab />
-              </TabPanel>
-            )}
+            
             <TabPanel>
               <StatisticsTab inventory={inventory} />
             </TabPanel> */}

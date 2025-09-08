@@ -1,5 +1,5 @@
 import { createContext, type ReactNode } from 'react';
-import type { Category, CollectionResponse, CreateInventoryRequest, CreateInventoryResponse, Inventory, InventoryItem, PaginatedResult, Tag, ViewInventory, ViewPagesRequest } from '../types/inventory';
+import type { Category, CollectionResponse, UpdateCustomFieldsRequest, CreateInventoryRequest, CreateInventoryResponse, Inventory, InventoryItem, PaginatedResult, Tag, ViewInventory, ViewPagesRequest, CreateItemRequest, UpdateItemRequest, DeleteItemsRequest } from '../types/inventory';
 import { inventoryApi } from '../api/inventory';
 
 interface InventoryContextType {
@@ -10,11 +10,36 @@ interface InventoryContextType {
   getInventory: (id : string) => Promise<Inventory>;
   getCategories: () => Promise<CollectionResponse<Category>>;
   getTagsCloud: () => Promise<CollectionResponse<Tag>>;
+  updateCustomFields: (request : UpdateCustomFieldsRequest) => Promise<void>;
+  getUserRoleInventory: (id: string) => Promise<string>;
+  createItem: (data: CreateItemRequest) => Promise<InventoryItem>;
+  updateItem: (itemId: string, data: UpdateItemRequest) => Promise<void>;
+  deleteItems: (data: DeleteItemsRequest) => Promise<void>;
 }
 
 export const InventoryContext = createContext<InventoryContextType | undefined>(undefined);
 
 export const InventoryProvider = ({ children }: { children: ReactNode }) => {
+
+  const createItem = async (data: CreateItemRequest) => {
+    return await inventoryApi.createItem(data);
+  };
+
+  const updateItem = async (itemId: string, data: UpdateItemRequest) => {
+    await inventoryApi.updateItem(itemId, data);
+  };
+
+  const deleteItems = async (data: DeleteItemsRequest) => {
+    await inventoryApi.deleteItems(data);
+  };
+
+  const getUserRoleInventory = async (id: string) => {
+    return await inventoryApi.getUserRoleInventory(id);
+  };
+
+  const updateCustomFields = async (request : UpdateCustomFieldsRequest) => {
+    await inventoryApi.updateCustomFields(request);
+  };
   
   const createInventory = async (data: CreateInventoryRequest) => {
     return await inventoryApi.createInventory(data);
@@ -46,7 +71,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
   }
   
   return (
-    <InventoryContext.Provider value={{ createInventory, getCategories, getMostPopularInventories, getLastInventories, getInventory, getTagsCloud, getItems }}>
+    <InventoryContext.Provider value={{ createItem, updateItem, deleteItems,getUserRoleInventory, updateCustomFields, createInventory, getCategories, getMostPopularInventories, getLastInventories, getInventory, getTagsCloud, getItems }}>
       {children}
     </InventoryContext.Provider>
   );

@@ -22,6 +22,45 @@ export interface ViewPagesRequest {
   pageSize: number;
 }
 
+export interface CustomFieldDefinition {
+  id: string;
+  name: string;
+  type: number;
+}
+
+export interface UpdateCustomFieldDefinitionRequest {
+  Id: string;
+  Name: string;
+  Type: number;
+}
+
+export interface UpdateCustomFieldsRequest {
+  inventoryId: string;
+  customFields: UpdateCustomFieldDefinitionRequest[];
+}
+
+export interface CustomFieldValueRequest {
+  fieldDefinitionId: string;
+  value: string | number | boolean | Date | null;
+}
+
+export interface CreateItemRequest {
+  inventoryId: string;
+  name: string;
+  tags: string[];
+  customFieldValues: CustomFieldValueRequest[];
+}
+
+export interface UpdateItemRequest {
+  name: string;
+  tags: string[];
+  customFieldValues: CustomFieldValueRequest[];
+}
+
+export interface DeleteItemsRequest {
+  itemIds: string[];
+}
+
 export interface Inventory {
   id: string;
   name: string;
@@ -32,14 +71,14 @@ export interface Inventory {
   category: Category;
   createdAt: Date;
   tags: Tag[];
-  CustomFieldsDefinition: CustomFieldDefinition[];
+  customFieldsDefinition: CustomFieldDefinition[];
 }
 
-export interface CustomFieldDefinition {
-  id: string;
-  name: string;
-  type: string;
-} 
+export interface FieldType
+{
+  id: number,
+  name: string
+}
 
 export interface CustomFieldValue
 {

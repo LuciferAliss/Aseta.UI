@@ -112,14 +112,46 @@
       "notFound": "Инвентаризация не найдена.",
       "generic": "Произошла ошибка."
     },
+    "elementsTab": {
+      "createdAt" : "Создано",
+      "updatedAt" : "Обновлено",
+      "createdBy" : "Автор",
+      "updatedBy" : "Редактор",
+      "customId" : "ID"
+    },
+    "fieldsTab": {
+      "heading": "Управление полями",
+      "fieldName": "Название поля",
+      "fieldNamePlaceholder": "Например, 'Цвет', 'Состояние'",
+      "fieldType": "Тип поля",
+      "addField": "Добавить поле",
+      "createdFields": "Созданные поля",
+      "noFields": "Пользовательские поля еще не добавлены."
+    },
     "tabs": {
       "elements": "Элементы",
       "discussions": "Обсуждения",
-      "settings": "Общие настройки",
-      "customId": "Произвольный ID",
+      "settings": "Настройки",
+      "customId": "пользовательский ID",
       "access": "Доступ",
       "fields": "Поля",
       "statistics": "Статистика"
+    },
+    "fields": {
+      "text" : "Текст",
+      "textarea" : "Текстовый блок",
+      "number" : "Число",
+      "checkbox" : "Чекбокс",
+      "date" : "Дата",
+      "checkboxDescription": "Чекбокс для логических значений.",
+      "dateDescription": "Для дат.",
+      "numberDescription": "Для чисел.",
+      "textareaDescription": "Для больших текстовых блоков.",
+      "textDescription": "Для коротких текстов.",
+      "toast": {
+        "successTitle": "Поле создано",
+        "successDeleteTitle": "Поле удалено"
+      }
     },
     "elements": {
       "addItem": "Добавить элемент",

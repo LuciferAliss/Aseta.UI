@@ -20,6 +20,6 @@ export const authApi = {
   },
 
   ping: async () : Promise<User> => {
-    return await apiClient.get('/auth/pingauth');
+    return (await apiClient.get('/auth/pingauth')).data;
   }
 };

@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import Headers from '../components/Header';
 import ImageUpload from "../components/inventoryCreate/ImageUpload";
 import app from '..';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {v4 as uuidv4} from 'uuid';
 import { useInventory } from "../hooks/useInventory";
 
@@ -40,6 +40,8 @@ const CreateInventoryPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const BASE_URL_IMAGE : string = 'https://firebasestorage.googleapis.com/v0/b/aseta-993bc.firebasestorage.app/o/images%2FNo_image_available.svg.png?alt=media&token=0a16decd-059f-4b56-8f6e-084298e37c89';
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -87,9 +89,10 @@ const CreateInventoryPage = () => {
         
         const imageRef = ref(storage, `images/${imageFile.name + uuidv4()}`);
         await uploadBytes(imageRef, imageFile);
-        imageUrl = imageRef.fullPath;
-
+        imageUrl = await getDownloadURL(imageRef);
         setImageFile(null);
+      } else {
+        imageUrl = BASE_URL_IMAGE;
       }
       
       const requestData: CreateInventoryRequest = {

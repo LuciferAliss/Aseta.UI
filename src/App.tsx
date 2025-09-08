@@ -8,7 +8,7 @@ function App() {
 			h={'100vh'} 
 			w={'100vw'}
 		>
-				<AppRouter />
+      <AppRouter />
 		</Flex>
 	)
 }

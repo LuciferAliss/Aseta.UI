@@ -127,6 +127,7 @@ const LatestInventories = () => {
           <Text color="gray.500">{t('mainPage.endOfList')}</Text>
         )}
       </Center>
+      
     </Box>
   );
 };
