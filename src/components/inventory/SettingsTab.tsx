@@ -4,7 +4,6 @@ import {
     FormLabel, 
     Input, 
     Textarea, 
-    Select, 
     useToast, 
     Text
 } from '@chakra-ui/react';
@@ -16,7 +15,7 @@ import ImageUpload from '../inventoryCreate/ImageUpload';
 const SettingsTab = ({ inventory }: { inventory: Inventory }) => {
   const { t } = useTranslation('global');
   const toast = useToast();
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [_, setImageFile] = useState<File | null>(null);
   const [formState, setFormState] = useState({
     name: inventory.name,
     description: inventory.description,
@@ -26,9 +25,6 @@ const SettingsTab = ({ inventory }: { inventory: Inventory }) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormState(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    setSaveStatus('unsaved');
-  };
-  const handleImageUpload = (cdnUrl: string) => {
     setSaveStatus('unsaved');
   };
   

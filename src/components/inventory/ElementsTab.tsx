@@ -23,31 +23,25 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
   const { t, i18n } = useTranslation('global');
   const { ref, inView } = useInView({ threshold: 0 });
   
-  // 2. Получаем все необходимые методы из хука
   const { getItems, deleteItems } = useInventory();
   const navigate = useNavigate();
   const toast = useToast();
-  
-  // Состояния для данных и пагинации
+
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
   
-  // Раздельные состояния загрузки для лучшего UX
-  const [isListLoading, setIsListLoading] = useState(true); // Для первоначальной загрузки и скролла
-  const [isActionLoading, setIsActionLoading] = useState(false); // Для операций (удаление, и т.д.)
+  const [isListLoading, setIsListLoading] = useState(true); 
+  const [isActionLoading, setIsActionLoading] = useState(false); 
   
-  // Состояние для множественного выбора
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   
-  // 3. Хуки для модального окна подтверждения удаления
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [itemIdsToDelete, setItemIdsToDelete] = useState<string[]>([]);
 
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
 
-  // Функция для загрузки элементов
   const fetchItems = useCallback(async (pageNum: number, refresh = false) => {
     if (isListLoading && !refresh) return;
     setIsListLoading(true);
@@ -68,23 +62,20 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
     }
   }, [getItems, inventoryId, isListLoading, t, toast]);
   
-  // Первоначальная загрузка и сброс при смене инвентаря
   useEffect(() => {
     setItems([]);
     setPage(1);
     setHasNextPage(true);
     setSelectedItems([]);
     fetchItems(1, true);
-  }, [inventoryId]); // Зависимость только от inventoryId
+  }, [inventoryId]); 
 
-  // Бесконечная прокрутка
   useEffect(() => {
     if (inView && !isListLoading && hasNextPage) {
       fetchItems(page);
     }
   }, [inView, isListLoading, hasNextPage, page, fetchItems]);
 
-  // Функции для управления выбором
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setSelectedItems(items.map(item => item.id));
@@ -101,7 +92,6 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
     }
   };
 
-  // 4. Функции для операций удаления
   const confirmDelete = (ids: string[]) => {
     setItemIdsToDelete(ids);
     onOpen();
@@ -117,7 +107,6 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
         status: "success",
         isClosable: true,
       });
-      // Обновляем список и сбрасываем выбор
       fetchItems(1, true);
       setSelectedItems([]);
     } catch (error) {
@@ -133,16 +122,13 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
     }
   };
 
-  // ... ваши вспомогательные функции getCustomFieldValue и formatDate ...
   const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString(i18n.language);
 
-  // Производные состояния для чекбоксов
   const isAllSelected = items.length > 0 && selectedItems.length === items.length;
   const isIndeterminate = selectedItems.length > 0 && !isAllSelected;
 
   return (
     <Box>
-      {/* 5. Панель управления отображается только для редакторов/владельцев */}
       {canEdit && (
         <Flex mb={4} gap={4}>
           <Button 
@@ -167,7 +153,6 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
         </Flex>
       )}
 
-      {/* Отображение спиннера только при самой первой загрузке */}
       {items.length === 0 && isListLoading ? <Center p={10}><Spinner size="xl"/></Center> : (
         <TableContainer>
           <Table variant="simple">
@@ -209,7 +194,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
                   )}
                   <Td>{item.customId}</Td>
                   {customFields.map((field) => (
-                    <Td key={`${item.id}-${field.id}`}>{/* ...логика отображения значения... */} {String(item.customFields.find(cf => cf.fieldId === field.id)?.value ?? '—')}</Td>
+                    <Td key={`${item.id}-${field.id}`}>{String(item.customFields.find(cf => cf.fieldId === field.id)?.value ?? '—')}</Td>
                   ))}
                   <Td>{formatDate(item.createdAt.toString())}</Td>
                   <Td>{item.userUpdate.userName}</Td>
@@ -242,7 +227,6 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
         </TableContainer>
       )}
 
-      {/* Индикатор подгрузки и конца списка */}
       <Center ref={ref} mt={4} h="40px">
         {isListLoading && items.length > 0 && <Spinner color="teal.500" />}
         {!hasNextPage && items.length > 0 && (
@@ -250,7 +234,6 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
         )}
       </Center>
 
-      {/* 6. Модальное окно подтверждения удаления */}
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

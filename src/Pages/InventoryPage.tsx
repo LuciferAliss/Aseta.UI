@@ -8,7 +8,6 @@ import { Box, Center, Text, Container, Heading, Spinner, Image, Tab, TabList, Fl
 import Headers from "../components/Header";
 import { FiTag, FiClock, FiGrid } from 'react-icons/fi';
 import ElementsTab from "../components/inventory/ElementsTab";
-import DiscussionsTab from "../components/inventory/DiscussionsTab";
 import SettingsTab from "../components/inventory/SettingsTab";
 import FieldsTab from "../components/inventory/FieldsTab";
 
@@ -149,7 +148,6 @@ const InventoryPage = () => {
           <TabList>
             <Tab>{t('inventoryPage.tabs.elements')}</Tab>
             <Tab>{t('inventoryPage.tabs.fields')}</Tab>
-            <Tab>{t('inventoryPage.tabs.discussions')}</Tab>
             <Tab>{t('inventoryPage.tabs.settings')}</Tab>
             <Tab>{t('inventoryPage.tabs.customId')}</Tab>
             <Tab>{t('inventoryPage.tabs.access')}</Tab>
@@ -172,9 +170,6 @@ const InventoryPage = () => {
                   inventoryId={inventory.id}
                   onFieldsUpdate={fetchInventory}  />
               )}
-            </TabPanel>
-            <TabPanel>
-              <DiscussionsTab inventoryId={inventory.id} />
             </TabPanel>
             <TabPanel>
                 <SettingsTab inventory={inventory} />

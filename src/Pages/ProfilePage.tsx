@@ -10,7 +10,7 @@ const ProfilePage = () => {
       <Header />
       <Box p={4}>
         <Heading as="h2" size="xl" mb={4}>
-          {user?.userName}
+          {user?.email}
         </Heading>
         <Text mb={2}>Email: {user?.email}</Text>
         <Button colorScheme="red" onClick={logoutAuth}>
