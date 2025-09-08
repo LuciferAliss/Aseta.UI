@@ -153,6 +153,7 @@ const InventoryPage = () => {
             <Tab>{t('inventoryPage.tabs.access')}</Tab>
             <Tab>{t('inventoryPage.tabs.statistics')}</Tab>
           </TabList>            
+
             
           <TabPanels> 
             <TabPanel>
