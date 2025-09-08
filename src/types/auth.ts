@@ -15,9 +15,9 @@ export interface PasswordInputProps {
 
 export interface User
 {
-    id: string;
-    email: string;
-    userName: string;
+  id: string;
+  email: string;
+  userName: string;
 }
 
 export interface ValidError extends Error {}

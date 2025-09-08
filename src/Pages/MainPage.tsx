@@ -1,5 +1,4 @@
 import { Box, Button, Container, Grid, GridItem } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import Headers from '../components/Header';
 import LatestInventories from '../components/main/LatestInventories';
 import PopularInventories from '../components/main/PopularInventories';

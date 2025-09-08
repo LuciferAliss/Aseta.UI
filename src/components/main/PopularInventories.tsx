@@ -56,8 +56,10 @@ const PopularInventories = () => {
           <Thead>
             <Tr>
               <Th>#</Th>
-              <Th>{t('mainPage.popular.name')}</Th>
-              <Th>{t('mainPage.popular.creatorName')}</Th>
+              <Th>{t('mainPage.table.name')}</Th>
+              <Th>{t('mainPage.table.description')}</Th>
+              <Th>{t('mainPage.table.creatorName')}</Th>
+              <Th>{t('mainPage.table.isPublic')}</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -70,7 +72,9 @@ const PopularInventories = () => {
               >
                 <Td>{index + 1}</Td>
                 <Td fontWeight="medium">{item.name}</Td>
-                <Td>{item.creator.userName}</Td>
+                <Td>{item.description}</Td>
+                <Td>{item.creator?.userName}</Td>
+                <Td>{item.isPublic ? t('mainPage.table.yes') : t('mainPage.table.no')}</Td>
               </Tr>
             ))}
           </Tbody>
@@ -82,7 +86,7 @@ const PopularInventories = () => {
         spacing={5} 
         display={{ base: 'grid', lg: 'none' }}
       >
-        {popularItems.map((item) => (
+        {popularItems.map((item, index) => (
           <Box
             key={item.id}
             borderWidth="1px"
@@ -98,9 +102,10 @@ const PopularInventories = () => {
             transition="all 0.2s ease-in-out"
           >
             <VStack p={5} align="stretch" spacing={3}>
-              <Heading as="h3" size="md" noOfLines={1}>{item.name}</Heading>
-              <Text fontSize="sm" noOfLines={2}>{item.description}</Text>
-              <Text fontSize="sm" fontWeight="medium" color="teal.500">{item.creator.userName}</Text>
+              <Heading as="h3" size="md" noOfLines={1}>{t('mainPage.table.name')}: {item.name} #{index + 1}</Heading>
+              <Text fontSize="sm" noOfLines={2}>{t('mainPage.table.description')}: {item.description}</Text>
+              <Text fontSize="sm" fontWeight="medium" color="teal.500"> {t('mainPage.table.creatorName')}: {item.creator?.userName}</Text>
+              <Text fontSize="sm"> {t('mainPage.table.isPublic')}: {item.isPublic ? t('mainPage.table.yes') : t('mainPage.table.no')}</Text>
             </VStack>
           </Box>
         ))}

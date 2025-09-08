@@ -30,19 +30,20 @@ const CreateInventoryPage = () => {
   const { t } = useTranslation('global');
   const toast = useToast();
   const navigate = useNavigate();
-  const { isLoading, createInventory, getCategories } = useInventory();
+  const { createInventory, getCategories } = useInventory();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isPublic, setIsPublic] = useState(false);
   const [categoryId, setCategoryId] = useState<number | ''>('');
-
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setIsLoading(true);
       try {
         const data = await getCategories();
         const a = data.collection;
@@ -55,6 +56,8 @@ const CreateInventoryPage = () => {
           duration: 5000,
           isClosable: true,
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 

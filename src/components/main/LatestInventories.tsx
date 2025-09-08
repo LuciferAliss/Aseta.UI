@@ -34,7 +34,6 @@ const LatestInventories = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const cardBg = useColorModeValue('white', 'gray.800');
-  const textColor = useColorModeValue("gray.600", "gray.400");
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
@@ -85,9 +84,10 @@ const LatestInventories = () => {
             transition="all 0.2s ease-in-out"
           >
             <VStack p={5} align="stretch" spacing={3}>
-              <Heading as="h3" size="md" noOfLines={1}>{item.name}</Heading>
-              <Text fontSize="sm" color={textColor} noOfLines={2}>{item.description}</Text>
-              <Text fontSize="sm" fontWeight="medium" color="teal.500">{item.creator.userName}</Text>
+              <Heading as="h3" size="md" noOfLines={1}>{t('mainPage.table.name')}: {item.name}</Heading>
+              <Text fontSize="sm" noOfLines={2}>{t('mainPage.table.description')}: {item.description}</Text>
+              <Text fontSize="sm" fontWeight="medium" color="teal.500"> {t('mainPage.table.creatorName')}: {item.creator?.userName}</Text>
+              <Text fontSize="sm"> {t('mainPage.table.isPublic')}: {item.isPublic ? t('mainPage.table.yes') : t('mainPage.table.no')}</Text>
             </VStack>
           </Box>
         ))}
@@ -97,9 +97,10 @@ const LatestInventories = () => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>{t('mainPage.latest.name')}</Th>
-              <Th>{t('mainPage.latest.description')}</Th>
-              <Th>{t('mainPage.latest.creatorName')}</Th>
+              <Th>{t('mainPage.table.name')}</Th>
+              <Th>{t('mainPage.table.description')}</Th>
+              <Th>{t('mainPage.table.creatorName')}</Th>
+              <Th>{t('mainPage.table.isPublic')}</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -112,7 +113,8 @@ const LatestInventories = () => {
               >
                 <Td fontWeight="medium">{item.name}</Td>
                 <Td>{item.description}</Td>
-                <Td>{item.creator.userName}</Td>
+                <Td>{item.creator?.userName}</Td>
+                <Td>{item.isPublic ? t('mainPage.table.yes') : t('mainPage.table.no')}</Td>
               </Tr>
             ))}
           </Tbody>
@@ -122,7 +124,7 @@ const LatestInventories = () => {
       <Center ref={ref} mt={4}>
         {isLoading && <Spinner size="xl" color="teal.500" />}
         {!isLoading && !hasNextPage && items.length > 0 && (
-          <Text color="gray.500">{t('mainPage.latest.endOfList')}</Text>
+          <Text color="gray.500">{t('mainPage.endOfList')}</Text>
         )}
       </Center>
     </Box>

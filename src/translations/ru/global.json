@@ -50,17 +50,20 @@
   },
   "mainPage": {
     "createButton": "Создать инвентарь",
+    "endOfList": "Конец списка",
     "latest": {
+      "title": "Последние инвентари"
+    },
+    "table": {
       "name": "Название",
       "description": "Описание",
-      "creatorName": "Автор",
-      "title": "Последние инвентари",
-      "endOfList" : "Конец списка"
+      "creatorName": "Создатель",
+      "isPublic": "Публичны",
+      "yes": "Да",
+      "no": "Нет"
     },
     "popular": {
-      "title": "Топ 5 инвентарей по количеству предметов",
-      "name": "Название",
-      "creatorName": "Автор"
+      "title": "Топ 5 инвентарей по количеству предметов"
     },
     "tags": {
       "title": "Облако тегов"
@@ -100,5 +103,41 @@
     "dropActive": "Отпустите изображение здесь...",
     "prompt": "Перетащите изображение сюда",
     "orClick": "или нажмите для выбора файла"
+  },
+  "inventoryPage": {
+    "info": {
+      "createdBy": "Автор"
+    },
+    "errors": {
+      "notFound": "Инвентаризация не найдена.",
+      "generic": "Произошла ошибка."
+    },
+    "tabs": {
+      "elements": "Элементы",
+      "discussions": "Обсуждения",
+      "settings": "Общие настройки",
+      "customId": "Произвольный ID",
+      "access": "Доступ",
+      "fields": "Поля",
+      "statistics": "Статистика"
+    },
+    "elements": {
+      "addItem": "Добавить элемент",
+      "tableName": "Название",
+      "tableCategory": "Категория"
+    },
+    "discussions": {
+      "placeholder": "Напишите сообщение...",
+      "send": "Отправить"
+    },
+    "settings": {
+      "autoSaveSuccess": "Изменения сохранены автоматически.",
+      "statusSaved": "Все изменения сохранены",
+      "statusSaving": "Сохранение...",
+      "statusUnsaved": "Несохраненные изменения",
+      "nameLabel": "Название инвентаризации",
+      "descriptionLabel": "Описание (поддерживается Markdown)",
+      "imageLabel": "Изображение"
+    }
   }
 }

@@ -1,39 +1,186 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useInventory } from "../hooks/useInventory";
+import type { Inventory } from "../types/inventory";
+import { useAuth } from "../hooks/useAuth";
+import { Box, Center, Text, Container, Heading, Spinner, Image, Tab, TabList, Flex, TabPanels, Tabs, VStack, Avatar, Divider, Wrap, HStack, Icon, useColorModeValue, Tag, TabPanel } from "@chakra-ui/react";
+import Headers from "../components/Header";
+import { FiTag, FiClock, FiGrid } from 'react-icons/fi';
+import ElementsTab from "../components/inventory/ElementsTab";
+import DiscussionsTab from "../components/inventory/DiscussionsTab";
+import SettingsTab from "../components/inventory/SettingsTab";
 
 const InventoryPage = () => {
-  const { t } = useTranslation();
-  const { getInventory } = useInventory();
-  
+  const { t, i18n } = useTranslation('global');
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const { getInventory } = useInventory();
+  const navigator = useNavigate();
+  
+  const [inventory, setInventory] = useState<Inventory | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!id) {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchInventory = async () => {
+      setIsLoading(true);
       try {
-        const data = await getIn();
-        const a = data.collection;
-        setCategories(a);
-      } catch (error) {
-        toast({
-          title: t('createPage.toast.categoriesErrorTitle'),
-          description: t('createPage.toast.categoriesErrorDescription'),
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        });
+        const data = await getInventory(id);
+        setInventory(data);
+      } catch (err) {
+        console.error("Failed to fetch inventory:", err);
+        navigator('/');
+      } finally {
+        setIsLoading(false);
       }
     };
     
-    if (id) {
-      
-    }
-  }, [id]);
+    fetchInventory();
+  }, [id, getInventory, t]);
 
-  return(
-      <div>InventoryPage</div>
-  )
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString(i18n.language, {
+      year: 'numeric', month: 'long', day: 'numeric',
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <>
+        <Headers />
+        <Center h="80vh"><Spinner size="xl" /></Center>
+      </>
+    );
+  }
+
+  if (!inventory) {
+    return (
+      <>
+        <Headers />
+        <Center h="80vh">
+          <Heading>{t('inventoryPage.errors.generic')}</Heading>
+        </Center>
+      </>
+    );
+  }
+
+  return (
+    <Box w="100%">
+      <Headers />
+      <Container maxW="container.xl" py={8}>
+        
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          align={{ base: 'center', md: 'flex-start' }}
+          gap={6}
+          mb={8}
+        >
+          <Box flexShrink={0}>
+            <Image
+              src={inventory.imageUrl}
+              alt={inventory.name}
+              boxSize={{ base: '150px', md: '200px' }}
+              objectFit="cover"
+              borderRadius="lg"
+              boxShadow="lg"
+              fallbackSrc='https://via.placeholder.com/200'
+            />
+          </Box>
+
+          <VStack align="stretch" spacing={4} w="100%">
+            <Heading as="h1" size="2xl">
+              {inventory.name}
+            </Heading>
+            <Text fontSize="lg" color="gray.500">
+              {inventory.description}
+            </Text>
+            
+            <Divider borderColor={useColorModeValue('gray.300', 'gray.600')} borderWidth="1px" />
+
+            <Wrap spacingX={6} spacingY={2} color="gray.500" fontSize="sm">
+              <HStack>
+                <Avatar size="xs" name={inventory.userCreator.userName} />
+                <Text>
+                  {t('inventoryPage.info.createdBy')}{' '}
+                  <Text as="b" color={useColorModeValue('teal.600', 'teal.300')}>
+                    {inventory.userCreator.userName}
+                  </Text>
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={FiClock} />
+                <Text>{formatDate(inventory.createdAt.toString())}</Text>
+              </HStack>
+              {inventory.category && (
+                <HStack>
+                  <Icon as={FiGrid} />
+                  <Text>{inventory.category.name}</Text>
+                </HStack>
+              )}
+            </Wrap>
+
+            {inventory.tags && inventory.tags.length > 0 && (
+               <HStack spacing={2}>
+                 <Icon as={FiTag} color="gray.500"/>
+                 {inventory.tags.map(tag => (
+                   <Tag key={tag.id} size="md" colorScheme="blue" variant="solid">
+                     {tag.name}
+                   </Tag>
+                 ))}
+               </HStack>
+            )}
+          </VStack>
+        </Flex>
+
+        <Tabs colorScheme="teal" isLazy>
+          <TabList>
+            <Tab>{t('inventoryPage.tabs.elements')}</Tab>
+            <Tab>{t('inventoryPage.tabs.discussions')}</Tab>
+            <Tab>{t('inventoryPage.tabs.settings')}</Tab>
+            <Tab>{t('inventoryPage.tabs.customId')}</Tab>
+            <Tab>{t('inventoryPage.tabs.access')}</Tab>
+            <Tab>{t('inventoryPage.tabs.fields')}</Tab>
+            <Tab>{t('inventoryPage.tabs.statistics')}</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <ElementsTab inventoryId={inventory.id} customFields={inventory.CustomFieldsDefinition || []} />
+            </TabPanel>
+            <TabPanel>
+              <DiscussionsTab inventoryId={inventory.id} />
+            </TabPanel>
+            <TabPanel>
+                <SettingsTab inventory={inventory} />
+            </TabPanel>
+            {/* {isOwner && (
+              <TabPanel>
+                <CustomIdTab />
+              </TabPanel>
+            )}
+            {isOwner && (
+              <TabPanel>
+                <AccessTab />
+              </TabPanel>
+            )}
+            {isOwner && (
+              <TabPanel>
+                <FieldsTab />
+              </TabPanel>
+            )}
+            <TabPanel>
+              <StatisticsTab inventory={inventory} />
+            </TabPanel> */}
+          </TabPanels>
+        </Tabs>
+      </Container>
+    </Box>
+  );
 };
 
-export default InventoryPage
+export default InventoryPage;

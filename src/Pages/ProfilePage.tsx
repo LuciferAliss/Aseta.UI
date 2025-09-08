@@ -1,4 +1,3 @@
-// src/pages/ProfilePage.tsx
 import { Box, Heading, Text, Button } from '@chakra-ui/react';
 import { useAuth } from '../hooks/useAuth';
 import Header from '../components/Header';

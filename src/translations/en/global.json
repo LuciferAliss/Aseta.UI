@@ -50,17 +50,20 @@
   },
   "mainPage": {
     "createButton": "Create Inventory",
+    "endOfList": "End of List",
     "latest": {
+      "title": "Latest Inventories"
+    },
+    "table": {
       "name": "Name",
       "description": "Description",
-      "creatorName": "Creator Name",
-      "title": "Latest Inventories",
-      "endOfList": "End of List"
+      "creatorName": "Creator",
+      "isPublic": "Public",
+      "yes": "Yes",
+      "no": "No"
     },
     "popular": {
-      "title": "Top 5 Inventories by number of Items",
-      "name": "Name",
-      "creatorName": "Creator Name"
+      "title": "Top 5 Inventories by number of Items"
     },
     "tags": {
       "title": "Tag Cloud"
@@ -100,5 +103,41 @@
     "dropActive": "Drop the image here...",
     "prompt": "Drag and drop an image here",
     "orClick": "or click to select a file"
+  },
+  "inventoryPage": {
+    "info": {
+      "createdBy": "Created by"
+    },  
+    "errors": {
+      "notFound": "Inventory not found.",
+      "generic": "An error occurred."
+    },
+    "tabs": {
+      "elements": "Elements",
+      "discussions": "Discussions",
+      "settings": "General Settings",
+      "customId": "Custom ID",
+      "access": "Access",
+      "fields": "Fields",
+      "statistics": "Statistics"
+    },
+    "elements": {
+      "addItem": "Add Item",
+      "tableName": "Name",
+      "tableCategory": "Category"
+    },
+    "discussions": {
+      "placeholder": "Write a message...",
+      "send": "Send"
+    },
+    "settings": {
+      "autoSaveSuccess": "Changes saved automatically.",
+      "statusSaved": "All changes saved",
+      "statusSaving": "Saving...",
+      "statusUnsaved": "Unsaved changes",
+      "nameLabel": "Inventory Name",
+      "descriptionLabel": "Description (Markdown supported)",
+      "imageLabel": "Image"
+    }
   }
 }

@@ -14,9 +14,10 @@ export interface ViewInventory {
   name: string;
   description: string;
   creator: UserCreator;
+  isPublic: boolean;
 }
 
-export interface ViewLatestInventoryRequest {
+export interface ViewPagesRequest {
   pageNumber: number;
   pageSize: number;
 }
@@ -31,6 +32,29 @@ export interface Inventory {
   category: Category;
   createdAt: Date;
   tags: Tag[];
+  CustomFieldsDefinition: CustomFieldDefinition[];
+}
+
+export interface CustomFieldDefinition {
+  id: string;
+  name: string;
+  type: string;
+} 
+
+export interface CustomFieldValue
+{
+  fieldId : string;
+  value : string | null; 
+}
+
+export interface InventoryItem {
+  id: string;
+  customId: string;
+  customFields: CustomFieldValue[];
+  userCreator: UserCreator;
+  userUpdate: UserCreator;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface PaginatedResult<T> {
