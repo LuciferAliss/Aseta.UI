@@ -23,7 +23,7 @@ export interface User
 export interface ValidError extends Error {}
 
 export class ValidError extends Error implements ValidError {
-    constructor(message: string, code?: string) {
+    constructor(message: string, code1?: string) {
         super(message);
         this.name = 'ValidError'; 
         Object.setPrototypeOf(this, ValidError.prototype);
