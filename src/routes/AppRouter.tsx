@@ -1,11 +1,11 @@
+import LoginPage from '../pages/LoginPage';
+import RegisterPage from '../pages/RegisterPage';
+import ProfilePage from '../pages/ProfilePage';
+import PrivateRoute from '../components/PrivateRoute';
+import MainPage from '../pages/MainPage';
+import CreateInventoryPage from '../pages/CreateInventoryPage';
+import InventoryPage from '../pages/InventoryPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from '../../src/pages/LoginPage.tsx';
-import RegisterPage from '../../src/pages/RegisterPage.tsx';
-import ProfilePage from '../../src/pages/ProfilePage.tsx';
-import PrivateRoute from '../../src/components/PrivateRoute';
-import MainPage from '../../src/pages/MainPage.tsx';
-import CreateInventoryPage from '../../src/pages/CreateInventoryPage.tsx';
-import InventoryPage from '../../src/pages/InventoryPage.tsx';
 
 const AppRouter = () => {
   return (
