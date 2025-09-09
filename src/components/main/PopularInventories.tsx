@@ -23,7 +23,7 @@ const PopularInventories = () => {
       setIsLoading(true);
       try {
         const popularData = await getMostPopularInventories(5);
-        setPopularItems(popularData.collection);
+        setPopularItems(popularData.collection || []);
       } catch (error) {
         console.error("Failed to fetch sidebar data:", error);
       } finally {
