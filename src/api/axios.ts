@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://luciferaliss.site',
+  baseURL: 'https://api.luciferaliss.site',
   withCredentials: true, 
 });
 
