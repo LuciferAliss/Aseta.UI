@@ -42,7 +42,7 @@ const LatestInventories = () => {
     setIsLoading(true);
     try {
       const response = await getLastInventories({ pageNumber: pageNum, pageSize: 12 });
-      setItems(prev => [...prev, ...response.items]);
+      setItems(prev => [...prev, ...response.items || []]);
       setPage(prev => prev + 1);
       setHasNextPage(response.hasNextPage);
     } catch (error) {

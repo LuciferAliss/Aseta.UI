@@ -18,7 +18,7 @@ const TagCloud = () => {
       setIsLoading(true);
       try {
         const tags = await getTagsCloud();
-        setTags(tags.collection);
+        setTags(tags.collection || []);
       } catch (error) {
         console.error("Failed to fetch sidebar data:", error);
       } finally {

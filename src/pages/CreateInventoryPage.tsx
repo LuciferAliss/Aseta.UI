@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Headers from '../components/Header';
 import ImageUpload from "../components/inventoryCreate/ImageUpload";
-import app from '..';
+import firebaseApp from '..';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {v4 as uuidv4} from 'uuid';
 import { useInventory } from "../hooks/useInventory";
@@ -48,8 +48,7 @@ const CreateInventoryPage = () => {
       setIsLoading(true);
       try {
         const data = await getCategories();
-        const a = data.collection;
-        setCategories(a);
+        setCategories(data.collection || []);
       } catch (error) {
         toast({
           title: t('createPage.toast.categoriesErrorTitle'),
@@ -85,7 +84,7 @@ const CreateInventoryPage = () => {
 
     try {
       if (imageFile) {
-        const storage = getStorage(app);
+        const storage = getStorage(firebaseApp);
         
         const imageRef = ref(storage, `images/${imageFile.name + uuidv4()}`);
         await uploadBytes(imageRef, imageFile);

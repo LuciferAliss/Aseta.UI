@@ -47,7 +47,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
     setIsListLoading(true);
     try {
       const response = await getItems({ pageNumber: pageNum, pageSize: 20 }, inventoryId);
-      setItems(prev => refresh ? response.items : [...prev, ...response.items]);
+      setItems(prev => refresh ? response.items : [...prev, ...response.items || []]);
       setPage(pageNum + 1);
       setHasNextPage(response.hasNextPage);
     } catch (error) {
