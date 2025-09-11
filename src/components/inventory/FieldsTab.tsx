@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { CustomFieldDefinition, UpdateCustomFieldsRequest } from '../../types/inventory';
 import {
   Box,
@@ -17,27 +17,57 @@ import {
   Spinner,
   Tooltip,
   Icon,
-  useToast
+  useToast,
+  useColorModeValue,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  useDisclosure,
+  AlertDialogFooter
 } from '@chakra-ui/react';
 import { DeleteIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { useInventory } from '../../hooks/useInventory';
+import { FiPlusSquare } from 'react-icons/fi';
 
 interface FieldsTabProps {
   customFields: CustomFieldDefinition[];
   inventoryId: string;
   onFieldsUpdate: () => void; 
+  canEdit: boolean;
 }
 
-const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate }: FieldsTabProps) => {
+const EmptyFieldsState = () => {
+  const { t } = useTranslation('global');
+  return (
+    <Center p={10} borderWidth="2px" borderStyle="dashed" borderRadius="lg" bg={useColorModeValue('gray.50', 'gray.800')}>
+      <VStack spacing={4}>
+        <Icon as={FiPlusSquare} boxSize={12} color="gray.400" />
+        <Heading as="h4" size="md" textAlign="center">{t('fieldsTab.empty.title')}</Heading>
+        <Text color="gray.500" textAlign="center">{t('fieldsTab.empty.description')}</Text>
+      </VStack>
+    </Center>
+  );
+};
+
+const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: FieldsTabProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const { t } =   useTranslation('global');
   const toast = useToast();
 
   const { updateCustomFields } = useInventory();
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  
   const [newFieldType, setNewFieldType] = useState('0');
   const [newFieldName, setNewFieldName] = useState('');
+
+  const inputBgColor = useColorModeValue('gray.100', 'gray.600');
+  const focusBorderColor = 'teal.500';
+  const cardBg = useColorModeValue('white', 'gray.700');
+  const listBg = useColorModeValue('gray.50', 'gray.800');
 
   const FIELD_TYPES = useMemo(() => [
     { value: '0', label: t('inventoryPage.fields.text'), description: t('inventoryPage.fields.textDescription') },
@@ -151,62 +181,92 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate }: FieldsTabProps
   }
 
   return (
-    <Box p={{ base: 3, md: 6 }}>
+    <Box p={{ base: 2, md: 6 }}>
       <VStack spacing={8} align="stretch">
-        <Box p={{ base: 4, md: 6 }} borderWidth="1px" borderRadius="lg" boxShadow="sm">
-          <Heading as="h3" size="md" mb={6}>
-            {t('inventoryPage.fieldsTab.heading')}
-          </Heading>
-          <fieldset disabled={isSaving}>
-            <Flex direction={{ base: 'column', md: 'row' }} gap={4} align={{ base: 'stretch', md: 'flex-end' }}>
-              <FormControl isRequired flex="1">
-                <FormLabel>{t('inventoryPage.fieldsTab.fieldName')}</FormLabel>
-                <Input
-                  value={newFieldName}
-                  onChange={(e) => setNewFieldName(e.target.value)}
-                  placeholder={t('inventoryPage.fieldsTab.fieldNamePlaceholder')}
-                />
-              </FormControl>
 
-              <FormControl w={{ base: '100%', md: '250px' }}>
-                <Flex align="center">
-                  <FormLabel mb="0">{t('inventoryPage.fieldsTab.fieldType')}</FormLabel>
-                  {selectedFieldTypeInfo?.description && (
-                    <Tooltip label={selectedFieldTypeInfo.description} placement="top" fontSize="md">
-                      <Icon as={InfoOutlineIcon} color="gray.400" ml={2} cursor="pointer" />
-                    </Tooltip>
-                  )}
-                </Flex>
-                <Select value={newFieldType} onChange={(e) => setNewFieldType(e.target.value)}>
-                  {FIELD_TYPES.map(fieldType => (
-                    <option key={fieldType.value} value={fieldType.value}>
-                      {fieldType.label}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-              
-              <Button
-                onClick={handleAddField}
-                isLoading={isSaving}
-                loadingText={t('settings.statusSaving')} 
-                colorScheme="blue"
-                minW="120px"
-              >
-                {t('inventoryPage.fieldsTab.addField')}
-              </Button>
-            </Flex>
-          </fieldset>
-        </Box>
+        {canEdit && (
+          <Box p={{ base: 4, md: 6 }} borderWidth="1px" borderRadius="lg" boxShadow="md" bg={cardBg}>
+            <Heading as="h3" size="md" mb={6}>
+              {t('inventoryPage.fieldsTab.heading')}
+            </Heading>
+            <fieldset disabled={isSaving}>
+              <Flex direction={{ base: 'column', md: 'row' }} gap={4} align={{ base: 'stretch', md: 'flex-end' }}>
+                <FormControl isRequired flex="1">
+                  <FormLabel>{t('inventoryPage.fieldsTab.fieldName')}</FormLabel>
+                  <Input
+                    bg={inputBgColor}
+                    focusBorderColor={focusBorderColor}
+                    value={newFieldName}
+                    variant="filled"
+                    size="md"
+                    onChange={(e) => setNewFieldName(e.target.value)}
+                    placeholder={t('inventoryPage.fieldsTab.fieldNamePlaceholder')}
+                  />
+                </FormControl>
+
+                <FormControl w={{ base: '100%', md: '250px' }}>
+                  <Flex align="center">
+                    <FormLabel mb="0">{t('inventoryPage.fieldsTab.fieldType')}</FormLabel>
+                    {selectedFieldTypeInfo?.description && (
+                      <Tooltip label={selectedFieldTypeInfo.description} placement="top" fontSize="md" hasArrow>
+                        <Icon as={InfoOutlineIcon} color="gray.400" ml={2} cursor="pointer" />
+                      </Tooltip>
+                    )}
+                  </Flex>
+                  <Select 
+                    value={newFieldType} 
+                    onChange={(e) => setNewFieldType(e.target.value)}
+                    bg={inputBgColor}
+                    focusBorderColor={focusBorderColor}
+                    variant="filled"
+                    size="md"
+                  >
+                    {FIELD_TYPES.map(fieldType => (
+                      <option key={fieldType.value} value={fieldType.value}>
+                        {fieldType.label}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+                
+                <Button
+                  onClick={handleAddField}
+                  isLoading={isSaving}
+                  loadingText={t('inventoryPage.fieldsTab.actions.saving')} 
+                  colorScheme="teal"
+                  minW={{ base: "auto", md: "120px" }} 
+                >
+                  {t('inventoryPage.fieldsTab.addField')}
+                </Button>
+              </Flex>
+            </fieldset>
+          </Box>
+        )}
 
         <Box>
-          <Heading as="h3" size="md" mb={6}>
+          <Heading as="h3" size="md" mb={canEdit ? 6 : 0}>
             {t('inventoryPage.fieldsTab.createdFields')}
           </Heading>
           {customFields.length > 0 ? (
-            <VStack spacing={4} align="stretch">
+            <VStack 
+              spacing={4} 
+              align="stretch"
+              p={{ base: 4, md: 0 }} 
+              bg={{ base: listBg, md: 'transparent' }}
+              borderRadius={{ base: 'lg', md: 'none' }}
+            >
               {customFields.map(field => (
-                <Flex key={field.id} p={4} borderWidth="1px" borderRadius="lg" align="center" opacity={isSaving ? 0.6 : 1}>
+                <Flex 
+                  key={field.id} 
+                  p={4} 
+                  borderWidth="1px" 
+                  borderRadius="lg" 
+                  align="center" 
+                  bg={{ base: cardBg, md: 'transparent' }}
+                  boxShadow={{ base: 'sm', md: 'none' }} 
+                  opacity={isSaving ? 0.6 : 1}
+                  transition="opacity 0.2s"
+                >
                   <Box>
                     <Text fontWeight="bold">{field.name}</Text>
                     <Text fontSize="sm" color="gray.500">
@@ -214,25 +274,47 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate }: FieldsTabProps
                     </Text>
                   </Box>
                   <Spacer />
-                  <IconButton
-                    aria-label={t('inventoryPage.fieldsTab.deleteAriaLabel', { fieldName: field.name })} 
-                    icon={<DeleteIcon />}
-                    variant="ghost"
-                    colorScheme="red"
-                    size="sm"
-                    onClick={() => handleDeleteField(field.id)}
-                    isDisabled={isSaving}
-                  />
+                  {canEdit && (
+                    <IconButton
+                      aria-label={t('fieldsTab.deleteAriaLabel', { fieldName: field.name })} 
+                      icon={<DeleteIcon />}
+                      variant="ghost"
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleDeleteField(field.id)}
+                      isDisabled={isSaving}
+                    />
+                  )}
                 </Flex>
               ))}
             </VStack>
           ) : (
-            <Text color="gray.500">
-              {t('inventoryPage.fieldsTab.noFields')}
-            </Text>
+             <EmptyFieldsState />
           )}
         </Box>
       </VStack>
+
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {t('inventoryPage.elementsTab.deleteDialog.title')}
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              {t('inventoryPage.elementsTab.deleteDialog.body', { count: itemIdsToDelete.length })}
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose} isDisabled={isSaving}>
+                {t('inventoryPage.elementsTab.deleteDialog.cancel')}
+              </Button>
+              <Button colorScheme="red" onClick={handleDeleteField} ml={3} isLoading={isSaving}>
+                {t('inventoryPage.elementsTab.deleteDialog.confirm')}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
     </Box>
   );
 };

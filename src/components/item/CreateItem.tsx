@@ -129,26 +129,22 @@ const CreateItem = () => {
             )}
             
             <Flex direction={{ base: 'column-reverse', sm: 'row' }} gap={3} justifyContent="flex-end" pt={4}>
-              <Tooltip label={t('inventoryPage.elementsTab.createItem.tooltips.cancel')} hasArrow>
-                <Button
-                  variant="ghost"
-                  onClick={() => navigator(`/inventory/${inventoryId}`)}
-                  isDisabled={isSubmitting}
-                >
-                  {t('inventoryPage.elementsTab.createItem.actions.cancel')}
-                </Button>
-              </Tooltip>
-              <Tooltip label={t('inventoryPage.elementsTab.createItem.tooltips.create')} hasArrow>
-                <Button
-                  type="submit"
-                  colorScheme="teal"
-                  isLoading={isSubmitting}
-                  loadingText={t('inventoryPage.elementsTab.createItem.actions.submitting')}
-                  isDisabled={isLoading || isSubmitting}
-                >
-                  {t('inventoryPage.elementsTab.createItem.actions.create')}
-                </Button>
-              </Tooltip>
+              <Button
+                variant="ghost"
+                onClick={() => navigator(`/inventory/${inventoryId}`)}
+                isDisabled={isSubmitting}
+              >
+                {t('inventoryPage.elementsTab.createItem.actions.cancel')}
+              </Button>
+              <Button
+                type="submit"
+                colorScheme="teal"
+                isLoading={isSubmitting}
+                loadingText={t('inventoryPage.elementsTab.createItem.actions.submitting')}
+                isDisabled={isLoading || isSubmitting}
+              >
+                {t('inventoryPage.elementsTab.createItem.actions.create')}
+              </Button>
             </Flex>
           </VStack>
         </Box>

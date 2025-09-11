@@ -4,7 +4,36 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useInventory } from "../hooks/useInventory";
 import type { Inventory } from "../types/inventory";
 import { useAuth } from "../hooks/useAuth";
-import { Box, Center, Text, Container, Heading, Spinner, Image, Tab, TabList, Flex, TabPanels, Tabs, VStack, Avatar, Divider, Wrap, HStack, Icon, useColorModeValue, Tag, TabPanel } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Text,
+  Container,
+  Heading,
+  Spinner,
+  Image,
+  Tab,
+  TabList,
+  Flex,
+  TabPanels,
+  Tabs,
+  VStack,
+  Avatar,
+  Divider,
+  Wrap,
+  HStack,
+  Icon,
+  useColorModeValue,
+  Tag,
+  TabPanel,
+  useBreakpointValue,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import Headers from "../components/Header";
 import { FiTag, FiClock, FiGrid } from 'react-icons/fi';
 import ElementsTab from "../components/inventory/ElementsTab";
@@ -13,19 +42,31 @@ import FieldsTab from "../components/inventory/FieldsTab";
 
 const InventoryPage = () => {
   const { t, i18n } = useTranslation('global');
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams < { id: string } > ();
   const { isAuthenticated, user } = useAuth();
   const { getInventory, getUserRoleInventory } = useInventory();
   const navigator = useNavigate();
-  
-  const [inventory, setInventory] = useState<Inventory>();
+
+  const [inventory, setInventory] = useState < Inventory > ();
   const [isLoading, setIsLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
   const [hasEditorAccess, setHasEditorAccess] = useState(false);
   const [hasOwnerAccess, setHasOwnerAccess] = useState(false);
-  
+
   const dividerBorderColor = useColorModeValue('gray.300', 'gray.600');
   const createdByColor = useColorModeValue('teal.600', 'teal.300');
+
+  // Hook to determine if the screen is mobile
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  const tabLabels = [
+    t('inventoryPage.tabs.elements'),
+    t('inventoryPage.tabs.fields'),
+    t('inventoryPage.tabs.settings'),
+    t('inventoryPage.tabs.customId'),
+    t('inventoryPage.tabs.access'),
+    t('inventoryPage.tabs.statistics'),
+  ];
 
   const fetchInventory = useCallback(async () => {
     if (!id) return;
@@ -79,10 +120,10 @@ const InventoryPage = () => {
   }
 
   return (
-    <Box w="100%">
+    <Box w="100%" overflowX="hidden">
       <Headers />
       <Container maxW="container.xl" py={8}>
-        
+
         <Flex
           direction={{ base: 'column', md: 'row' }}
           align={{ base: 'center', md: 'flex-start' }}
@@ -107,7 +148,7 @@ const InventoryPage = () => {
             <Text fontSize="lg" color="gray.500">
               {inventory.description}
             </Text>
-            
+
             <Divider borderColor={dividerBorderColor} borderWidth="1px" />
 
             <Wrap spacingX={6} spacingY={2} color="gray.500" fontSize="sm">
@@ -133,34 +174,47 @@ const InventoryPage = () => {
             </Wrap>
 
             {inventory.tags && inventory.tags.length > 0 && (
-               <HStack spacing={2}>
-                 <Icon as={FiTag} color="gray.500"/>
-                 {inventory.tags.map(tag => (
-                   <Tag key={tag.id} size="md" colorScheme="blue" variant="solid">
-                     {tag.name}
-                   </Tag>
-                 ))}
-               </HStack>
+              <HStack spacing={2}>
+                <Icon as={FiTag} color="gray.500" />
+                {inventory.tags.map(tag => (
+                  <Tag key={tag.id} size="md" colorScheme="blue" variant="solid">
+                    {tag.name}
+                  </Tag>
+                ))}
+              </HStack>
             )}
           </VStack>
         </Flex>
 
         <Tabs colorScheme="teal" isLazy onChange={(index) => setTabIndex(index)} index={tabIndex}>
-          <TabList>
-            <Tab>{t('inventoryPage.tabs.elements')}</Tab>
-            <Tab>{t('inventoryPage.tabs.fields')}</Tab>
-            <Tab>{t('inventoryPage.tabs.settings')}</Tab>
-            <Tab>{t('inventoryPage.tabs.customId')}</Tab>
-            <Tab>{t('inventoryPage.tabs.access')}</Tab>
-            <Tab>{t('inventoryPage.tabs.statistics')}</Tab>
-          </TabList>            
+          {/* Conditional rendering for Tabs vs. Menu */}
+          {isMobile ? (
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w="100%" mb={4}>
+                {tabLabels[tabIndex]}
+              </MenuButton>
+              <MenuList>
+                {tabLabels.map((label, index) => (
+                  <MenuItem key={label} onClick={() => setTabIndex(index)}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          ) : (
+            <TabList>
+              {tabLabels.map(label => (
+                <Tab key={label}>{label}</Tab>
+              ))}
+            </TabList>
+          )}
 
-            
-          <TabPanels> 
+
+          <TabPanels>
             <TabPanel>
               {inventory && (
-                <ElementsTab 
-                  inventoryId={inventory.id} 
+                <ElementsTab
+                  inventoryId={inventory.id}
                   customFields={inventory.customFieldsDefinition}
                   canEdit={hasEditorAccess}
                 />
@@ -168,13 +222,14 @@ const InventoryPage = () => {
             </TabPanel>
             <TabPanel>
               {inventory && (
-                <FieldsTab customFields={inventory.customFieldsDefinition} 
+                <FieldsTab customFields={inventory.customFieldsDefinition}
                   inventoryId={inventory.id}
-                  onFieldsUpdate={fetchInventory}  />
+                  onFieldsUpdate={fetchInventory}
+                  canEdit={hasEditorAccess} />
               )}
             </TabPanel>
             <TabPanel>
-                <SettingsTab inventory={inventory} />
+              <SettingsTab inventory={inventory} />
             </TabPanel>
             {/* {isOwner && (
               <TabPanel>

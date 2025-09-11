@@ -160,8 +160,7 @@
       "tooltips": {
         "addItem": "Add a new item to this inventory",
         "deleteSelected": "Delete all selected items",
-        "selectAll": "Select all items on this page",
-        "itemActions": "Item actions"
+        "selectAll": "Select all items on this page"
       },
       "table": {
         "header": {

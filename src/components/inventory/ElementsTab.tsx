@@ -12,7 +12,7 @@ import {
 import { AddIcon, ChevronDownIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import type { CustomFieldDefinition, DeleteItemsRequest, InventoryItem } from '../../types/inventory';
+import type { CustomFieldDefinition, InventoryItem } from '../../types/inventory';
 import { useInView } from 'react-intersection-observer';
 import { useInventory } from '../../hooks/useInventory';
 import { useNavigate } from 'react-router-dom';
@@ -187,8 +187,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
       
       {canEdit && (
         <Flex mb={4} gap={4} wrap="wrap">
-          <Tooltip label={t('inventoryPage.elementsTab.tooltips.addItem')} hasArrow>
-            <Button 
+          <Button 
               leftIcon={<AddIcon />} 
               colorScheme="teal"
               onClick={handleAddItemClick}
@@ -196,19 +195,16 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
             >
               {t('inventoryPage.elementsTab.actions.addItem')}
             </Button>
-          </Tooltip>
           <Spacer />
           {selectedItems.length > 0 && (
-            <Tooltip label={t('inventoryPage.elementsTab.tooltips.deleteSelected')} hasArrow>
-              <Button 
-                leftIcon={<DeleteIcon />} 
-                colorScheme="red"
-                onClick={() => confirmDelete(selectedItems)}
-                isLoading={isActionLoading}
-              >
-                {t('inventoryPage.elementsTab.actions.deleteSelected', { count: selectedItems.length })}
-              </Button>
-            </Tooltip>
+            <Button 
+              leftIcon={<DeleteIcon />} 
+              colorScheme="red"
+              onClick={() => confirmDelete(selectedItems)}
+              isLoading={isActionLoading}
+            >
+              {t('inventoryPage.elementsTab.actions.deleteSelected', { count: selectedItems.length })}
+            </Button>
           )}
         </Flex>
       )}
@@ -220,6 +216,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
               {canEdit && (
                 <Th width="1%" paddingRight={2}>
                   <Checkbox
+                    colorScheme="teal"
                     isChecked={isAllSelected}
                     isIndeterminate={isIndeterminate}
                     onChange={handleSelectAll}
@@ -231,7 +228,6 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
               {customFields.map((field) => ( <Th key={field.id}>{field.name}</Th> ))}
               <Th>{t('inventoryPage.elementsTab.table.header.createdAt')}</Th>
               <Th>{t('inventoryPage.elementsTab.table.header.updatedBy')}</Th>
-              {canEdit && <Th>{t('inventoryPage.elementsTab.table.header.actions')}</Th>}
             </Tr>
           </Thead>
           <Tbody>
@@ -247,6 +243,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
                 {canEdit && (
                   <Td paddingRight={2}>
                     <Checkbox
+                      colorScheme="teal"
                       isChecked={selectedItems.includes(item.id)}
                       onChange={(e) => handleSelectItem(item.id, e.target.checked)}
                       isDisabled={isActionLoading}
@@ -279,30 +276,6 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
                     </Text>
                   </Tooltip>
                 </Td>
-                {canEdit && (
-                  <Td>
-                     <Tooltip label={t('inventoryPage.elementsTab.tooltips.itemActions')} hasArrow>
-                        <Menu>
-                          <MenuButton as={IconButton} aria-label={t('inventoryPage.elementsTab.tooltips.itemActions')} icon={<ChevronDownIcon />} variant="ghost" size="sm" isDisabled={isActionLoading}/>
-                          <MenuList>
-                            <MenuItem 
-                              icon={<EditIcon />}
-                              onClick={() => navigate(`/inventory/${inventoryId}/items/${item.id}/edit`)}
-                            >
-                              {t('inventoryPage.elementsTab.actions.editItem')}
-                            </MenuItem>
-                            <MenuItem 
-                              icon={<DeleteIcon />} 
-                              color="red.500"
-                              onClick={() => confirmDelete([item.id])}
-                            >
-                              {t('inventoryPage.elementsTab.actions.deleteItem')}
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
-                     </Tooltip>
-                  </Td>
-                )}
               </Tr>
             ))}
           </Tbody>
