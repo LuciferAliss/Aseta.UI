@@ -43,14 +43,14 @@ export const inventoryApi = {
     },
 
     createItem: async (data: CreateItemRequest): Promise<InventoryItem> => {
-      return (await apiClient.post('/inventory/items-create', data)).data;
+      return (await apiClient.post('/inventory/create-item', data)).data;
     },
 
     updateItem: async (itemId: string, data: UpdateItemRequest): Promise<void> => {
       await apiClient.put(`/inventory/items/${itemId}`, data);
     },
 
-    deleteItems: async (data: DeleteItemsRequest): Promise<void> => {
-      await apiClient.delete('/inventory/items/delete', { data });
+    deleteItems: async (data: DeleteItemsRequest, inventoryId : string): Promise<void> => {
+      await apiClient.delete(`/inventory/remove-item/${inventoryId}`, {data});
   }
 };

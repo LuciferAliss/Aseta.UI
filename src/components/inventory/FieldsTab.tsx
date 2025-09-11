@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { CustomFieldDefinition, UpdateCustomFieldDefinitionRequest, UpdateCustomFieldsRequest } from '../../types/inventory';
+import type { CustomFieldDefinition, UpdateCustomFieldsRequest } from '../../types/inventory';
 import {
   Box,
   Text,
@@ -63,15 +63,15 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate }: FieldsTabProps
     }
 
     const existingFieldsForRequest = customFields.map(field => ({
-      Id: field.id,
-      Name: field.name,
-      Type: field.type, 
+      id: field.id,
+      name: field.name,
+      type: field.type, 
     }));
 
-    const newFieldForRequest: UpdateCustomFieldDefinitionRequest = {
-      Id: '',
-      Name: newFieldName.trim(),
-      Type: parseInt(newFieldType, 10),
+    const newFieldForRequest: CustomFieldDefinition = {
+      id: '',
+      name: newFieldName.trim(),
+      type: newFieldType,
     };
 
     const payload: UpdateCustomFieldsRequest = {
@@ -111,9 +111,9 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate }: FieldsTabProps
     const remainingFields = customFields.filter(field => field.id !== fieldIdToDelete);
 
     const fieldsForRequest = remainingFields.map(field => ({
-      Id: field.id,
-      Name: field.name,
-      Type: field.type,
+      id: field.id,
+      name: field.name,
+      type: field.type,
     }));
 
     const payload: UpdateCustomFieldsRequest = {

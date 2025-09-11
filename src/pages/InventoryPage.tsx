@@ -14,33 +14,34 @@ import FieldsTab from "../components/inventory/FieldsTab";
 const InventoryPage = () => {
   const { t, i18n } = useTranslation('global');
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { getInventory, getUserRoleInventory } = useInventory();
   const navigator = useNavigate();
   
-  const [userRole, setUserRole] = useState<string>('');
   const [inventory, setInventory] = useState<Inventory>();
   const [isLoading, setIsLoading] = useState(true);
-
   const [tabIndex, setTabIndex] = useState(0);
-
-  const canEdit = user?.role === 'Admin' || userRole === 'Owner' || userRole === 'Editor';
+  const [hasEditorAccess, setHasEditorAccess] = useState(false);
+  const [hasOwnerAccess, setHasOwnerAccess] = useState(false);
+  
+  const dividerBorderColor = useColorModeValue('gray.300', 'gray.600');
+  const createdByColor = useColorModeValue('teal.600', 'teal.300');
 
   const fetchInventory = useCallback(async () => {
     if (!id) return;
     try {
       const data = await getInventory(id);
       setInventory(data);
-      if (user) {
-        const userRole = await getUserRoleInventory(id);
-        setUserRole(userRole);
+      if (isAuthenticated) {
+        const newRole = await getUserRoleInventory(id);
+        setHasEditorAccess(newRole === 'Owner' || user?.role === 'Admin' || newRole === 'Editor');
+        setHasOwnerAccess(newRole === 'Owner' || user?.role === 'Admin');
       }
     } catch (err) {
       console.error("Failed to fetch inventory:", err);
       navigator('/');
     }
-  }, [id, getInventory, navigator]);
-
+  }, [id, getInventory, navigator, getUserRoleInventory, isAuthenticated]);
 
   useEffect(() => {
     const initialFetch = async () => {
@@ -49,7 +50,7 @@ const InventoryPage = () => {
       setIsLoading(false);
     }
     initialFetch();
-  }, [id]);
+  }, [id, fetchInventory]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(i18n.language, {
@@ -107,14 +108,14 @@ const InventoryPage = () => {
               {inventory.description}
             </Text>
             
-            <Divider borderColor={useColorModeValue('gray.300', 'gray.600')} borderWidth="1px" />
+            <Divider borderColor={dividerBorderColor} borderWidth="1px" />
 
             <Wrap spacingX={6} spacingY={2} color="gray.500" fontSize="sm">
               <HStack>
                 <Avatar size="xs" name={inventory.userCreator.userName} />
                 <Text>
                   {t('inventoryPage.info.createdBy')}{' '}
-                  <Text as="b" color={useColorModeValue('teal.600', 'teal.300')}>
+                  <Text as="b" color={createdByColor}>
                     {inventory.userCreator.userName}
                   </Text>
                 </Text>
@@ -161,7 +162,7 @@ const InventoryPage = () => {
                 <ElementsTab 
                   inventoryId={inventory.id} 
                   customFields={inventory.customFieldsDefinition}
-                  canEdit={canEdit}
+                  canEdit={hasEditorAccess}
                 />
               )}
             </TabPanel>

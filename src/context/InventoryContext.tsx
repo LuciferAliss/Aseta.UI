@@ -14,7 +14,7 @@ interface InventoryContextType {
   getUserRoleInventory: (id: string) => Promise<string>;
   createItem: (data: CreateItemRequest) => Promise<InventoryItem>;
   updateItem: (itemId: string, data: UpdateItemRequest) => Promise<void>;
-  deleteItems: (data: DeleteItemsRequest) => Promise<void>;
+  deleteItems: (data: DeleteItemsRequest, id : string) => Promise<void>;
 }
 
 export const InventoryContext = createContext<InventoryContextType | undefined>(undefined);
@@ -29,8 +29,8 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     await inventoryApi.updateItem(itemId, data);
   };
 
-  const deleteItems = async (data: DeleteItemsRequest) => {
-    await inventoryApi.deleteItems(data);
+  const deleteItems = async (data: DeleteItemsRequest, id : string) => {
+    await inventoryApi.deleteItems(data, id);
   };
 
   const getUserRoleInventory = async (id: string) => {

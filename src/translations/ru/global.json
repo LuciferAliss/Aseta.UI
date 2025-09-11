@@ -105,71 +105,101 @@
     "orClick": "или нажмите для выбора файла"
   },
   "inventoryPage": {
+    "tabs": {
+      "elements": "Элементы",
+      "fields": "Поля",
+      "settings": "Настройки",
+      "customId": "Пользовательский ID",
+      "access": "Доступ",
+      "statistics": "Статистика"
+    },
     "info": {
       "createdBy": "Автор"
     },
     "errors": {
-      "notFound": "Инвентаризация не найдена.",
-      "generic": "Произошла ошибка."
+      "generic": "Инвентарь не найден или произошла ошибка."
     },
     "elementsTab": {
-      "createdAt" : "Создано",
-      "updatedAt" : "Обновлено",
-      "createdBy" : "Автор",
-      "updatedBy" : "Редактор",
-      "customId" : "ID"
+      "empty": {
+        "title": "В этом инвентаре пока ничего нет",
+        "description": "Начните с добавления первого элемента. Вы можете сначала определить поля для структурирования данных."
+      },
+      "createItem": {
+        "title": "Добавить новый элемент в {{inventoryName}}",
+        "actions": {
+          "cancel": "Отмена",
+          "create": "Создать элемент",
+          "submitting": "Создание..."
+        },
+        "tooltips": {
+          "cancel": "Отменить изменения и вернуться к инвентарю.",
+          "create": "Сохранить новый элемент в инвентаре."
+        },
+        "toast": {
+          "successTitle": "Элемент успешно создан"
+        }
+      },
+      "actions": {
+        "addFirstItem": "Добавить первый элемент",
+        "addItem": "Добавить элемент",
+        "deleteSelected": "Удалить ({{count}})",
+        "editItem": "Изменить",
+        "deleteItem": "Удалить"
+      },
+      "tooltips": {
+        "addItem": "Добавить новый элемент в этот инвентарь",
+        "deleteSelected": "Удалить все выбранные элементы",
+        "selectAll": "Выбрать все элементы на этой странице",
+        "itemActions": "Действия с элементом"
+      },
+      "table": {
+        "header": {
+          "customId": "ID",
+          "createdAt": "Дата создания",
+          "updatedBy": "Кем обновлено",
+          "actions": "Действия"
+        }
+      },
+      "deleteDialog": {
+        "title": "Удаление элемента(ов)",
+        "body": "Вы уверены, что хотите удалить {{count}} элемент(а/ов)? Это действие нельзя будет отменить.",
+        "cancel": "Отмена",
+        "confirm": "Удалить"
+      },
+      "endOfList": "Вы достигли конца списка."
     },
     "fieldsTab": {
-      "heading": "Управление полями",
+      "heading": "Добавить новое поле",
       "fieldName": "Название поля",
-      "fieldNamePlaceholder": "Например, 'Цвет', 'Состояние'",
+      "fieldNamePlaceholder": "Напр., Серийный номер, Состояние",
       "fieldType": "Тип поля",
       "addField": "Добавить поле",
       "createdFields": "Созданные поля",
-      "noFields": "Пользовательские поля еще не добавлены."
-    },
-    "tabs": {
-      "elements": "Элементы",
-      "discussions": "Обсуждения",
-      "settings": "Настройки",
-      "customId": "пользовательский ID",
-      "access": "Доступ",
-      "fields": "Поля",
-      "statistics": "Статистика"
-    },
-    "fields": {
-      "text" : "Текст",
-      "textarea" : "Текстовый блок",
-      "number" : "Число",
-      "checkbox" : "Чекбокс",
-      "date" : "Дата",
-      "checkboxDescription": "Чекбокс для логических значений.",
-      "dateDescription": "Для дат.",
-      "numberDescription": "Для чисел.",
-      "textareaDescription": "Для больших текстовых блоков.",
-      "textDescription": "Для коротких текстов.",
+      "noFields": "Пользовательские поля еще не добавлены.",
+      "deleteAriaLabel": "Удалить поле {{fieldName}}",
+      "nameRequired": "Название поля обязательно для заполнения.",
       "toast": {
-        "successTitle": "Поле создано",
-        "successDeleteTitle": "Поле удалено"
+        "successTitle": "Поле успешно добавлено!",
+        "successDeleteTitle": "Поле удалено."
       }
     },
-    "elements": {
-      "addItem": "Добавить элемент",
-      "tableName": "Название",
-      "tableCategory": "Категория"
+    "fields": {
+      "text": "Текст",
+      "textDescription": "Для короткого текста, например, названия.",
+      "textarea": "Многострочный текст",
+      "textareaDescription": "Для длинного текста, например, описания.",
+      "number": "Число",
+      "numberDescription": "Для числовых значений.",
+      "checkbox": "Флажок (чекбокс)",
+      "checkboxDescription": "Для простого выбора да/нет или истина/ложь.",
+      "date": "Дата",
+      "dateDescription": "Для выбора конкретной даты."
     },
-    "discussions": {
-      "placeholder": "Напишите сообщение...",
-      "send": "Отправить"
-    },
-    "settings": {
-      "autoSaveSuccess": "Изменения сохранены автоматически.",
-      "statusSaved": "Все изменения сохранены",
-      "statusSaving": "Сохранение...",
-      "statusUnsaved": "Несохраненные изменения",
-      "nameLabel": "Название инвентаризации",
-      "descriptionLabel": "Описание (поддерживается Markdown)",
-      "imageLabel": "Изображение"
+    "createPage": {
+      "toast": {
+        "errorTitle": "Произошла ошибка",
+        "validationErrorTitle": "Ошибка валидации"
+      }
     }
   }
 }

@@ -1,5 +1,11 @@
 {
-	"registerPage": {
+  "toasts": {
+    "error": {
+      "title": "An error occurred"
+    }
+  },
+
+  "registerPage": {
     "back": "Back to main page",
     "heading": "Register",
     "email": "Email",
@@ -23,14 +29,15 @@
       "badRequestDescription": "Invalid data for registration.",
       "serverErrorDescription": "Server error. Please try again later."
     }
-	},
-	"loginPage": {
+  },
+
+  "loginPage": {
     "back": "Back to main page",
     "heading": "Login",
     "email": "Email",
     "password": "Password",
     "login": "Sign In",
-    "rememberMe" : "Remember Me",
+    "rememberMe": "Remember Me",
     "noAccount": "Don't have an account?",
     "register": "Register",
     "toast": {
@@ -43,14 +50,16 @@
       "notAllowedDescription": "You have not confirmed your email."
     }
   },
+
   "header": {
     "profile": "Profile",
     "logout": "Logout",
     "login": "Login"
   },
+
   "mainPage": {
     "createButton": "Create Inventory",
-    "endOfList": "End of List",
+    "endOfList": "You have reached the end of the list",
     "latest": {
       "title": "Latest Inventories"
     },
@@ -69,6 +78,7 @@
       "title": "Tag Cloud"
     }
   },
+
   "createPage": {
     "title": "Create New Inventory",
     "nameLabel": "Name",
@@ -94,9 +104,10 @@
       "submitErrorTitle": "Creation Failed",
       "submitErrorDescription": "An error occurred while creating the inventory. Please try again.",
       "errorTitle": "An error occurred",
-      "errorDescription" : "Please try again later."
+      "errorDescription": "Please try again later."
     }
   },
+
   "imageUpload": {
     "previewAlt": "Image preview",
     "removeAriaLabel": "Remove image",
@@ -105,71 +116,101 @@
     "orClick": "or click to select a file"
   },
   "inventoryPage": {
+    "tabs": {
+      "elements": "Elements",
+      "fields": "Fields",
+      "settings": "Settings",
+      "customId": "Custom ID",
+      "access": "Access",
+      "statistics": "Statistics"
+    },
     "info": {
       "createdBy": "Created by"
-    },  
+    },
     "errors": {
-      "notFound": "Inventory not found.",
-      "generic": "An error occurred."
+      "generic": "Inventory not found or an error occurred."
     },
     "elementsTab": {
-      "createdAt" : "Created At",
-      "updatedAt" : "Updated At",
-      "createdBy" : "Created By",
-      "updatedBy" : "Updated By",
-      "customId" : "ID"
+      "empty": {
+        "title": "This inventory is empty",
+        "description": "Get started by adding your first item. You can define custom fields first to structure your data."
+      },
+      "createItem": {
+        "title": "Add New Item to \"{{inventoryName}}\"",
+        "actions": {
+          "cancel": "Cancel",
+          "create": "Create Item",
+          "submitting": "Creating..."
+        },
+        "tooltips": {
+          "cancel": "Discard changes and return to the inventory view.",
+          "create": "Save the new item to the inventory."
+        },
+        "toast": {
+          "successTitle": "Item created successfully"
+        }
+      },
+      "actions": {
+        "addFirstItem": "Add first item",
+        "addItem": "Add Item",
+        "deleteSelected": "Delete ({{count}})",
+        "editItem": "Edit",
+        "deleteItem": "Delete"
+      },
+      "tooltips": {
+        "addItem": "Add a new item to this inventory",
+        "deleteSelected": "Delete all selected items",
+        "selectAll": "Select all items on this page",
+        "itemActions": "Item actions"
+      },
+      "table": {
+        "header": {
+          "customId": "ID",
+          "createdAt": "Created At",
+          "updatedBy": "Updated By",
+          "actions": "Actions"
+        }
+      },
+      "deleteDialog": {
+        "title": "Delete Item(s)",
+        "body": "Are you sure you want to delete {{count}} item(s)? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      },
+      "endOfList": "You've reached the end of the list."
     },
     "fieldsTab": {
-      "heading": "Manage Custom Fields",
+      "heading": "Add a New Custom Field",
       "fieldName": "Field Name",
-      "fieldNamePlaceholder": "e.g., 'Color', 'Condition'",
+      "fieldNamePlaceholder": "e.g., Serial Number, Condition",
       "fieldType": "Field Type",
       "addField": "Add Field",
       "createdFields": "Created Fields",
       "noFields": "No custom fields have been added yet.",
+      "deleteAriaLabel": "Delete field {{fieldName}}",
+      "nameRequired": "Field name is required.",
       "toast": {
-        "successTitle": "Field Created",
-        "successDeleteTitle": "Field Deleted"
+        "successTitle": "Field added successfully!",
+        "successDeleteTitle": "Field deleted."
       }
     },
-    "tabs": {
-      "elements": "Elements",
-      "discussions": "Discussions",
-      "settings": "Settings",
-      "customId": "Custom ID",
-      "access": "Access",
-      "fields": "Fields",
-      "statistics": "Statistics"
-    },
     "fields": {
-      "text" : "Text",
-      "textarea" : "Textarea",
-      "number" : "Number",
-      "checkbox" : "Checkbox",
-      "date" : "Date",
-      "checkboxDescription": "Checkboxes for boolean values.",
-      "dateDescription": "For dates and timestamps.",
+      "text": "Text",
+      "textDescription": "For short text, like a name or title.",
+      "textarea": "Textarea",
+      "textareaDescription": "For longer text, like a description.",
+      "number": "Number",
       "numberDescription": "For numerical values.",
-      "textareaDescription": "For large text blocks.",
-      "textDescription": "For single-line text input."
+      "checkbox": "Checkbox",
+      "checkboxDescription": "For a simple yes/no or true/false value.",
+      "date": "Date",
+      "dateDescription": "For selecting a specific date."
     },
-    "elements": {
-      "addItem": "Add Item",
-      "tableName": "Name",
-      "tableCategory": "Category"
-    },
-    "discussions": {
-      "placeholder": "Write a message...",
-      "send": "Send"
-    },
-    "settings": {
-      "autoSaveSuccess": "Changes saved automatically.",
-      "statusSaved": "All changes saved",
-      "statusSaving": "Saving...",
-      "statusUnsaved": "Unsaved changes",
-      "nameLabel": "Inventory Name",
-      "descriptionLabel": "Description (Markdown supported)",
-      "imageLabel": "Image"
+    "createPage": {
+      "toast": {
+        "errorTitle": "An error occurred",
+        "validationErrorTitle": "Validation Error"
+      }
     }
   }
 }

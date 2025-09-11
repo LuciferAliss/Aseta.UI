@@ -2,22 +2,66 @@ import {
   Box, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Spinner, Center,
   useColorModeValue, Text, Checkbox, Flex, Button, Spacer, Menu, MenuButton,
   MenuList, MenuItem, IconButton, useToast, AlertDialog, AlertDialogBody,
-  AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useDisclosure
+  AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useDisclosure,
+  SkeletonText,
+  VStack,
+  Icon,
+  Heading,
+  Tooltip
 } from '@chakra-ui/react';
 import { AddIcon, ChevronDownIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import type { CustomFieldDefinition, InventoryItem } from '../../types/inventory';
+import type { CustomFieldDefinition, DeleteItemsRequest, InventoryItem } from '../../types/inventory';
 import { useInView } from 'react-intersection-observer';
 import { useInventory } from '../../hooks/useInventory';
 import { useNavigate } from 'react-router-dom';
+import { FiInbox } from 'react-icons/fi';
 
-// 1. Определяем интерфейс пропсов с флагом для прав доступа
 interface ElementsTabProps {
   inventoryId: string;
   customFields: CustomFieldDefinition[];
   canEdit: boolean;
 }
+
+const TableSkeleton = () => (
+  <TableContainer>
+    <Table variant="simple">
+      <Thead>
+        <Tr>
+          {[...Array(5)].map((_, i) => <Th key={i}><SkeletonText noOfLines={1} skeletonHeight="20px" /></Th>)}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {[...Array(3)].map((_, i) => (
+          <Tr key={i}>
+            {[...Array(5)].map((_, j) => <Td key={j}><SkeletonText noOfLines={1} /></Td>)}
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  </TableContainer>
+);
+
+const EmptyState = ({ onAddItem }: { onAddItem: () => void }) => {
+  const { t } = useTranslation('global');
+  return (
+    <Center p={10} borderWidth="2px" borderStyle="dashed" borderRadius="md" bg={useColorModeValue('gray.50', 'gray.700')}>
+      <VStack spacing={4}>
+        <Icon as={FiInbox} boxSize={12} color="gray.400" />
+        <Heading as="h3" size="md">{t('inventoryPage.elementsTab.empty.title')}</Heading>
+        <Text color="gray.500">{t('inventoryPage.elementsTab.empty.description')}</Text>
+        <Button 
+          leftIcon={<AddIcon />} 
+          colorScheme="teal"
+          onClick={onAddItem}
+        >
+          {t('inventoryPage.elementsTab.actions.addFirstItem')}
+        </Button>
+      </VStack>
+    </Center>
+  );
+};
 
 const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) => {
   const { t, i18n } = useTranslation('global');
@@ -41,6 +85,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
   const [itemIdsToDelete, setItemIdsToDelete] = useState<string[]>([]);
 
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
+  const selectedBg = useColorModeValue('teal.50', 'teal.900');
 
   const fetchItems = useCallback(async (pageNum: number, refresh = false) => {
     if (isListLoading && !refresh) return;
@@ -52,7 +97,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
       setHasNextPage(response.hasNextPage);
     } catch (error) {
       toast({
-        title: t('createPage.toast.errorTitle'),
+        title: t('inventoryPage.createPage.toast.errorTitle'),
         description: (error as Error).message,
         status: 'error',
         isClosable: true,
@@ -101,7 +146,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
     onClose();
     setIsActionLoading(true);
     try {
-      await deleteItems({ itemIds: itemIdsToDelete });
+      await deleteItems({ itemIds: itemIdsToDelete }, inventoryId);
       toast({
         title: "Элементы успешно удалены",
         status: "success",
@@ -127,132 +172,165 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
   const isAllSelected = items.length > 0 && selectedItems.length === items.length;
   const isIndeterminate = selectedItems.length > 0 && !isAllSelected;
 
+  const handleAddItemClick = () => navigate(`/inventory/${inventoryId}/items/new`);
+
+  if (isListLoading && items.length === 0) {
+    return <TableSkeleton />;
+  }
+  
+  if (!isListLoading && items.length === 0 && canEdit) {
+    return <EmptyState onAddItem={handleAddItemClick} />;
+  }
+
   return (
     <Box>
+      
       {canEdit && (
-        <Flex mb={4} gap={4}>
-          <Button 
-            leftIcon={<AddIcon />} 
-            colorScheme="teal"
-            onClick={() => navigate(`/inventory/${inventoryId}/items/new`)}
-            isDisabled={isActionLoading}
-          >
-            {t('inventoryPage.elements.addItem')}
-          </Button>
+        <Flex mb={4} gap={4} wrap="wrap">
+          <Tooltip label={t('inventoryPage.elementsTab.tooltips.addItem')} hasArrow>
+            <Button 
+              leftIcon={<AddIcon />} 
+              colorScheme="teal"
+              onClick={handleAddItemClick}
+              isDisabled={isActionLoading}
+            >
+              {t('inventoryPage.elementsTab.actions.addItem')}
+            </Button>
+          </Tooltip>
           <Spacer />
           {selectedItems.length > 0 && (
-            <Button 
-              leftIcon={<DeleteIcon />} 
-              colorScheme="red"
-              onClick={() => confirmDelete(selectedItems)}
-              isLoading={isActionLoading}
-            >
-              Удалить ({selectedItems.length})
-            </Button>
+            <Tooltip label={t('inventoryPage.elementsTab.tooltips.deleteSelected')} hasArrow>
+              <Button 
+                leftIcon={<DeleteIcon />} 
+                colorScheme="red"
+                onClick={() => confirmDelete(selectedItems)}
+                isLoading={isActionLoading}
+              >
+                {t('inventoryPage.elementsTab.actions.deleteSelected', { count: selectedItems.length })}
+              </Button>
+            </Tooltip>
           )}
         </Flex>
       )}
 
-      {items.length === 0 && isListLoading ? <Center p={10}><Spinner size="xl"/></Center> : (
-        <TableContainer>
-          <Table variant="simple">
-            <Thead>
-              <Tr>
+      <TableContainer>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              {canEdit && (
+                <Th width="1%" paddingRight={2}>
+                  <Checkbox
+                    isChecked={isAllSelected}
+                    isIndeterminate={isIndeterminate}
+                    onChange={handleSelectAll}
+                    isDisabled={isActionLoading || items.length === 0}
+                  />
+                </Th>
+              )}
+              <Th>{t('inventoryPage.elementsTab.table.header.customId')}</Th>
+              {customFields.map((field) => ( <Th key={field.id}>{field.name}</Th> ))}
+              <Th>{t('inventoryPage.elementsTab.table.header.createdAt')}</Th>
+              <Th>{t('inventoryPage.elementsTab.table.header.updatedBy')}</Th>
+              {canEdit && <Th>{t('inventoryPage.elementsTab.table.header.actions')}</Th>}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {items.map((item) => (
+              <Tr 
+                cursor='pointer'
+                key={item.id}  
+                _hover={{ bg: hoverBg }}
+                bg={selectedItems.includes(item.id) ? selectedBg : 'transparent'}
+                opacity={isActionLoading ? 0.6 : 1}
+                transition="background-color 0.2s, opacity 0.2s"
+              >
                 {canEdit && (
-                  <Th width="1%" paddingRight={2}>
+                  <Td paddingRight={2}>
                     <Checkbox
-                      isChecked={isAllSelected}
-                      isIndeterminate={isIndeterminate}
-                      onChange={handleSelectAll}
-                      isDisabled={isActionLoading || items.length === 0}
+                      isChecked={selectedItems.includes(item.id)}
+                      onChange={(e) => handleSelectItem(item.id, e.target.checked)}
+                      isDisabled={isActionLoading}
                     />
-                  </Th>
+                  </Td>
                 )}
-                <Th>{t('inventoryPage.elementsTab.customId')}</Th>
-                {customFields.map((field) => ( <Th key={field.id}>{field.name}</Th> ))}
-                <Th>{t('inventoryPage.elementsTab.createdAt')}</Th>
-                <Th>{t('inventoryPage.elementsTab.updatedBy')}</Th>
-                {canEdit && <Th>Действия</Th>}
+                <Td>
+                  <Tooltip label={item.customId} placement="top" >
+                    <Text noOfLines={1} maxW='130px'>
+                      {item.customId}
+                    </Text>
+                  </Tooltip>
+                </Td>
+                {customFields.map((field) => {
+                  const cellValue = String(item.customFields.find(cf => cf.fieldId === field.id)?.value ?? '—');
+                  
+                  return (
+                    <Td key={`${item.id}-${field.id}`} maxW="180px">
+                      <Text noOfLines={1} >
+                        {cellValue}
+                      </Text>
+                    </Td>
+                  );
+                })}
+                <Td>{formatDate(item.createdAt.toString())}</Td>
+                <Td maxW="150px">
+                  <Tooltip label={item.userUpdate.userName} placement="top" >
+                    <Text noOfLines={1}>
+                      {item.userUpdate.userName}
+                    </Text>
+                  </Tooltip>
+                </Td>
+                {canEdit && (
+                  <Td>
+                     <Tooltip label={t('inventoryPage.elementsTab.tooltips.itemActions')} hasArrow>
+                        <Menu>
+                          <MenuButton as={IconButton} aria-label={t('inventoryPage.elementsTab.tooltips.itemActions')} icon={<ChevronDownIcon />} variant="ghost" size="sm" isDisabled={isActionLoading}/>
+                          <MenuList>
+                            <MenuItem 
+                              icon={<EditIcon />}
+                              onClick={() => navigate(`/inventory/${inventoryId}/items/${item.id}/edit`)}
+                            >
+                              {t('inventoryPage.elementsTab.actions.editItem')}
+                            </MenuItem>
+                            <MenuItem 
+                              icon={<DeleteIcon />} 
+                              color="red.500"
+                              onClick={() => confirmDelete([item.id])}
+                            >
+                              {t('inventoryPage.elementsTab.actions.deleteItem')}
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                     </Tooltip>
+                  </Td>
+                )}
               </Tr>
-            </Thead>
-            <Tbody>
-              {items.map((item) => (
-                <Tr 
-                  key={item.id}  
-                  _hover={{ bg: hoverBg }}
-                  bg={selectedItems.includes(item.id) ? 'teal.50' : 'transparent'}
-                  opacity={isActionLoading ? 0.6 : 1}
-                >
-                  {canEdit && (
-                    <Td paddingRight={2}>
-                      <Checkbox
-                        isChecked={selectedItems.includes(item.id)}
-                        onChange={(e) => handleSelectItem(item.id, e.target.checked)}
-                        isDisabled={isActionLoading}
-                      />
-                    </Td>
-                  )}
-                  <Td>{item.customId}</Td>
-                  {customFields.map((field) => (
-                    <Td key={`${item.id}-${field.id}`}>{String(item.customFields.find(cf => cf.fieldId === field.id)?.value ?? '—')}</Td>
-                  ))}
-                  <Td>{formatDate(item.createdAt.toString())}</Td>
-                  <Td>{item.userUpdate.userName}</Td>
-                  {canEdit && (
-                    <Td>
-                      <Menu>
-                        <MenuButton as={IconButton} aria-label="Действия" icon={<ChevronDownIcon />} variant="ghost" size="sm" isDisabled={isActionLoading}/>
-                        <MenuList>
-                          <MenuItem 
-                            icon={<EditIcon />}
-                            onClick={() => navigate(`/inventory/${inventoryId}/items/${item.id}/edit`)}
-                          >
-                            Редактировать
-                          </MenuItem>
-                          <MenuItem 
-                            icon={<DeleteIcon />} 
-                            color="red.500"
-                            onClick={() => confirmDelete([item.id])}
-                          >
-                            Удалить
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </Td>
-                  )}
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      )}
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
 
       <Center ref={ref} mt={4} h="40px">
         {isListLoading && items.length > 0 && <Spinner color="teal.500" />}
         {!hasNextPage && items.length > 0 && (
-          <Text color="gray.500">{t('mainPage.endOfList')}</Text>
+          <Text color="gray.500">{t('inventoryPage.elementsTab.endOfList')}</Text>
         )}
       </Center>
 
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Подтверждение удаления
+              {t('inventoryPage.elementsTab.deleteDialog.title')}
             </AlertDialogHeader>
             <AlertDialogBody>
-              Вы уверены, что хотите удалить {itemIdsToDelete.length} элемент(а)? Это действие необратимо.
+              {t('inventoryPage.elementsTab.deleteDialog.body', { count: itemIdsToDelete.length })}
             </AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose} isDisabled={isActionLoading}>
-                Отмена
+                {t('inventoryPage.elementsTab.deleteDialog.cancel')}
               </Button>
               <Button colorScheme="red" onClick={handleDelete} ml={3} isLoading={isActionLoading}>
-                Удалить
+                {t('inventoryPage.elementsTab.deleteDialog.confirm')}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
