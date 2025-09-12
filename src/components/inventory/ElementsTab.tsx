@@ -1,15 +1,15 @@
 import {
   Box, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Spinner, Center,
-  useColorModeValue, Text, Checkbox, Flex, Button, Spacer, Menu, MenuButton,
-  MenuList, MenuItem, IconButton, useToast, AlertDialog, AlertDialogBody,
+  useColorModeValue, Text, Checkbox, Flex, Button, Spacer, useToast, AlertDialog, AlertDialogBody,
   AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useDisclosure,
   SkeletonText,
   VStack,
   Icon,
   Heading,
-  Tooltip
+  Tooltip,
+  useBreakpointValue
 } from '@chakra-ui/react';
-import { AddIcon, ChevronDownIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import type { CustomFieldDefinition, InventoryItem } from '../../types/inventory';
@@ -17,6 +17,7 @@ import { useInView } from 'react-intersection-observer';
 import { useInventory } from '../../hooks/useInventory';
 import { useNavigate } from 'react-router-dom';
 import { FiInbox } from 'react-icons/fi';
+import ItemCard from './ItemCardElementsTab';
 
 interface ElementsTabProps {
   inventoryId: string;
@@ -45,14 +46,16 @@ const TableSkeleton = () => (
 
 const EmptyState = ({ onAddItem }: { onAddItem: () => void }) => {
   const { t } = useTranslation('global');
+
+  const emptyStateBg = useColorModeValue('gray.50', 'gray.700');
+  
   return (
-    <Center p={10} borderWidth="2px" borderStyle="dashed" borderRadius="md" bg={useColorModeValue('gray.50', 'gray.700')}>
-      <VStack spacing={4}>
+    <Center p={10} borderWidth="2px" borderStyle="dashed" borderRadius="lg" bg={emptyStateBg}>
+      <VStack spacing={4} w="100%">
         <Icon as={FiInbox} boxSize={12} color="gray.400" />
-        <Heading as="h3" size="md">{t('inventoryPage.elementsTab.empty.title')}</Heading>
-        <Text color="gray.500">{t('inventoryPage.elementsTab.empty.description')}</Text>
-        <Button 
-          leftIcon={<AddIcon />} 
+        <Heading as="h4" size="md" textAlign="center">{t('inventoryPage.elementsTab.empty.title')}</Heading>
+        <Text color="gray.500" textAlign="center">{t('inventoryPage.elementsTab.empty.description')}</Text>
+        <Button
           colorScheme="teal"
           onClick={onAddItem}
         >
@@ -84,8 +87,11 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [itemIdsToDelete, setItemIdsToDelete] = useState<string[]>([]);
 
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
   const selectedBg = useColorModeValue('teal.50', 'teal.900');
+  const bgColorForButtonAll = useColorModeValue('gray.50', 'gray.700');
 
   const fetchItems = useCallback(async (pageNum: number, refresh = false) => {
     if (isListLoading && !refresh) return;
@@ -101,6 +107,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
         description: (error as Error).message,
         status: 'error',
         isClosable: true,
+        duration: 2000,
       });
     } finally {
       setIsListLoading(false);
@@ -149,8 +156,9 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
       await deleteItems({ itemIds: itemIdsToDelete }, inventoryId);
       toast({
         title: "Элементы успешно удалены",
-        status: "success",
+        status: "info",
         isClosable: true,
+        duration: 2000,
       });
       fetchItems(1, true);
       setSelectedItems([]);
@@ -160,6 +168,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
         description: (error as Error).message,
         status: "error",
         isClosable: true,
+        duration: 2000,
       });
     } finally {
       setIsActionLoading(false);
@@ -182,26 +191,139 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
     return <EmptyState onAddItem={handleAddItemClick} />;
   }
 
+  const renderDesktopView = () => (
+    <TableContainer>
+      <Table variant="simple">
+        <Thead>
+          <Tr>
+            {canEdit && (
+              <Th width="1%" paddingRight={2}>
+                <Checkbox
+                  colorScheme="teal"
+                  isChecked={isAllSelected}
+                  isIndeterminate={isIndeterminate}
+                  onChange={handleSelectAll}
+                  isDisabled={isActionLoading || items.length === 0}
+                />
+              </Th>
+            )}
+            <Th>{t('inventoryPage.elementsTab.table.header.customId')}</Th>
+            {customFields.map((field) => (<Th key={field.id}>{field.name}</Th>))}
+            <Th>{t('inventoryPage.elementsTab.table.header.createdAt')}</Th>
+            <Th>{t('inventoryPage.elementsTab.table.header.updatedBy')}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {items.map((item) => (
+            <Tr
+              cursor='pointer'
+              key={item.id}
+              _hover={{ bg: hoverBg }}
+              bg={selectedItems.includes(item.id) ? selectedBg : 'transparent'}
+              opacity={isActionLoading ? 0.6 : 1}
+              transition="background-color 0.2s, opacity 0.2s"
+            >
+              {canEdit && (
+                <Td paddingRight={2}>
+                  <Checkbox
+                    colorScheme="teal"
+                    isChecked={selectedItems.includes(item.id)}
+                    onChange={(e) => handleSelectItem(item.id, e.target.checked)}
+                    isDisabled={isActionLoading}
+                  />
+                </Td>
+              )}
+              <Td>
+                <Tooltip label={item.customId} placement="top" >
+                  <Text noOfLines={1} maxW='130px'>
+                    {item.customId}
+                  </Text>
+                </Tooltip>
+              </Td>
+              {customFields.map((field) => {
+                const cellValue = String(item.customFields.find(cf => cf.fieldId === field.id)?.value ?? '—');
+                return (
+                  <Td key={`${item.id}-${field.id}`} maxW="180px">
+                    <Text noOfLines={1} >
+                      {cellValue}
+                    </Text>
+                  </Td>
+                );
+              })}
+              <Td>{formatDate(item.createdAt.toString())}</Td>
+              <Td maxW="150px">
+                <Tooltip label={item.userUpdate.userName} placement="top" >
+                  <Text noOfLines={1}>
+                    {item.userUpdate.userName}
+                  </Text>
+                </Tooltip>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </TableContainer>
+  );
+
+  const renderMobileView = () => (
+    <VStack spacing={4} align="stretch">
+      {canEdit && items.length > 0 && (
+        <Flex
+          p={3}
+          borderWidth="1px"
+          borderRadius="md"
+          justify="space-between"
+          align="center"
+          bg={bgColorForButtonAll}
+        >
+          <Checkbox
+            colorScheme="teal"
+            isChecked={isAllSelected}
+            isIndeterminate={isIndeterminate}
+            onChange={handleSelectAll}
+            isDisabled={isActionLoading || items.length === 0}
+          >
+          {t('inventoryPage.elementsTab.actions.selectAll')}
+          </Checkbox>
+          <Text fontSize="sm" color="gray.500">
+            {t('inventoryPage.elementsTab.actions.selected', { count: selectedItems.length })}
+          </Text>
+        </Flex>
+      )}
+      {items.map(item => (
+        <ItemCard
+          key={item.id}
+          item={item}
+          customFields={customFields}
+          isSelected={selectedItems.includes(item.id)}
+          onSelectItem={handleSelectItem}
+          isActionLoading={isActionLoading}
+        />
+      ))}
+    </VStack>
+  );
+
   return (
     <Box>
-      
       {canEdit && (
-        <Flex mb={4} gap={4} wrap="wrap">
-          <Button 
-              leftIcon={<AddIcon />} 
-              colorScheme="teal"
-              onClick={handleAddItemClick}
-              isDisabled={isActionLoading}
-            >
-              {t('inventoryPage.elementsTab.actions.addItem')}
-            </Button>
+        <Flex mb={6} gap={4} direction={{ base: 'column', sm: 'row' }}>
+          <Button
+            leftIcon={<AddIcon />}
+            colorScheme="teal"
+            onClick={handleAddItemClick}
+            isDisabled={isActionLoading}
+            width={{ base: '100%', sm: 'auto' }}
+          >
+            {t('inventoryPage.elementsTab.actions.addItem')}
+          </Button>
           <Spacer />
           {selectedItems.length > 0 && (
-            <Button 
-              leftIcon={<DeleteIcon />} 
+            <Button
+              leftIcon={<DeleteIcon />}
               colorScheme="red"
               onClick={() => confirmDelete(selectedItems)}
               isLoading={isActionLoading}
+              width={{ base: '100%', sm: 'auto' }}
             >
               {t('inventoryPage.elementsTab.actions.deleteSelected', { count: selectedItems.length })}
             </Button>
@@ -209,78 +331,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
         </Flex>
       )}
 
-      <TableContainer>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              {canEdit && (
-                <Th width="1%" paddingRight={2}>
-                  <Checkbox
-                    colorScheme="teal"
-                    isChecked={isAllSelected}
-                    isIndeterminate={isIndeterminate}
-                    onChange={handleSelectAll}
-                    isDisabled={isActionLoading || items.length === 0}
-                  />
-                </Th>
-              )}
-              <Th>{t('inventoryPage.elementsTab.table.header.customId')}</Th>
-              {customFields.map((field) => ( <Th key={field.id}>{field.name}</Th> ))}
-              <Th>{t('inventoryPage.elementsTab.table.header.createdAt')}</Th>
-              <Th>{t('inventoryPage.elementsTab.table.header.updatedBy')}</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {items.map((item) => (
-              <Tr 
-                cursor='pointer'
-                key={item.id}  
-                _hover={{ bg: hoverBg }}
-                bg={selectedItems.includes(item.id) ? selectedBg : 'transparent'}
-                opacity={isActionLoading ? 0.6 : 1}
-                transition="background-color 0.2s, opacity 0.2s"
-              >
-                {canEdit && (
-                  <Td paddingRight={2}>
-                    <Checkbox
-                      colorScheme="teal"
-                      isChecked={selectedItems.includes(item.id)}
-                      onChange={(e) => handleSelectItem(item.id, e.target.checked)}
-                      isDisabled={isActionLoading}
-                    />
-                  </Td>
-                )}
-                <Td>
-                  <Tooltip label={item.customId} placement="top" >
-                    <Text noOfLines={1} maxW='130px'>
-                      {item.customId}
-                    </Text>
-                  </Tooltip>
-                </Td>
-                {customFields.map((field) => {
-                  const cellValue = String(item.customFields.find(cf => cf.fieldId === field.id)?.value ?? '—');
-                  
-                  return (
-                    <Td key={`${item.id}-${field.id}`} maxW="180px">
-                      <Text noOfLines={1} >
-                        {cellValue}
-                      </Text>
-                    </Td>
-                  );
-                })}
-                <Td>{formatDate(item.createdAt.toString())}</Td>
-                <Td maxW="150px">
-                  <Tooltip label={item.userUpdate.userName} placement="top" >
-                    <Text noOfLines={1}>
-                      {item.userUpdate.userName}
-                    </Text>
-                  </Tooltip>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      {isMobile ? renderMobileView() : renderDesktopView()}
 
       <Center ref={ref} mt={4} h="40px">
         {isListLoading && items.length > 0 && <Spinner color="teal.500" />}

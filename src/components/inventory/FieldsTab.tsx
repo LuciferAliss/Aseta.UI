@@ -35,7 +35,7 @@ import { FiPlusSquare } from 'react-icons/fi';
 interface FieldsTabProps {
   customFields: CustomFieldDefinition[];
   inventoryId: string;
-  onFieldsUpdate: () => void; 
+  onFieldsUpdate: () => void;
   canEdit: boolean;
 }
 
@@ -45,8 +45,8 @@ const EmptyFieldsState = () => {
     <Center p={10} borderWidth="2px" borderStyle="dashed" borderRadius="lg" bg={useColorModeValue('gray.50', 'gray.800')}>
       <VStack spacing={4}>
         <Icon as={FiPlusSquare} boxSize={12} color="gray.400" />
-        <Heading as="h4" size="md" textAlign="center">{t('fieldsTab.empty.title')}</Heading>
-        <Text color="gray.500" textAlign="center">{t('fieldsTab.empty.description')}</Text>
+        <Heading as="h4" size="md" textAlign="center">{t('inventoryPage.fieldsTab.empty.title')}</Heading>
+        <Text color="gray.500" textAlign="center">{t('inventoryPage.fieldsTab.empty.description')}</Text>
       </VStack>
     </Center>
   );
@@ -54,13 +54,14 @@ const EmptyFieldsState = () => {
 
 const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: FieldsTabProps) => {
   const [isSaving, setIsSaving] = useState(false);
-  const { t } =   useTranslation('global');
+  const { t } = useTranslation('global');
   const toast = useToast();
 
   const { updateCustomFields } = useInventory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   
+  const [fieldIdToDelete, setFieldIdToDelete] = useState<string | null>(null);
   const [newFieldType, setNewFieldType] = useState('0');
   const [newFieldName, setNewFieldName] = useState('');
 
@@ -95,7 +96,7 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
     const existingFieldsForRequest = customFields.map(field => ({
       id: field.id,
       name: field.name,
-      type: field.type, 
+      type: field.type,
     }));
 
     const newFieldForRequest: CustomFieldDefinition = {
@@ -122,8 +123,8 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
 
       setNewFieldName('');
       setNewFieldType('0');
-      onFieldsUpdate(); 
-      
+      onFieldsUpdate();
+
     } catch (error) {
       toast({
         title: t('createPage.toast.errorTitle'),
@@ -137,7 +138,14 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
     }
   };
 
-  const handleDeleteField = async (fieldIdToDelete: string) => {
+  const openDeleteConfirmation = (fieldId: string) => {
+    setFieldIdToDelete(fieldId);
+    onOpen();
+  };
+
+  const handleDeleteField = async () => {
+    if (!fieldIdToDelete) return;
+
     const remainingFields = customFields.filter(field => field.id !== fieldIdToDelete);
 
     const fieldsForRequest = remainingFields.map(field => ({
@@ -154,7 +162,7 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
     setIsSaving(true);
     try {
       await updateCustomFields(payload);
-      
+
       toast({
         title: t('inventoryPage.fieldsTab.toast.successDeleteTitle'),
         status: 'info',
@@ -164,7 +172,7 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
 
       onFieldsUpdate();
     } catch (error) {
-        toast({
+      toast({
         title: t('createPage.toast.errorTitle'),
         description: (error as Error).message,
         status: 'error',
@@ -173,11 +181,13 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
       });
     } finally {
       setIsSaving(false);
+      onClose();
+      setFieldIdToDelete(null);
     }
   };
 
   if (!customFields) {
-      return <Center w='100%'><Spinner size="xl" /></Center>;
+    return <Center w='100%'><Spinner size="xl" /></Center>;
   }
 
   return (
@@ -213,8 +223,8 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
                       </Tooltip>
                     )}
                   </Flex>
-                  <Select 
-                    value={newFieldType} 
+                  <Select
+                    value={newFieldType}
                     onChange={(e) => setNewFieldType(e.target.value)}
                     bg={inputBgColor}
                     focusBorderColor={focusBorderColor}
@@ -228,13 +238,13 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
                     ))}
                   </Select>
                 </FormControl>
-                
+
                 <Button
                   onClick={handleAddField}
                   isLoading={isSaving}
-                  loadingText={t('inventoryPage.fieldsTab.actions.saving')} 
+                  loadingText={t('inventoryPage.fieldsTab.actions.saving')}
                   colorScheme="teal"
-                  minW={{ base: "auto", md: "120px" }} 
+                  minW={{ base: "auto", md: "120px" }}
                 >
                   {t('inventoryPage.fieldsTab.addField')}
                 </Button>
@@ -248,22 +258,22 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
             {t('inventoryPage.fieldsTab.createdFields')}
           </Heading>
           {customFields.length > 0 ? (
-            <VStack 
-              spacing={4} 
+            <VStack
+              spacing={4}
               align="stretch"
-              p={{ base: 4, md: 0 }} 
+              p={{ base: 4, md: 0 }}
               bg={{ base: listBg, md: 'transparent' }}
               borderRadius={{ base: 'lg', md: 'none' }}
             >
               {customFields.map(field => (
-                <Flex 
-                  key={field.id} 
-                  p={4} 
-                  borderWidth="1px" 
-                  borderRadius="lg" 
-                  align="center" 
+                <Flex
+                  key={field.id}
+                  p={4}
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  align="center"
                   bg={{ base: cardBg, md: 'transparent' }}
-                  boxShadow={{ base: 'sm', md: 'none' }} 
+                  boxShadow={{ base: 'sm', md: 'none' }}
                   opacity={isSaving ? 0.6 : 1}
                   transition="opacity 0.2s"
                 >
@@ -276,12 +286,12 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
                   <Spacer />
                   {canEdit && (
                     <IconButton
-                      aria-label={t('fieldsTab.deleteAriaLabel', { fieldName: field.name })} 
+                      aria-label={t('inventoryPage.fieldsTab.deleteAriaLabel', { fieldName: field.name })}
                       icon={<DeleteIcon />}
                       variant="ghost"
                       colorScheme="red"
                       size="sm"
-                      onClick={() => handleDeleteField(field.id)}
+                      onClick={() => openDeleteConfirmation(field.id)}
                       isDisabled={isSaving}
                     />
                   )}
@@ -289,7 +299,7 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
               ))}
             </VStack>
           ) : (
-             <EmptyFieldsState />
+            <EmptyFieldsState />
           )}
         </Box>
       </VStack>
@@ -298,17 +308,17 @@ const FieldsTab = ({ customFields, inventoryId, onFieldsUpdate, canEdit }: Field
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {t('inventoryPage.elementsTab.deleteDialog.title')}
+              {t('inventoryPage.fieldsTab.deleteDialog.title')}
             </AlertDialogHeader>
             <AlertDialogBody>
-              {t('inventoryPage.elementsTab.deleteDialog.body', { count: itemIdsToDelete.length })}
+              {t('inventoryPage.fieldsTab.deleteDialog.body')}
             </AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose} isDisabled={isSaving}>
-                {t('inventoryPage.elementsTab.deleteDialog.cancel')}
+                {t('inventoryPage.fieldsTab.deleteDialog.cancel')}
               </Button>
               <Button colorScheme="red" onClick={handleDeleteField} ml={3} isLoading={isSaving}>
-                {t('inventoryPage.elementsTab.deleteDialog.confirm')}
+                {t('inventoryPage.fieldsTab.deleteDialog.confirm')}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

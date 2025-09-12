@@ -151,11 +151,15 @@
         }
       },
       "actions": {
-        "addFirstItem": "Add first item",
         "addItem": "Add Item",
+        "addFirstItem": "Add first item",
         "deleteSelected": "Delete ({{count}})",
-        "editItem": "Edit",
-        "deleteItem": "Delete"
+        "deleteSelected_one": "Delete (1)",
+        "deleteSelected_other": "Delete ({{count}})",
+        "selectAll": "Select All",
+        "selected": "{{count}} selected",
+        "selected_one": "1 selected",
+        "selected_other": "{{count}} selected"
       },
       "tooltips": {
         "addItem": "Add a new item to this inventory",
@@ -188,9 +192,22 @@
       "noFields": "No custom fields have been added yet.",
       "deleteAriaLabel": "Delete field {{fieldName}}",
       "nameRequired": "Field name is required.",
+      "actions" : {
+        "saving" : "Saving..."
+      },
       "toast": {
         "successTitle": "Field added successfully!",
         "successDeleteTitle": "Field deleted."
+      },
+      "deleteDialog": {
+        "title" : "Delete Field",
+        "body" : "Are you sure you want to delete this field? This action cannot be undone.",
+        "cancel" : "Cancel",
+        "confirm" : "Delete"
+      },
+      "empty" : {
+        "title": "This inventory has no custom fields",
+        "description": "Get started by adding your first custom field. You can define custom fields first to structure your data."
       }
     },
     "fields": {

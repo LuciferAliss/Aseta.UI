@@ -143,8 +143,14 @@
         "addFirstItem": "Добавить первый элемент",
         "addItem": "Добавить элемент",
         "deleteSelected": "Удалить ({{count}})",
-        "editItem": "Изменить",
-        "deleteItem": "Удалить"
+        "deleteSelected_one": "Удалить ({{count}})",
+        "deleteSelected_few": "Удалить ({{count}})",
+        "deleteSelected_many": "Удалить ({{count}})",
+        "selectAll": "Выбрать все",
+        "selected": "{{count}} выбрано",
+        "selected_one": "{{count}} выбран",
+        "selected_few": "{{count}} выбрано",
+        "selected_many": "{{count}} выбрано"
       },
       "tooltips": {
         "addItem": "Добавить новый элемент в этот инвентарь",
@@ -177,9 +183,22 @@
       "noFields": "Пользовательские поля еще не добавлены.",
       "deleteAriaLabel": "Удалить поле {{fieldName}}",
       "nameRequired": "Название поля обязательно для заполнения.",
+      "actions" : {
+        "saving" : "Сохранение..."
+      },
       "toast": {
         "successTitle": "Поле успешно добавлено!",
         "successDeleteTitle": "Поле удалено."
+      },
+      "deleteDialog": {
+        "title" : "Удалить поле",
+        "body" : "Вы уверены, что хотите удалить это поле? Это действие нельзя будет отменить.",
+        "cancel" : "Отмена",
+        "confirm" : "Удалить"
+      },
+      "empty" : {
+        "title": "Пользовательские поля еще не добавлены.",
+        "description": "Начните с добавления первого поля."
       }
     },
     "fields": {
