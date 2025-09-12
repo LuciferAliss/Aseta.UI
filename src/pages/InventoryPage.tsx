@@ -47,7 +47,7 @@ const InventoryPage = () => {
   const { getInventory, getUserRoleInventory } = useInventory();
   const navigator = useNavigate();
 
-  const [inventory, setInventory] = useState < Inventory > ();
+  const [inventory, setInventory] = useState<Inventory>();
   const [isLoading, setIsLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
   const [hasEditorAccess, setHasEditorAccess] = useState(false);
@@ -56,17 +56,7 @@ const InventoryPage = () => {
   const dividerBorderColor = useColorModeValue('gray.300', 'gray.600');
   const createdByColor = useColorModeValue('teal.600', 'teal.300');
 
-  // Hook to determine if the screen is mobile
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const tabLabels = [
-    t('inventoryPage.tabs.elements'),
-    t('inventoryPage.tabs.fields'),
-    t('inventoryPage.tabs.settings'),
-    t('inventoryPage.tabs.customId'),
-    t('inventoryPage.tabs.access'),
-    t('inventoryPage.tabs.statistics'),
-  ];
+  const isMobile = useBreakpointValue( { base: true, md: false } );
 
   const fetchInventory = useCallback(async () => {
     if (!id) return;
@@ -92,6 +82,60 @@ const InventoryPage = () => {
     }
     initialFetch();
   }, [id, fetchInventory]);
+
+  const allTabs = [
+    {
+      key: 'elements',
+      label: t('inventoryPage.tabs.elements'),
+      hasAccess: true,
+      component: inventory && (
+        <ElementsTab
+          inventoryId={inventory.id}
+          customFields={inventory.customFieldsDefinition}
+          canEdit={hasEditorAccess}
+        />
+      ),
+    },
+    {
+      key: 'fields',
+      label: t('inventoryPage.tabs.fields'),
+      hasAccess: hasOwnerAccess, 
+      component: inventory && hasOwnerAccess && (
+        <FieldsTab
+          customFields={inventory.customFieldsDefinition}
+          inventoryId={inventory.id}
+          onFieldsUpdate={fetchInventory}
+          canEdit={hasOwnerAccess} 
+        />
+      ),
+    },
+    {
+      key: 'customId',
+      label: t('inventoryPage.tabs.customId'),
+      hasAccess: hasOwnerAccess,
+      component: <Text>Custom ID Tab (в разработке)</Text>,
+    },
+    {
+      key: 'settings',
+      label: t('inventoryPage.tabs.settings'),
+      hasAccess: true,
+      component: inventory && <SettingsTab inventory={inventory}/>,
+    },
+    {
+      key: 'access',
+      label: t('inventoryPage.tabs.access'),
+      hasAccess: hasOwnerAccess, 
+      component: <Text>Access Tab (в разработке)</Text>, 
+    },
+    {
+      key: 'statistics',
+      label: t('inventoryPage.tabs.statistics'),
+      hasAccess: true,
+      component: <Text>Statistics Tab (в разработке)</Text>, 
+    },
+  ];
+
+  const accessibleTabs = allTabs.filter(tab => tab.hasAccess);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(i18n.language, {
@@ -187,64 +231,34 @@ const InventoryPage = () => {
         </Flex>
 
         <Tabs colorScheme="teal" isLazy onChange={(index) => setTabIndex(index)} index={tabIndex}>
-          {/* Conditional rendering for Tabs vs. Menu */}
           {isMobile ? (
             <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w="100%" mb={4}>
-                {tabLabels[tabIndex]}
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w="100%" mb={4} >
+                {/* Используем accessibleTabs для отображения текущей вкладки. Добавим ?. для безопасности */}
+                {accessibleTabs[tabIndex]?.label}
               </MenuButton>
               <MenuList>
-                {tabLabels.map((label, index) => (
-                  <MenuItem key={label} onClick={() => setTabIndex(index)}>
-                    {label}
+                {accessibleTabs.map((tab, index) => (
+                  <MenuItem key={tab.key} onClick={() => setTabIndex(index)}>
+                    {tab.label}
                   </MenuItem>
                 ))}
               </MenuList>
             </Menu>
           ) : (
             <TabList>
-              {tabLabels.map(label => (
-                <Tab key={label}>{label}</Tab>
+              {accessibleTabs.map(tab => (
+                <Tab key={tab.key}>{tab.label}</Tab>
               ))}
             </TabList>
           )}
 
-
           <TabPanels>
-            <TabPanel>
-              {inventory && (
-                <ElementsTab
-                  inventoryId={inventory.id}
-                  customFields={inventory.customFieldsDefinition}
-                  canEdit={hasEditorAccess}
-                />
-              )}
-            </TabPanel>
-            <TabPanel>
-              {inventory && (
-                <FieldsTab customFields={inventory.customFieldsDefinition}
-                  inventoryId={inventory.id}
-                  onFieldsUpdate={fetchInventory}
-                  canEdit={hasEditorAccess} />
-              )}
-            </TabPanel>
-            <TabPanel>
-              <SettingsTab inventory={inventory} />
-            </TabPanel>
-            {/* {isOwner && (
-              <TabPanel>
-                <CustomIdTab />
+            {accessibleTabs.map(tab => (
+              <TabPanel key={tab.key}>
+                {tab.component}
               </TabPanel>
-            )}
-            {isOwner && (
-              <TabPanel>
-                <AccessTab />
-              </TabPanel>
-            )}
-            
-            <TabPanel>
-              <StatisticsTab inventory={inventory} />
-            </TabPanel> */}
+            ))}
           </TabPanels>
         </Tabs>
       </Container>

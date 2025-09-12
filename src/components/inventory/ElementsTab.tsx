@@ -275,7 +275,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
           justify="space-between"
           align="center"
           bg={bgColorForButtonAll}
-        >
+        > 
           <Checkbox
             colorScheme="teal"
             isChecked={isAllSelected}
@@ -298,6 +298,7 @@ const ElementsTab = ({ inventoryId, customFields, canEdit }: ElementsTabProps) =
           isSelected={selectedItems.includes(item.id)}
           onSelectItem={handleSelectItem}
           isActionLoading={isActionLoading}
+          canEdit={canEdit}
         />
       ))}
     </VStack>

@@ -11,7 +11,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import LanguageChangeButton from '../components/LanguageChangeButton';
@@ -38,10 +38,11 @@ export default function Header() {
   const { isAuthenticated, logoutAuth } = useAuth();
   const [ t ] = useTranslation("global");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     await logoutAuth();
-    navigate('/');
+    navigate(0); 
   };
 
   return (
@@ -77,7 +78,7 @@ export default function Header() {
                 </Button>
               ) : (
                 <>
-                  <Button as={RouterLink} to="/login" colorScheme="teal" variant="solid" size="sm">
+                  <Button as={RouterLink} to="/login" state={{ from: location }} colorScheme="teal" variant="solid" size="sm">
                     {t('header.login')}
                   </Button>
                 </>

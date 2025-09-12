@@ -8,9 +8,10 @@ interface ItemCardProps {
   isSelected: boolean;
   onSelectItem: (id: string, isChecked: boolean) => void;
   isActionLoading: boolean;
+  canEdit: boolean;
 }
 
-const ItemCard = ({ item, customFields, isSelected, onSelectItem, isActionLoading }: ItemCardProps) => {
+const ItemCard = ({ item, customFields, isSelected, onSelectItem, isActionLoading, canEdit }: ItemCardProps) => {
   const { t, i18n } = useTranslation('global');
   const cardBg = useColorModeValue('white', 'gray.800');
   const hoverBg = useColorModeValue('gray.50', 'gray.700');
@@ -35,14 +36,16 @@ const ItemCard = ({ item, customFields, isSelected, onSelectItem, isActionLoadin
       align="flex-start"
       gap={4}
     >
-      <Checkbox
-        colorScheme="teal"
-        isChecked={isSelected}
-        onChange={(e) => onSelectItem(item.id, e.target.checked)}
-        isDisabled={isActionLoading}
-        mt={1}
-        aria-label={`Select item ${item.customId}`}
-      />
+      {canEdit && (
+        <Checkbox
+          colorScheme="teal"
+          isChecked={isSelected}
+          onChange={(e) => onSelectItem(item.id, e.target.checked)}
+          isDisabled={isActionLoading}
+          mt={1}
+          aria-label={`Select item ${item.customId}`}
+        />
+      )}
       <VStack align="stretch" spacing={3} w="100%">
         <Flex justify="space-between" align="center" w="100%">
           <Tooltip label={item.customId}>

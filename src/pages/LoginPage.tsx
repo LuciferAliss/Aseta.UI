@@ -12,7 +12,7 @@ import {
   useColorModeValue,
   Checkbox,
 } from '@chakra-ui/react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -23,6 +23,7 @@ import Header from '../components/Header';
 const LoginPage = () => {
   const toast = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -31,6 +32,8 @@ const LoginPage = () => {
   const { loginAuth, checkAuthStatus, isLoading, isAuthenticated } = useAuth();
   
   const [ t ] = useTranslation("global");
+
+  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e : React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +48,7 @@ const LoginPage = () => {
         duration: 2000,
         isClosable: true,
       });
-      navigate('/');
+      navigate(from, { replace: true });
     } catch (err : any) {
       if (typeof err === 'object' && err !== null && 'status' in err) {
         const error = err as HttpError;
@@ -93,7 +96,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', { replace: true });
+      navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -133,7 +136,7 @@ const LoginPage = () => {
           </Button>
           <Text>
             {t('loginPage.noAccount')}{' '}
-            <ChakraLink as={RouterLink} to="/register" color="teal.500">
+            <ChakraLink as={RouterLink} to="/register" state={{ from: location.state?.from }} color="teal.500">
               {t('loginPage.register')}
             </ChakraLink>
           </Text>

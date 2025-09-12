@@ -12,7 +12,7 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { ValidError } from '../types/auth';
@@ -23,6 +23,7 @@ import Header from '../components/Header';
 const RegisterPage = () => {
   const toast = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -72,7 +73,7 @@ const RegisterPage = () => {
         duration: 2000,
         isClosable: true,
       });
-      navigate('/login');
+      navigate('/login', { state: { from: location.state?.from } });
     } catch(err) {
       if (typeof err === 'object' && err !== null && 'status' in err) {
         const error = err as { status: number };
@@ -110,9 +111,10 @@ const RegisterPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', { replace: true });
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location.state?.from]);
 
   return (
     <VStack w={'100%'}>
@@ -152,7 +154,7 @@ const RegisterPage = () => {
           </Button>
           <Text>
             {t('registerPage.haveAccount')}{' '}
-            <ChakraLink as={RouterLink} to="/login" color="teal.500">
+            <ChakraLink as={RouterLink} to="/login" state={{ from: location.state?.from }} color="teal.500">
               {t('registerPage.login')}
             </ChakraLink>
           </Text>
