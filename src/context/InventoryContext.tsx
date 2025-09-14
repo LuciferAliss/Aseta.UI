@@ -1,5 +1,5 @@
 import { createContext, type ReactNode } from 'react';
-import type { Category, CollectionResponse, UpdateCustomFieldsRequest, CreateInventoryRequest, CreateInventoryResponse, Inventory, InventoryItem, PaginatedResult, Tag, ViewInventory, ViewPagesRequest, CreateItemRequest, UpdateItemRequest, DeleteItemsRequest } from '../types/inventory';
+import type { Category, CollectionResponse, UpdateCustomFieldsRequest, CreateInventoryRequest, CreateInventoryResponse, Inventory, InventoryItem, PaginatedResult, Tag, ViewInventory, ViewPagesRequest, CreateItemRequest, UpdateItemRequest, DeleteItemsRequest, CustomIdRulesRequest } from '../types/inventory';
 import { inventoryApi } from '../api/inventory';
 
 interface InventoryContextType {
@@ -15,11 +15,16 @@ interface InventoryContextType {
   createItem: (data: CreateItemRequest) => Promise<InventoryItem>;
   updateItem: (itemId: string, data: UpdateItemRequest) => Promise<void>;
   deleteItems: (data: DeleteItemsRequest, id : string) => Promise<void>;
+  updateCustomIdRules: (request : CustomIdRulesRequest, id : string) => Promise<void>;
 }
 
 export const InventoryContext = createContext<InventoryContextType | undefined>(undefined);
 
 export const InventoryProvider = ({ children }: { children: ReactNode }) => {
+
+  const updateCustomIdRules = async (request : CustomIdRulesRequest, id : string) => {
+    await inventoryApi.updateCustomIdRules(request, id);
+  };
 
   const createItem = async (data: CreateItemRequest) => {
     return await inventoryApi.createItem(data);
@@ -71,7 +76,7 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
   }
   
   return (
-    <InventoryContext.Provider value={{ createItem, updateItem, deleteItems,getUserRoleInventory, updateCustomFields, createInventory, getCategories, getMostPopularInventories, getLastInventories, getInventory, getTagsCloud, getItems }}>
+    <InventoryContext.Provider value={{ updateCustomIdRules, createItem, updateItem, deleteItems,getUserRoleInventory, updateCustomFields, createInventory, getCategories, getMostPopularInventories, getLastInventories, getInventory, getTagsCloud, getItems }}>
       {children}
     </InventoryContext.Provider>
   );

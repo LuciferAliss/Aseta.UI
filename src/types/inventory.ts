@@ -66,7 +66,15 @@ export interface Inventory {
   createdAt: Date;
   tags: Tag[];
   customFieldsDefinition: CustomFieldDefinition[];
+  customIdRules : CustomIdRule[]
 }
+
+export type CustomIdRule = {
+  clientSideId: string;
+  type: string;
+  order: number;
+  [key: string]: any; 
+};
 
 export interface FieldType
 {
@@ -117,4 +125,18 @@ export interface CreateInventoryResponse {
 
 export interface CollectionResponse<T> {
   collection: T[];
+}
+
+export interface CustomIdRulesRequest {
+  customIdRuleParts: CustomIdRuleRequest[]
+}
+
+export interface CustomIdRuleRequest {
+  type: string;
+  order: number;
+  format?: string;
+  text?: string;
+  padding?: number;
+  length?: number;
+  countBits?: number;
 }

@@ -39,6 +39,7 @@ import { FiTag, FiClock, FiGrid } from 'react-icons/fi';
 import ElementsTab from "../components/inventory/ElementsTab";
 import SettingsTab from "../components/inventory/SettingsTab";
 import FieldsTab from "../components/inventory/FieldsTab";
+import CustomIdTab from "../components/inventory/CustomIdTab";
 
 const InventoryPage = () => {
   const { t, i18n } = useTranslation('global');
@@ -113,7 +114,13 @@ const InventoryPage = () => {
       key: 'customId',
       label: t('inventoryPage.tabs.customId'),
       hasAccess: hasOwnerAccess,
-      component: <Text>Custom ID Tab (в разработке)</Text>,
+      component: inventory && hasOwnerAccess && (
+        <CustomIdTab 
+          inventoryId={inventory.id} 
+          initialRules={inventory?.customIdRules} 
+          onUpdate={fetchInventory} 
+        />
+      ),
     },
     {
       key: 'settings',
@@ -234,7 +241,6 @@ const InventoryPage = () => {
           {isMobile ? (
             <Menu>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w="100%" mb={4} >
-                {/* Используем accessibleTabs для отображения текущей вкладки. Добавим ?. для безопасности */}
                 {accessibleTabs[tabIndex]?.label}
               </MenuButton>
               <MenuList>

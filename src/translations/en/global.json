@@ -210,6 +210,62 @@
         "description": "Get started by adding your first custom field. You can define custom fields first to structure your data."
       }
     },
+    "customIdTab": {
+      "title": "Custom Item ID Configuration",
+      "info": {
+        "title": "How it works",
+        "description": "Drag and drop the parts below to build a unique ID format for items in this inventory. The ID will be automatically generated when a new item is created."
+      },
+      "preview": {
+        "title": "Live Preview",
+        "empty": "Add a rule to see the preview...",
+        "defaultGuid": "No rules configured. By default, a standard GUID will be used as the item ID."
+      },
+      "addRule": "Add Rule",
+      "saveChanges": "Save Changes",
+      "ruleTypes": {
+        "fixed_text": "Fixed Text",
+        "sequence": "Sequence",
+        "date": "Date/Time",
+        "guid": "GUID",
+        "random_digits_6": "6-Digit Random Number",
+        "random_digits_9": "9-Digit Random Number",
+        "random_bits_20": "20-bit Random Number",
+        "random_bits_32": "32-bit Random Number"
+      },
+      "editorHeaders": {
+        "fixed_text": "Fixed Text",
+        "sequence": "Sequence",
+        "date": "Date/Time",
+        "guid": "GUID",
+        "random_digits": "Random Digits",
+        "random_bits": "Random Number (Bits)"
+      },
+      "fields": {
+        "textValue": "Text Value",
+        "padding": "Padding (leading zeros)",
+        "dateFormat": "Date/Time Format",
+        "guidFormat": "GUID Format",
+        "digitsLength": "Length",
+        "bitCount": "Bit Count",
+        "numberFormat": "Number Format"
+      },
+      "tooltips": {
+        "textValue": "This exact text (supports Unicode) will be included in every ID.",
+        "padding": "Adds the item's sequential number (total items + 1). Padding adds leading zeros (e.g., a padding of 4 turns '12' into '0012').",
+        "dateFormat": "Uses the item's creation date and time. Format codes: yyyy (year), MM (month), dd (day), HH (hour), mm (minute), ss (second).",
+        "guidFormat": "A globally unique identifier. The format controls its appearance (with/without hyphens, braces, etc.).",
+        "digitsLength": "Generates a random number with a fixed number of digits.",
+        "bitCount": "Choose between a 20-bit (~1 million options) or 32-bit (~4 billion options) random number.",
+        "numberFormat": "Controls how the number is displayed. Use 'X' for hexadecimal (e.g., 'A1B2'), 'D' or leave empty for decimal."
+      },
+      "toast": {
+        "successTitle": "Custom ID Saved",
+        "successDescription": "The new ID format has been saved successfully.",
+        "errorTitle": "Save Failed",
+        "errorDescription": "Could not save the custom ID format. Please try again."
+      }
+    },
     "fields": {
       "text": "Text",
       "textDescription": "For short text, like a name or title.",
