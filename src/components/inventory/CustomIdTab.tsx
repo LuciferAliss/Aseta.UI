@@ -21,13 +21,13 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import {
   Box, Button, VStack, HStack, Heading, Text, IconButton, Menu, MenuButton, MenuList, MenuItem,
-  FormControl, FormLabel, Input, Select, useToast, Icon, useColorModeValue, NumberInput,
-  NumberInputField, Alert, AlertIcon, AlertTitle, AlertDescription, Tooltip,
+  FormControl, FormLabel, Input, Select, useToast, Icon, useColorModeValue,
+  Alert, AlertIcon, AlertTitle, AlertDescription, Tooltip, useNumberInput,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { AddIcon, DeleteIcon, DragHandleIcon, InfoIcon } from '@chakra-ui/icons';
-import type { CustomIdRule, CustomIdRulesRequest } from '../../types/inventory';
+import type { CustomIdRule, CustomIdRuleApiRequest, CustomIdRulesRequest } from '../../types/inventory';
 
-// Вспомогательный компонент для добавления Tooltip к FormLabel
 const LabelWithTooltip: React.FC<{ label: string; tooltipText: string }> = ({ label, tooltipText }) => (
   <HStack spacing={1} align="center">
     <FormLabel mb="0">{label}</FormLabel>
@@ -40,12 +40,14 @@ const LabelWithTooltip: React.FC<{ label: string; tooltipText: string }> = ({ la
 interface CustomIdTabProps {
   inventoryId: string;
   initialRules: CustomIdRule[];
+  initialSeparator: string;
   onUpdate: () => void;
 }
 
 const RuleEditor: React.FC<{ rule: CustomIdRule; onChange: (updatedRule: CustomIdRule) => void; }> = ({ rule, onChange }) => {
   const { t } = useTranslation('global');
   const bgColor = useColorModeValue('gray.50', 'gray.700');
+  const focusBorderColor = useColorModeValue('teal.600', 'teal.400');
 
   const handleFieldChange = (field: string, value: string | number) => {
     onChange({ ...rule, [field]: value });
@@ -60,31 +62,45 @@ const RuleEditor: React.FC<{ rule: CustomIdRule; onChange: (updatedRule: CustomI
   const renderRuleFields = () => {
     switch (rule.type) {
       case 'fixed_text':
+        const isInvalid = !rule.text || rule.text.trim() === '';
         return (
-          <FormControl>
+          <FormControl isInvalid={isInvalid}> 
             <LabelWithTooltip
               label={t('inventoryPage.customIdTab.fields.textValue')}
               tooltipText={t('inventoryPage.customIdTab.tooltips.textValue')}
             />
             <Input
+              mt={2}
+              focusBorderColor={focusBorderColor}
               value={rule.text || ''}
               onChange={(e) => handleFieldChange('text', e.target.value)}
             />
+            {isInvalid && (
+              <FormErrorMessage>
+                {t('inventoryPage.customIdTab.errors.fieldRequired')}
+              </FormErrorMessage>
+            )}
           </FormControl>
         );
       case 'sequence':
+        const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
+          useNumberInput({
+            defaultValue: 1, min: 1, max: 15,
+            value: rule.padding || 1,
+            onChange: (_, valueAsNumber) => handleFieldChange('padding', valueAsNumber || 1),
+          });
+
         return (
           <FormControl>
-            <LabelWithTooltip
+            <LabelWithTooltip 
               label={t('inventoryPage.customIdTab.fields.padding')}
               tooltipText={t('inventoryPage.customIdTab.tooltips.padding')}
             />
-            <NumberInput
-              min={1} max={10} value={rule.padding || 1}
-              onChange={(_, valueAsNumber) => handleFieldChange('padding', valueAsNumber || 1)}
-            >
-              <NumberInputField />
-            </NumberInput>
+            <HStack mt={2}>
+              <Button {...getDecrementButtonProps()} >-</Button>
+              <Input {...getInputProps()} isReadOnly focusBorderColor={focusBorderColor} />
+              <Button {...getIncrementButtonProps()} >+</Button>
+            </HStack>
           </FormControl>
         );
       case 'date':
@@ -94,11 +110,19 @@ const RuleEditor: React.FC<{ rule: CustomIdRule; onChange: (updatedRule: CustomI
               label={t('inventoryPage.customIdTab.fields.dateFormat')}
               tooltipText={t('inventoryPage.customIdTab.tooltips.dateFormat')}
             />
-            <Input
-              placeholder="e.g., yyyy-MM-dd HH:mm:ss"
-              value={rule.format || ''}
+            <Select
+              mt={2} 
+              focusBorderColor={focusBorderColor}
+              value={rule.format || 'yyyyMMdd'} 
               onChange={(e) => handleFieldChange('format', e.target.value)}
-            />
+            >
+              <option value="yyyyMMdd">{t('inventoryPage.customIdTab.dateFormats.yyyyMMdd')}</option>
+              <option value="yyyy-MM-dd">{t('inventoryPage.customIdTab.dateFormats.yyyy_MM_dd_hyphen')}</option>
+              <option value="ddMMyy">{t('inventoryPage.customIdTab.dateFormats.ddMMyy')}</option>
+              <option value="yyyyMMddHHmmss">{t('inventoryPage.customIdTab.dateFormats.yyyyMMddHHmmss')}</option>
+              <option value="yyyy">{t('inventoryPage.customIdTab.dateFormats.year_only')}</option>
+              <option value="MM">{t('inventoryPage.customIdTab.dateFormats.month_only')}</option>
+            </Select>
           </FormControl>
         );
       case 'guid':
@@ -109,45 +133,33 @@ const RuleEditor: React.FC<{ rule: CustomIdRule; onChange: (updatedRule: CustomI
               tooltipText={t('inventoryPage.customIdTab.tooltips.guidFormat')}
             />
             <Select
+              mt={2} 
+              focusBorderColor={focusBorderColor}
               value={rule.format || 'D'}
               onChange={(e) => handleFieldChange('format', e.target.value)}
             >
-              <option value="D">32 digits separated by hyphens</option>
-              <option value="N">32 digits</option>
-              <option value="B">Hyphens, enclosed in braces</option>
-              <option value="P">Hyphens, enclosed in parentheses</option>
+              <option value="D">{t('inventoryPage.customIdTab.guidFormats.D')}</option>
+              <option value="N">{t('inventoryPage.customIdTab.guidFormats.N')}</option>
+              <option value="X">{t('inventoryPage.customIdTab.guidFormats.X')}</option>
             </Select>
           </FormControl>
         );
       case 'random_digits':
         return (
-          <FormControl>
-            <LabelWithTooltip
-              label={t('inventoryPage.customIdTab.fields.digitsLength')}
-              tooltipText={t('inventoryPage.customIdTab.tooltips.digitsLength')}
-            />
-            <NumberInput
-              min={1} max={15} value={rule.length || 6} // Увеличил max для гибкости
-              onChange={(_, valueAsNumber) => handleFieldChange('length', valueAsNumber || 1)}
-            >
-              <NumberInputField />
-            </NumberInput>
-          </FormControl>
-        );
-      case 'random_bits':
-        return (
-          <VStack align="stretch">
+          <VStack align="stretch" spacing={4}>
             <FormControl>
               <LabelWithTooltip
-                label={t('inventoryPage.customIdTab.fields.bitCount')}
-                tooltipText={t('inventoryPage.customIdTab.tooltips.bitCount')}
+                label={t('inventoryPage.customIdTab.fields.digitCount')}
+                tooltipText={t('inventoryPage.customIdTab.tooltips.digitCount')}
               />
               <Select
-                value={rule.countBits || 20}
-                onChange={(e) => handleFieldChange('countBits', parseInt(e.target.value))}
+                mt={2} 
+                focusBorderColor={focusBorderColor}
+                value={rule.length || 6}
+                onChange={(e) => handleFieldChange('length', parseInt(e.target.value))}
               >
-                <option value={20}>20-bit</option>
-                <option value={32}>32-bit</option>
+                <option value={6}>{t('inventoryPage.customIdTab.digitCounts.6')}</option>
+                <option value={9}>{t('inventoryPage.customIdTab.digitCounts.9')}</option>
               </Select>
             </FormControl>
             <FormControl>
@@ -155,16 +167,55 @@ const RuleEditor: React.FC<{ rule: CustomIdRule; onChange: (updatedRule: CustomI
                 label={t('inventoryPage.customIdTab.fields.numberFormat')}
                 tooltipText={t('inventoryPage.customIdTab.tooltips.numberFormat')}
               />
-              <Input
-                placeholder="e.g., X for Hex"
-                value={rule.format || ''}
+              <Select
+                mt={2} 
+                focusBorderColor={focusBorderColor}
+                value={rule.format || 'D'} 
                 onChange={(e) => handleFieldChange('format', e.target.value)}
+              >
+                <option value="D">{t('inventoryPage.customIdTab.numberFormats.dec')}</option>
+                <option value="X">{t('inventoryPage.customIdTab.numberFormats.hex')}</option>
+              </Select>
+            </FormControl>
+          </VStack>
+        );
+      case 'random_bits':
+        return (
+          <VStack align="stretch" spacing={4}>
+            <FormControl>
+              <LabelWithTooltip
+                label={t('inventoryPage.customIdTab.fields.bitCount')}
+                tooltipText={t('inventoryPage.customIdTab.tooltips.bitCount')}
               />
+              <Select
+                mt={2} 
+                focusBorderColor={focusBorderColor}
+                value={rule.countBits || 20}
+                onChange={(e) => handleFieldChange('countBits', parseInt(e.target.value))}
+              >
+                <option value={20}>{t('inventoryPage.customIdTab.bitCounts.20')}</option>
+                <option value={32}>{t('inventoryPage.customIdTab.bitCounts.32')}</option>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <LabelWithTooltip
+                label={t('inventoryPage.customIdTab.fields.numberFormat')}
+                tooltipText={t('inventoryPage.customIdTab.tooltips.numberFormat')}
+              />
+              <Select
+                mt={2} 
+                focusBorderColor={focusBorderColor}
+                value={rule.format || 'X'}
+                onChange={(e) => handleFieldChange('format', e.target.value)}
+              >
+                <option value="D">{t('inventoryPage.customIdTab.numberFormats.dec')}</option>
+                <option value="X">{t('inventoryPage.customIdTab.numberFormats.hex')}</option>
+              </Select>
             </FormControl>
           </VStack>
         );
       default:
-        return <Text color="red.500">Unknown rule type!</Text>;
+        return <Text color="red.500">{t('inventoryPage.customIdTab.errors.unknownRule')}</Text>;
     }
   };
 
@@ -176,12 +227,12 @@ const RuleEditor: React.FC<{ rule: CustomIdRule; onChange: (updatedRule: CustomI
   );
 };
 
-
 const SortableRuleItem: React.FC<{
   rule: CustomIdRule;
   onUpdate: (updatedRule: CustomIdRule) => void;
   onRemove: () => void;
 }> = ({ rule, onUpdate, onRemove }) => {
+  const { t } = useTranslation('global');
   const {
     attributes,
     listeners,
@@ -198,12 +249,12 @@ const SortableRuleItem: React.FC<{
   return (
     <Box ref={setNodeRef} style={style} w="100%">
       <HStack spacing={2} align="center">
-        <Box {...attributes} {...listeners} cursor="grab" p={2} aria-label="Drag handle" sx={{ touchAction: 'none' }}>
+        <Box {...attributes} {...listeners} cursor="grab" p={2} aria-label={t('inventoryPage.customIdTab.dragHandleAriaLabel')} sx={{ touchAction: 'none' }}>
           <Icon as={DragHandleIcon} color="gray.500" />
         </Box>
         <RuleEditor rule={rule} onChange={onUpdate} />
         <IconButton
-          aria-label="Remove rule"
+          aria-label={t('inventoryPage.customIdTab.removeRuleAriaLabel')}
           icon={<DeleteIcon />}
           colorScheme="red"
           onClick={onRemove}
@@ -232,9 +283,7 @@ const CustomIdTab: React.FC<CustomIdTabProps> = ({ inventoryId, initialRules = [
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -249,23 +298,41 @@ const CustomIdTab: React.FC<CustomIdTabProps> = ({ inventoryId, initialRules = [
     }
   };
 
-  // === ИЗМЕНЕНИЕ 2: Обновленная функция addRule для предустановок ===
-  const addRule = (type: string, defaults: Partial<CustomIdRule> = {}) => {
+  const addRule = (type: string) => {
+    let defaults: Partial<CustomIdRule> = {};
+
+    switch (type) {
+      case 'fixed_text':
+        defaults = { text: 'FIXED-' };
+        break;
+      case 'sequence':
+        defaults = { padding: 4 };
+        break;
+      case 'date':
+        defaults = { format: 'yyyyMMdd' };
+        break;
+      case 'guid':
+        defaults = { format: 'N' };
+        break;
+      case 'random_digits':
+        defaults = { length: 6, format: 'D' }; 
+        break;
+      case 'random_bits':
+        defaults = { countBits: 20, format: 'X' }; 
+        break;
+    }
+
     const newRule: CustomIdRule = {
       clientSideId: uuidv4(),
-      type: type,
+      type,
       order: rules.length,
-      ...defaults, // Применяем предустановленные значения
+      ...defaults,
     };
     setRules([...rules, newRule]);
   };
-
+  
   const updateRule = (clientSideId: string, updatedRule: CustomIdRule) => {
-    setRules(prevRules =>
-      prevRules.map(rule =>
-        rule.clientSideId === clientSideId ? updatedRule : rule
-      )
-    );
+    setRules(rules.map(rule => (rule.clientSideId === clientSideId ? updatedRule : rule)));
   };
 
   const removeRule = (clientSideIdToRemove: string) => {
@@ -273,15 +340,77 @@ const CustomIdTab: React.FC<CustomIdTabProps> = ({ inventoryId, initialRules = [
     setRules(newRules.map((item, index) => ({ ...item, order: index })));
   };
 
+  const prepareRulesForApi = (rules: CustomIdRule[]): CustomIdRulesRequest => {
+    const apiRuleParts: CustomIdRuleApiRequest[] = rules.map(rule => {
+      switch (rule.type) {
+        case 'fixed_text':
+          return {
+            $type: 'fixed_text',
+            order: rule.order,
+            text: rule.text || '',
+          };
+        case 'sequence':
+          return {
+            $type: 'sequence',
+            order: rule.order,
+            padding: rule.padding || 0, 
+          };
+        case 'date':
+          return {
+            $type: 'date',
+            order: rule.order,
+            format: rule.dateFormat || 'yyyyMMdd',
+          };
+        case 'guid':
+          return {
+            $type: 'guid',
+            order: rule.order,
+            format: rule.guidFormat || 'N',
+          };
+        case 'random_digits':
+          return {
+            $type: 'random_digits',
+            order: rule.order,
+            length: rule.digitCount || 6,
+          };
+        case 'random_bits':
+          return {
+            $type: 'random_bits',
+            order: rule.order,
+            countBits: rule.bitCount || 20,
+            format: rule.numberFormat || 'hex',
+          };
+        default:
+          throw new Error(`Unknown custom ID rule type: "${rule.type}"`);
+      }
+    });
+
+    return { customIdRuleParts: apiRuleParts };
+  };
+
   const handleSave = async () => {
     setIsLoading(true);
-    try {
+    try {     
+      const invalidRule = rules.find(rule => 
+        rule.type === 'fixed_text' && (!rule.text || rule.text.trim() === '')
+      );
+
+      if (invalidRule) {
+        toast({
+          title: t('inventoryPage.customIdTab.toast.validationErrorTitle'),
+          description: t('inventoryPage.customIdTab.toast.validationErrorDescription'),
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+        setIsLoading(false);
+        return;
+      }
 
       const rulesToSave: CustomIdRulesRequest = {
-        customIdRuleParts: rules.map(({ clientSideId, ...rest }) => rest) 
+        customIdRuleParts: prepareRulesForApi(rules).customIdRuleParts
       };
-    
-      console.log(rulesToSave);
+      
       await updateCustomIdRules(rulesToSave, inventoryId);
       toast({
         title: t('inventoryPage.customIdTab.toast.successTitle'),
@@ -304,39 +433,37 @@ const CustomIdTab: React.FC<CustomIdTabProps> = ({ inventoryId, initialRules = [
   };
 
   const generatePreview = () => {
-    if (rules.length === 0) return '';
+    if (rules.length === 0) return t('inventoryPage.customIdTab.preview.defaultGuid');
     return rules.map(rule => {
       switch (rule.type) {
         case 'fixed_text': return rule.text || '';
         case 'sequence': return '1'.padStart(rule.padding || 1, '0');
         case 'date': return '20250912...';
-        case 'guid': return 'a1b2c3d4e5f6...';
+        case 'guid': return 'a1b2c3d4...';
         case 'random_digits': return '...'.padStart(rule.length || 0, 'X');
         case 'random_bits': return 'ABC123...';
         default: return '';
       }
-    }).join('');
+    }).join('-');
   };
 
   return (
     <VStack spacing={6} align="stretch">
       <Heading size="lg">{t('inventoryPage.customIdTab.title')}</Heading>
-      <Alert status="info" borderRadius="md">
+      <Alert status="info" borderRadius="md" colorScheme='teal'>
         <AlertIcon />
         <Box>
           <AlertTitle>{t('inventoryPage.customIdTab.info.title')}</AlertTitle>
           <AlertDescription>{t('inventoryPage.customIdTab.info.description')}</AlertDescription>
         </Box>
       </Alert>
-      <Box p={4} borderWidth={1} borderRadius="md">
-        <Heading size="md" mb={2}>{t('inventoryPage.customIdTab.preview.title')}</Heading>
-        <Text fontFamily="monospace" fontSize="lg" p={2} bg={useColorModeValue('gray.100', 'gray.800')} borderRadius="sm" overflowX="auto">
-          {rules.length > 0
-            ? generatePreview()
-            : t('inventoryPage.customIdTab.preview.defaultGuid')
-          }
+
+      <VStack spacing={4} p={4} borderWidth={1} borderRadius="md" align="stretch">
+        <Heading size="md">{t('inventoryPage.customIdTab.preview.title')}</Heading>
+        <Text fontFamily="monospace" fontSize="lg" p={2} borderRadius="sm" overflowX="auto" minH="32px">
+          {generatePreview()}
         </Text>
-      </Box>
+      </VStack>
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={rules.map(r => r.clientSideId)} strategy={verticalListSortingStrategy}>
@@ -358,20 +485,16 @@ const CustomIdTab: React.FC<CustomIdTabProps> = ({ inventoryId, initialRules = [
           <MenuButton as={Button} leftIcon={<AddIcon />} colorScheme="teal">
             {t('inventoryPage.customIdTab.addRule')}
           </MenuButton>
-          {/* === ИЗМЕНЕНИЕ 3: Обновленное меню с конкретными опциями === */}
           <MenuList>
-            <MenuItem onClick={() => addRule('fixed_text', { text: 'FIXED-' })}>{t('inventoryPage.customIdTab.ruleTypes.fixed_text')}</MenuItem>
-            <MenuItem onClick={() => addRule('sequence', { padding: 4 })}>{t('inventoryPage.customIdTab.ruleTypes.sequence')}</MenuItem>
-            <MenuItem onClick={() => addRule('date', { format: 'yyyyMMdd' })}>{t('inventoryPage.customIdTab.ruleTypes.date')}</MenuItem>
-            <MenuItem onClick={() => addRule('guid', { format: 'N' })}>{t('inventoryPage.customIdTab.ruleTypes.guid')}</MenuItem>
-            <MenuItem onClick={() => addRule('random_digits', { length: 6 })}>{t('inventoryPage.customIdTab.ruleTypes.random_digits_6')}</MenuItem>
-            <MenuItem onClick={() => addRule('random_digits', { length: 9 })}>{t('inventoryPage.customIdTab.ruleTypes.random_digits_9')}</MenuItem>
-            <MenuItem onClick={() => addRule('random_bits', { countBits: 20, format: 'X' })}>{t('inventoryPage.customIdTab.ruleTypes.random_bits_20')}</MenuItem>
-            <MenuItem onClick={() => addRule('random_bits', { countBits: 32, format: 'X' })}>{t('inventoryPage.customIdTab.ruleTypes.random_bits_32')}</MenuItem>
+            <MenuItem onClick={() => addRule('fixed_text')}>{t('inventoryPage.customIdTab.ruleTypes.fixed_text')}</MenuItem>
+            <MenuItem onClick={() => addRule('sequence')}>{t('inventoryPage.customIdTab.ruleTypes.sequence')}</MenuItem>
+            <MenuItem onClick={() => addRule('date')}>{t('inventoryPage.customIdTab.ruleTypes.date')}</MenuItem>
+            <MenuItem onClick={() => addRule('guid')}>{t('inventoryPage.customIdTab.ruleTypes.guid')}</MenuItem>
+            <MenuItem onClick={() => addRule('random_digits')}>{t('inventoryPage.customIdTab.ruleTypes.random_digits')}</MenuItem>
+            <MenuItem onClick={() => addRule('random_bits')}>{t('inventoryPage.customIdTab.ruleTypes.random_bits')}</MenuItem>
           </MenuList>
         </Menu>
-
-        <Button colorScheme="blue" onClick={handleSave} isLoading={isLoading}>
+        <Button colorScheme="teal" onClick={handleSave} isLoading={isLoading}>
           {t('inventoryPage.customIdTab.saveChanges')}
         </Button>
       </HStack>

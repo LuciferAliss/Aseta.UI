@@ -212,12 +212,15 @@
     },
     "customIdTab": {
       "title": "Custom Item ID Configuration",
+      "errors": {
+        "fieldRequired": "This field is required."
+      },
       "info": {
         "title": "How it works",
-        "description": "Drag and drop the parts below to build a unique ID format for items in this inventory. The ID will be automatically generated when a new item is created."
+        "description": "Drag and drop the blocks below to build a unique ID format for items in this inventory. The ID will be automatically generated when a new item is created."
       },
       "preview": {
-        "title": "Live Preview",
+        "title": "Preview",
         "empty": "Add a rule to see the preview...",
         "defaultGuid": "No rules configured. By default, a standard GUID will be used as the item ID."
       },
@@ -228,42 +231,68 @@
         "sequence": "Sequence",
         "date": "Date/Time",
         "guid": "GUID",
-        "random_digits_6": "6-Digit Random Number",
-        "random_digits_9": "9-Digit Random Number",
-        "random_bits_20": "20-bit Random Number",
-        "random_bits_32": "32-bit Random Number"
+        "random_bits": "Random Number (bits)",
+        "random_digits": "Random Number (digits)"
       },
       "editorHeaders": {
         "fixed_text": "Fixed Text",
         "sequence": "Sequence",
         "date": "Date/Time",
         "guid": "GUID",
-        "random_digits": "Random Digits",
-        "random_bits": "Random Number (Bits)"
+        "random_digits": "Random Number (digits)",
+        "random_bits": "Random Number (bits)"
       },
       "fields": {
         "textValue": "Text Value",
-        "padding": "Padding (leading zeros)",
+        "padding": "Leading zeros",
         "dateFormat": "Date/Time Format",
         "guidFormat": "GUID Format",
-        "digitsLength": "Length",
-        "bitCount": "Bit Count",
-        "numberFormat": "Number Format"
+        "digitCount": "Number of digits",
+        "bitCount": "Number of bits",
+        "numberFormat": "Number Format",
+        "charType": "Character type"
       },
       "tooltips": {
         "textValue": "This exact text (supports Unicode) will be included in every ID.",
-        "padding": "Adds the item's sequential number (total items + 1). Padding adds leading zeros (e.g., a padding of 4 turns '12' into '0012').",
-        "dateFormat": "Uses the item's creation date and time. Format codes: yyyy (year), MM (month), dd (day), HH (hour), mm (minute), ss (second).",
-        "guidFormat": "A globally unique identifier. The format controls its appearance (with/without hyphens, braces, etc.).",
-        "digitsLength": "Generates a random number with a fixed number of digits.",
+        "padding": "Adds the item's sequential number (total items + 1). Leading zeros pad the number (e.g., a value of 4 turns '12' into '0012').",
+        "dateFormat": "Uses the item's creation date and time.",
+        "guidFormat": "A globally unique identifier.",
+        "digitCount": "Generates a random number with a fixed number of digits.",
         "bitCount": "Choose between a 20-bit (~1 million options) or 32-bit (~4 billion options) random number.",
-        "numberFormat": "Controls how the number is displayed. Use 'X' for hexadecimal (e.g., 'A1B2'), 'D' or leave empty for decimal."
+        "numberFormat": "Controls how the number is displayed. Use 'X' for hexadecimal (e.g., 'A1B2'), 'D' for decimal (e.g., '123')."
       },
       "toast": {
-        "successTitle": "Custom ID Saved",
+        "successTitle": "ID Saved",
         "successDescription": "The new ID format has been saved successfully.",
         "errorTitle": "Save Failed",
-        "errorDescription": "Could not save the custom ID format. Please try again."
+        "errorDescription": "Could not save the ID format. Please try again.",
+        "validationErrorTitle": "Validation Error",
+        "validationErrorDescription": "Please correct the errors in the form."
+      },
+      "dateFormats": {
+        "yyyyMMdd": "YearMonthDay (20250914)",
+        "yyyy_MM_dd_hyphen": "Year-Month-Day (2025-09-14)",
+        "ddMMyy": "DayMonthYear (140925)",
+        "yyyyMMddHHmmss": "Full date and time",
+        "year_only": "Year only (2025)",
+        "month_only": "Month only (09)"
+      },
+      "guidFormats": {
+        "D": "32 digits separated by hyphens",
+        "N": "32 digits",
+        "X": "32 hexadecimal digits"
+      },
+      "digitCounts": {
+        "6": "6 characters",
+        "9": "9 characters"
+      },
+      "bitCounts": {
+        "20": "20-bit",
+        "32": "32-bit"
+      },
+      "numberFormats": {
+        "hex": "Hexadecimal (0-9, A-F)",
+        "dec": "Decimal (0-9)"
       }
     },
     "fields": {

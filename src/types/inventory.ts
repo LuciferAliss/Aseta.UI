@@ -127,16 +127,52 @@ export interface CollectionResponse<T> {
   collection: T[];
 }
 
-export interface CustomIdRulesRequest {
-  customIdRuleParts: CustomIdRuleRequest[]
+interface CustomIdRuleBase {
+  order: number;
 }
 
-export interface CustomIdRuleRequest {
-  type: string;
-  order: number;
-  format?: string;
-  text?: string;
-  padding?: number;
-  length?: number;
-  countBits?: number;
+// Конкретные типы правил
+export interface FixedTextRulePartRequest extends CustomIdRuleBase {
+  $type: 'fixed_text';
+  text: string;
+}
+
+export interface SequenceRulePartRequest extends CustomIdRuleBase {
+  $type: 'sequence';
+  padding: number;
+}
+
+export interface DateRulePartRequest extends CustomIdRuleBase {
+  $type: 'date';
+  format: string;
+}
+
+export interface GuidRulePartRequest extends CustomIdRuleBase {
+  $type: 'guid';
+  format: string;
+}
+
+export interface RandomDigitsRulePartRequest extends CustomIdRuleBase {
+  $type: 'random_digits';
+  length: number;
+}
+
+export interface RandomNumberBitRulePartRequest extends CustomIdRuleBase {
+  $type: 'random_bits';
+  countBits: number;
+  format: string;
+}
+
+// Объединение всех возможных типов правил для API
+export type CustomIdRuleApiRequest =
+  | FixedTextRulePartRequest
+  | SequenceRulePartRequest
+  | DateRulePartRequest
+  | GuidRulePartRequest
+  | RandomDigitsRulePartRequest
+  | RandomNumberBitRulePartRequest;
+
+// Главный интерфейс запроса
+export interface CustomIdRulesRequest {
+  customIdRuleParts: CustomIdRuleApiRequest[];
 }
