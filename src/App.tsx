@@ -1,16 +1,7 @@
-import { Flex } from '@chakra-ui/react';
-import './App.css'
-import AppRouter from './routes/AppRouter';
+import { Flex } from "@chakra-ui/react";
 
 function App() {
-	return (
-		<Flex 
-			h={'100vh'} 
-			w={'100vw'}
-		>
-      <AppRouter />
-		</Flex>
-	)
+  return <Flex h={"100vh"} w={"100vw"}></Flex>;
 }
 
-export default App
+export default App;
