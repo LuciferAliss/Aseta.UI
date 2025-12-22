@@ -1,4 +1,7 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+import { colors } from "./colors";
+import { semanticTokens } from "./semantic-tokens";
+import { Shadows } from "./shadows";
 
 const config: ThemeConfig = {
   initialColorMode: "system",
@@ -7,23 +10,42 @@ const config: ThemeConfig = {
 
 const theme = extendTheme({
   config,
-  colors: {},
-  semanticTokens: {
-    colors: {
-      "app-bg": {
-        _light: "gray.50",
-        _dark: "gray.900",
-      },
-    },
-  },
+  colors,
+  semanticTokens,
   styles: {
     global: () => ({
       body: {
         bg: "app-bg",
+        color: "app-text",
       },
     }),
   },
-  components: {},
+  shadows: {
+    ...Shadows,
+  },
+  components: {
+    Input: {
+      variants: {
+        auth: {
+          field: {
+            border: "2px",
+            bg: "input-bg",
+            borderColor: "static-border-color",
+            _hover: {
+              borderColor: "hover-border-color",
+              _notfocus: {
+                borderColor: "hover-border-color",
+              },
+            },
+            _focus: {
+              borderColor: "focus-border-color",
+              boxShadow: "input-focus",
+            },
+          },
+        },
+      },
+    },
+  },
 });
 
 export default theme;

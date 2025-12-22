@@ -1,7 +1,12 @@
-import { Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import AppRouters from "./components/routers/AppRouters";
 
 function App() {
-  return <Flex h={"100vh"} w={"100vw"}></Flex>;
+  return (
+    <Box minH="100vh">
+      <AppRouters />
+    </Box>
+  );
 }
 
 export default App;
