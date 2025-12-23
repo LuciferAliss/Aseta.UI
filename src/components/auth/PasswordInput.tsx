@@ -1,4 +1,9 @@
-import { Icon, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import {
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
@@ -11,13 +16,18 @@ const PasswordInput = () => {
       <Input
         type={show ? "text" : "password"}
         placeholder="Enter password"
-        variant="auth"
+        variant="base"
       />
       <InputRightElement>
-        <Icon
-          as={show ? ViewIcon : ViewOffIcon}
+        <IconButton
+          icon={show ? <ViewIcon /> : <ViewOffIcon />}
           onClick={handleClick}
-          cursor="pointer"
+          bg="transparent"
+          aria-label="Show password"
+          _focusVisible={{
+            boxShadow: "none",
+            border: "2px solid var(--chakra-colors-focus-border-color)",
+          }}
         />
       </InputRightElement>
     </InputGroup>

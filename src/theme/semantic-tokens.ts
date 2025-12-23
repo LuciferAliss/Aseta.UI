@@ -10,6 +10,10 @@ export const semanticTokens = {
       _light: "black",
       _dark: "slate.200",
     },
+    "focus-border-color": {
+      _light: "violet.600",
+      _dark: "violet.400",
+    },
     //-----------------------------
 
     // Objects by type Card
@@ -23,28 +27,37 @@ export const semanticTokens = {
     },
     //-----------------------------
 
-    "brand-primary": {
-      _light: "brand.700",
-      _dark: "brand.800",
-    },
-
     // Objects by type Input
-    "static-border-color": {
+    "input-border-color": {
       _light: "slate.200",
       _dark: "violet.700",
     },
-    "hover-border-color": {
+    "input-hover-border-color": {
       _light: "slate.400",
       _dark: "violet.600",
-    },
-    "focus-border-color": {
-      _light: "violet.600",
-      _dark: "violet.400",
     },
     "input-bg": {
       _light: "white",
       _dark: "slate.700",
     },
     //-----------------------------
+
+    // Objects by type Button
+    "button-bg": {
+      _light: "violet.600",
+      _dark: "violet.700",
+    },
+    "button-text": {
+      _light: "white",
+      _dark: "white",
+    },
+    "button-hover-bg": {
+      _light: "violet.700",
+      _dark: "violet.600",
+    },
+    "button-active-bg": {
+      _light: "violet.900",
+      _dark: "violet.400",
+    },
   },
 };
