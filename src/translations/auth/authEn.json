@@ -1,0 +1,22 @@
+{
+  "login": {
+    "title": "Sign in",
+    "email_label": "Email",
+    "email_placeholder": "Enter email",
+    "password_label": "Password",
+    "submit_button": "Sign in",
+    "switch_to_register": "Don't have an account? Sign up"
+  },
+  "password_input_placeholder": "Enter password",
+  "register": {
+    "title": "Sign up",
+    "email_label": "Email",
+    "email_placeholder": "Enter email",
+    "username_label": "Username",
+    "username_placeholder": "Enter username",
+    "password_label": "Password",
+    "confirm_password_label": "Confirm Password",
+    "submit_button": "Sign up",
+    "switch_to_login": "Already have an account? Sign in"
+  }
+}

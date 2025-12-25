@@ -21,6 +21,9 @@ const AuthModal = ({
 }: AuthModalProps) => {
   const [view, setView] = useState(initialView);
 
+  const initialRefLogin = React.useRef<HTMLInputElement>(null);
+  const initialRefRegister = React.useRef<HTMLInputElement>(null);
+
   const handleSwitchToRegister = () => setView("register");
   const handleSwitchToLogin = () => setView("login");
 
@@ -30,8 +33,21 @@ const AuthModal = ({
     }
   }, [isOpen, initialView]);
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (view === "login" && initialRefLogin.current) {
+        initialRefLogin.current.focus();
+      } else if (view === "register" && initialRefRegister.current) {
+        initialRefRegister.current.focus();
+      }
+    });
+
+    return () => clearTimeout(timer);
+  }, [view]);
+
   return (
     <Modal
+      initialFocusRef={view === "login" ? initialRefLogin : initialRefRegister}
       isOpen={isOpen}
       onClose={onClose}
       closeOnOverlayClick={false}
@@ -53,9 +69,15 @@ const AuthModal = ({
           }}
         />
         {view === "login" ? (
-          <LoginView onSwitchToRegister={handleSwitchToRegister} />
+          <LoginView
+            onSwitchToRegister={handleSwitchToRegister}
+            ref={initialRefLogin}
+          />
         ) : (
-          <RegisterView onSwitchToLogin={handleSwitchToLogin} />
+          <RegisterView
+            onSwitchToLogin={handleSwitchToLogin}
+            ref={initialRefRegister}
+          />
         )}
       </ModalContent>
     </Modal>

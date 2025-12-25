@@ -1,0 +1,22 @@
+{
+  "login": {
+    "title": "Вход",
+    "email_label": "Email",
+    "email_placeholder": "Введите email",
+    "password_label": "Пароль",
+    "submit_button": "Войти",
+    "switch_to_register": "Нет аккаунта? Зарегистрироваться"
+  },
+  "password_input_placeholder": "Введите пароль",
+  "register": {
+    "title": "Регистрация",
+    "email_label": "Email",
+    "email_placeholder": "Введите Email",
+    "username_label": "Имя пользователя",
+    "username_placeholder": "Введите имя пользователя",
+    "password_label": "Пароль",
+    "confirm_password_label": "Подтвердите пароль",
+    "submit_button": "Зарегистрироваться",
+    "switch_to_login": "Уже есть аккаунт? Войти"
+  }
+}

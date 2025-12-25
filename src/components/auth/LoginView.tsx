@@ -9,43 +9,56 @@ import {
   ModalHeader,
 } from "@chakra-ui/react";
 import PasswordInput from "./PasswordInput";
+import { useTranslation } from "react-i18next";
+import type { RefObject } from "react";
 
 interface LoginViewProps {
   onSwitchToRegister: () => void;
+  ref: RefObject<any>;
 }
 
-const LoginView = ({ onSwitchToRegister }: LoginViewProps) => {
+const LoginView = ({ onSwitchToRegister, ref }: LoginViewProps) => {
+  const { t } = useTranslation("auth");
+
   return (
     <>
       <ModalHeader>
         <Center>
           <Text fontSize="4xl" as="b">
-            Sign in
+            {t("login.title")}
           </Text>
         </Center>
       </ModalHeader>
       <ModalBody>
         <VStack alignItems="left" mb="1rem">
-          <Text>Email</Text>
+          <Text>{t("login.email_label")}</Text>
           <Input
-            placeholder="Enter email"
+            ref={ref}
+            placeholder={t("login.email_placeholder")}
             type="email"
             id="email"
             variant="base"
           />
         </VStack>
         <VStack alignItems="left" mb="0.5rem">
-          <Text>Password</Text>
+          <Text>{t("login.password_label")}</Text>
           <PasswordInput />
         </VStack>
       </ModalBody>
       <ModalFooter>
         <VStack w="100%" spacing="1rem">
           <Button variant="base" w="100%" type="submit">
-            Sign in
+            {t("login.submit_button")}
           </Button>
-          <Button variant="link" w="100%" onClick={onSwitchToRegister}>
-            Don't have an account? Sign up
+          <Button
+            variant="link"
+            w="100%"
+            onClick={onSwitchToRegister}
+            _focusVisible={{
+              border: "2px solid var(--chakra-colors-focus-border-color)",
+            }}
+          >
+            {t("login.switch_to_register")}
           </Button>
         </VStack>
       </ModalFooter>

@@ -9,56 +9,69 @@ import {
   ModalHeader,
 } from "@chakra-ui/react";
 import PasswordInput from "./PasswordInput";
+import { useTranslation } from "react-i18next";
+import { type RefObject } from "react";
 
 interface RegisterViewProps {
   onSwitchToLogin: () => void;
+  ref: RefObject<any>;
 }
 
-const RegisterView = ({ onSwitchToLogin }: RegisterViewProps) => {
+const RegisterView = ({ onSwitchToLogin, ref }: RegisterViewProps) => {
+  const { t } = useTranslation("auth");
+
   return (
     <>
       <ModalHeader>
         <Center>
           <Text fontSize="4xl" as="b">
-            Sign up
+            {t("register.title")}
           </Text>
         </Center>
       </ModalHeader>
       <ModalBody>
         <VStack alignItems="left" mb="1rem">
-          <Text>Email</Text>
+          <Text>{t("register.email_label")}</Text>
           <Input
-            placeholder="Enter email"
+            ref={ref}
+            placeholder={t("register.email_placeholder")}
             type="email"
             id="inputEmail"
             variant="base"
           />
         </VStack>
         <VStack alignItems="left" mb="1rem">
-          <Text>Username</Text>
+          <Text>{t("register.username_label")}</Text>
           <Input
-            placeholder="Enter username"
+            placeholder={t("register.username_placeholder")}
             type="text"
             id="inputUsername"
             variant="base"
           />
         </VStack>
         <VStack alignItems="left" mb="1rem">
-          <Text>Password</Text>
+          <Text>{t("register.password_label")}</Text>
           <PasswordInput />
         </VStack>
         <VStack alignItems="left" mb="0.5rem">
-          <Text>Confirm Password</Text>
+          <Text>{t("register.confirm_password_label")}</Text>
           <PasswordInput />
         </VStack>
       </ModalBody>
       <ModalFooter>
         <VStack w="100%" spacing="1rem">
           <Button variant="base" w="100%" type="submit">
-            Sign up
+            {t("register.submit_button")}
           </Button>
-          <Button variant="link" w="100%" onClick={onSwitchToLogin}>
-            Already have an account? Sign in
+          <Button
+            variant="link"
+            w="100%"
+            onClick={onSwitchToLogin}
+            _focusVisible={{
+              border: "2px solid var(--chakra-colors-focus-border-color)",
+            }}
+          >
+            {t("register.switch_to_login")}
           </Button>
         </VStack>
       </ModalFooter>
