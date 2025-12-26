@@ -54,20 +54,8 @@ const AuthModal = ({
       isCentered
     >
       <ModalOverlay />
-      <ModalContent
-        flexDirection="column"
-        bg="card-bg"
-        borderColor="card-border"
-        borderWidth="4px"
-        borderRadius="lg"
-        boxShadow="card-glow-shadows"
-      >
-        <ModalCloseButton
-          _focusVisible={{
-            boxShadow: "none",
-            border: "2px solid var(--chakra-colors-focus-border-color)",
-          }}
-        />
+      <ModalContent>
+        <ModalCloseButton />
         {view === "login" ? (
           <LoginView
             onSwitchToRegister={handleSwitchToRegister}

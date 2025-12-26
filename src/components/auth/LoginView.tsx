@@ -50,14 +50,7 @@ const LoginView = ({ onSwitchToRegister, ref }: LoginViewProps) => {
           <Button variant="base" w="100%" type="submit">
             {t("login.submit_button")}
           </Button>
-          <Button
-            variant="link"
-            w="100%"
-            onClick={onSwitchToRegister}
-            _focusVisible={{
-              border: "2px solid var(--chakra-colors-focus-border-color)",
-            }}
-          >
+          <Button variant="link" w="100%" onClick={onSwitchToRegister}>
             {t("login.switch_to_register")}
           </Button>
         </VStack>

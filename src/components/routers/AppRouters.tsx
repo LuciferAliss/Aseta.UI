@@ -1,20 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import { ROUTES } from "../../lib/routes";
 import PrivateRoute from "./PrivateRoute";
-import { IconButton, useColorMode, useDisclosure } from "@chakra-ui/react";
+import { Flex, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import AuthModal from "../auth/AuthModal";
 import LanguageChangeButton from "../layout/LanguageChangeButton";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-
-const ThemeChangeButton = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  return (
-    <IconButton onClick={toggleColorMode} aria-label={""}>
-      {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-    </IconButton>
-  );
-};
+import ThemeChangeButton from "../layout/ThemeChangeButton";
 
 const DashboardPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,9 +18,10 @@ const DashboardPage = () => {
 
   return (
     <div>
-      <LanguageChangeButton />
-      <p />
-      <ThemeChangeButton />
+      <Flex gap="1">
+        <LanguageChangeButton />
+        <ThemeChangeButton />
+      </Flex>
       <p />
       <button onClick={openLogin}>Open Login Modal</button>
       <p />

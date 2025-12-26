@@ -22,24 +22,17 @@ const LanguageChangeButton = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} variant="base" leftIcon={<ImSphere />}>
+      <MenuButton as={Button} leftIcon={<ImSphere />}>
         {currentLanguage?.name || "English"}
       </MenuButton>
       <MenuList>
-        <MenuOptionGroup
-          defaultValue={i18n.language}
-          title="Language"
-          type="radio"
-        >
+        <MenuOptionGroup value={i18n.language} title="Language" type="radio">
           <MenuDivider />
           {languages.map((lang) => (
             <MenuItemOption
               key={lang.code}
               value={lang.code}
               onClick={() => i18n.changeLanguage(lang.code)}
-              _hover={{ bg: "menu-item-hover-bg" }}
-              _active={{ bg: "menu-item-active-bg" }}
-              _focus={{ bg: "menu-item-hover-bg" }}
             >
               {lang.name}
             </MenuItemOption>

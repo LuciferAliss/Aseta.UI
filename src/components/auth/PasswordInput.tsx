@@ -24,12 +24,8 @@ const PasswordInput = () => {
         <IconButton
           icon={show ? <ViewIcon /> : <ViewOffIcon />}
           onClick={handleClick}
-          bg="transparent"
           aria-label="Show password"
-          _focusVisible={{
-            boxShadow: "none",
-            border: "2px solid var(--chakra-colors-focus-border-color)",
-          }}
+          variant="ghost"
         />
       </InputRightElement>
     </InputGroup>

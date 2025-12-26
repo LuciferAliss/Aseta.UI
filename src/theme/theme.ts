@@ -1,7 +1,7 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 import { colors } from "./colors";
-import { semanticTokens } from "./semantic-tokens";
-import { Shadows } from "./shadows";
+import { semanticTokens } from "./semanticTokens";
+import { shadows } from "./shadows";
 import { components } from "./components";
 
 const config: ThemeConfig = {
@@ -17,12 +17,12 @@ const theme = extendTheme({
     global: () => ({
       body: {
         bg: "app-bg",
-        color: "app-text",
+        color: "text-primary",
       },
     }),
   },
   shadows: {
-    ...Shadows,
+    ...shadows,
   },
   components,
 });
