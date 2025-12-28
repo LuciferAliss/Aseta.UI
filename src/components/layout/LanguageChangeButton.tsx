@@ -22,7 +22,7 @@ const LanguageChangeButton = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} leftIcon={<ImSphere />}>
+      <MenuButton as={Button} variant="ghost" leftIcon={<ImSphere />}>
         {currentLanguage?.name || "English"}
       </MenuButton>
       <MenuList>

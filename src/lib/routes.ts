@@ -1,6 +1,5 @@
 export const ROUTES = {
-  login: "/login",
-  dashboard: "/",
+  main: "/",
 };
 
 const generatePath = (

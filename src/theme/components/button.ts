@@ -1,8 +1,6 @@
-// src/theme/components/button.ts
 import { defineStyleConfig } from "@chakra-ui/react";
 
 export const Button = defineStyleConfig({
-  // Базовые стили для всех кнопок
   baseStyle: {
     fontWeight: "bold",
     borderRadius: "lg",
@@ -33,25 +31,9 @@ export const Button = defineStyleConfig({
 
       _focusVisible: {
         ring: "2px",
-        ringColor: "focus-ring",
+        ringColor: "btn-focus-ring",
         ringOffset: "2px",
         ringOffsetColor: "app-bg",
-      },
-    },
-
-    outline: {
-      bg: "transparent",
-      border: "1px solid",
-      borderColor: "border-default",
-      color: "text-primary",
-
-      _hover: {
-        bg: "gray.100",
-        borderColor: "gray.300",
-        _dark: {
-          bg: "whiteAlpha.100",
-          borderColor: "whiteAlpha.300",
-        },
       },
     },
 
@@ -81,7 +63,7 @@ export const Button = defineStyleConfig({
 
       _focusVisible: {
         ring: "2px",
-        ringColor: "focus-ring",
+        ringColor: "btn-focus-ring",
         ringOffset: "2px",
         ringOffsetColor: "app-bg",
       },
@@ -89,24 +71,20 @@ export const Button = defineStyleConfig({
 
     ghost: {
       bg: "transparent",
+      textColor: "btn-ghost-text",
       color: "btn-primary-bg",
       _hover: {
-        bg: "violet.50",
-        _dark: {
-          bg: "whiteAlpha.100",
-        },
+        bg: "btn-ghost-hover-bg",
       },
 
       _active: {
-        bg: "violet.100",
-        _dark: {
-          bg: "whiteAlpha.200",
-        },
+        bg: "btn-ghost-active-bg",
+        transform: "scale(0.90)",
       },
 
       _focusVisible: {
         ring: "2px",
-        ringColor: "focus-ring",
+        ringColor: "btn-focus-ring",
         ringOffset: "2px",
         ringOffsetColor: "app-bg",
       },

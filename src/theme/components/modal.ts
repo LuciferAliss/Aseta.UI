@@ -1,4 +1,3 @@
-// src/theme/components/modal.ts
 import { modalAnatomy as parts } from "@chakra-ui/anatomy";
 import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 

@@ -1,4 +1,3 @@
-// src/theme/components/menu.ts
 import { menuAnatomy } from "@chakra-ui/anatomy";
 import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 
@@ -21,18 +20,13 @@ const baseStyle = definePartsStyle({
     color: "text-primary",
     borderRadius: "md",
     transition: "background 0.2s",
-    py: 2.5,
-    px: 3,
 
     _hover: {
       bg: "menu-item-hover-bg",
       color: "text-primary",
     },
-    _focus: {
+    _focusVisible: {
       bg: "menu-item-hover-bg",
-    },
-    _active: {
-      bg: "menu-item-active-bg",
     },
 
     _checked: {
@@ -52,7 +46,7 @@ const baseStyle = definePartsStyle({
   },
 
   divider: {
-    borderColor: "border-subtle",
+    borderColor: "menu-border-subtle",
     my: 2,
     opacity: 0.6,
   },

@@ -1,4 +1,3 @@
-// src/theme/layer-styles.ts
 export const layerStyles = {
   "card-container": {
     display: "flex",
@@ -16,7 +15,7 @@ export const layerStyles = {
     transition: "all 0.2s ease-in-out",
 
     _dark: {
-      borderColor: "card-border", // Можно сделать "violet.700" для явного акцента
+      borderColor: "card-border",
     },
   },
 };

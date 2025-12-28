@@ -1,24 +1,19 @@
 import {
+  Button,
   Modal,
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import LoginView from "./LoginView";
 import RegisterView from "./RegisterView";
 
-interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  initialView?: "login" | "register";
-}
+const AuthModal = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [initialView, setInitialView] = useState<"login" | "register">("login");
 
-const AuthModal = ({
-  isOpen,
-  onClose,
-  initialView = "login",
-}: AuthModalProps) => {
   const [view, setView] = useState(initialView);
 
   const initialRefLogin = React.useRef<HTMLInputElement>(null);
@@ -45,30 +40,49 @@ const AuthModal = ({
     return () => clearTimeout(timer);
   }, [view]);
 
+  const openLogin = () => {
+    setInitialView("login");
+    onOpen();
+  };
+
   return (
-    <Modal
-      initialFocusRef={view === "login" ? initialRefLogin : initialRefRegister}
-      isOpen={isOpen}
-      onClose={onClose}
-      closeOnOverlayClick={false}
-      isCentered
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalCloseButton />
-        {view === "login" ? (
-          <LoginView
-            onSwitchToRegister={handleSwitchToRegister}
-            ref={initialRefLogin}
+    <>
+      <Button onClick={openLogin} variant="ghost">
+        Sign in
+      </Button>
+      <Modal
+        initialFocusRef={
+          view === "login" ? initialRefLogin : initialRefRegister
+        }
+        isOpen={isOpen}
+        onClose={onClose}
+        closeOnOverlayClick={false}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton
+            _focusVisible={{
+              ring: "2px",
+              ringColor: "btn-focus-ring",
+              ringOffset: "2px",
+              ringOffsetColor: "app-bg",
+            }}
           />
-        ) : (
-          <RegisterView
-            onSwitchToLogin={handleSwitchToLogin}
-            ref={initialRefRegister}
-          />
-        )}
-      </ModalContent>
-    </Modal>
+          {view === "login" ? (
+            <LoginView
+              onSwitchToRegister={handleSwitchToRegister}
+              ref={initialRefLogin}
+            />
+          ) : (
+            <RegisterView
+              onSwitchToLogin={handleSwitchToLogin}
+              ref={initialRefRegister}
+            />
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

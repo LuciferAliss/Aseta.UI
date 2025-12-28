@@ -1,4 +1,3 @@
-// src/theme/semantic-tokens.ts
 export const semanticTokens = {
   colors: {
     // ------------------------------------------
@@ -6,11 +5,11 @@ export const semanticTokens = {
     // ------------------------------------------
     "app-bg": {
       _light: "gray.50",
-      _dark: "slate.950",
+      _dark: "gray.950",
     },
     "app-bg-subtle": {
       _light: "gray.100",
-      _dark: "slate.900",
+      _dark: "gray.900",
     },
 
     // ------------------------------------------
@@ -18,35 +17,35 @@ export const semanticTokens = {
     // ------------------------------------------
     "text-primary": {
       _light: "gray.900",
-      _dark: "slate.50",
+      _dark: "gray.50",
     },
     "text-secondary": {
       _light: "gray.600",
-      _dark: "slate.300",
+      _dark: "gray.300",
     },
     "text-disabled": {
       _light: "gray.400",
-      _dark: "slate.600",
+      _dark: "gray.600",
     },
     "text-brand": {
       _light: "violet.600",
       _dark: "violet.400",
     },
+    "text-brand-hover": {
+      _light: "violet.700",
+      _dark: "violet.500",
+    },
 
     // ------------------------------------------
-    // BORDERS & DIVIDERS
+    // COMPONENTS: HEADER
     // ------------------------------------------
-    "border-subtle": {
-      _light: "gray.200",
-      _dark: "slate.800",
+    "header-bg": {
+      _light: "white",
+      _dark: "gray.800",
     },
-    "border-default": {
-      _light: "gray.300",
-      _dark: "slate.700",
-    },
-    "focus-ring": {
-      _light: "violet.600",
-      _dark: "violet.400",
+    "header-shadow-color": {
+      _light: "violet.200",
+      _dark: "violet.700",
     },
 
     // ------------------------------------------
@@ -54,10 +53,10 @@ export const semanticTokens = {
     // ------------------------------------------
     "card-bg": {
       _light: "white",
-      _dark: "slate.800",
+      _dark: "gray.900",
     },
     "card-border": {
-      _light: "gray.400",
+      _light: "violet.400",
       _dark: "violet.600",
     },
     "card-border-active": {
@@ -65,14 +64,13 @@ export const semanticTokens = {
       _dark: "violet.500",
     },
     "card-glow-shadow-color": {
-      _light: "violet.200", // Сделал мягче
+      _light: "violet.200",
       _dark: "violet.900",
     },
 
     // ------------------------------------------
     // COMPONENTS: BUTTONS
     // ------------------------------------------
-    // Primary Button
     "btn-primary-bg": {
       _light: "violet.600",
       _dark: "violet.600",
@@ -89,42 +87,47 @@ export const semanticTokens = {
       _light: "white",
       _dark: "white",
     },
+    "btn-primary-border": {
+      _light: "gray.300",
+      _dark: "gray.700",
+    },
 
-    "btn-secondary-bg": {
-      _light: "transparent",
-      _dark: "transparent",
-    },
-    "btn-secondary-border": {
+    "btn-ghost-active-bg": {
       _light: "violet.200",
-      _dark: "slate.600",
+      _dark: "violet.666",
     },
-    "btn-secondary-text": {
-      _light: "violet.700",
-      _dark: "violet.300",
+    "btn-ghost-hover-bg": {
+      _light: "violet.100",
+      _dark: "violet.888",
     },
-    "btn-secondary-hover-bg": {
-      _light: "violet.50",
-      _dark: "slate.700",
+    "btn-ghost-text": {
+      _light: "gray.900",
+      _dark: "gray.50",
     },
     "btn-link-text": {
-      _light: "violet.600", // Базовый цвет (как text-brand)
+      _light: "violet.600",
       _dark: "violet.400",
     },
     "btn-link-hover-text": {
-      _light: "violet.800", // Темнее при наведении в светлой теме
-      _dark: "violet.300", // Светлее/ярче при наведении в темной теме
+      _light: "violet.800",
+      _dark: "violet.300",
+    },
+
+    "btn-focus-ring": {
+      _light: "violet.600",
+      _dark: "violet.400",
     },
 
     // ------------------------------------------
     // COMPONENTS: INPUTS
     // ------------------------------------------
     "input-bg": {
-      _light: "white",
-      _dark: "slate.900", // Чуть темнее чем карта
+      _light: "gray.100",
+      _dark: "gray.800",
     },
     "input-border": {
       _light: "gray.300",
-      _dark: "slate.600",
+      _dark: "gray.600",
     },
     "input-border-hover": {
       _light: "violet.400",
@@ -136,7 +139,7 @@ export const semanticTokens = {
     },
     "input-placeholder": {
       _light: "gray.400",
-      _dark: "slate.500",
+      _dark: "gray.500",
     },
 
     // ------------------------------------------
@@ -144,19 +147,19 @@ export const semanticTokens = {
     // ------------------------------------------
     "menu-bg": {
       _light: "white",
-      _dark: "slate.800",
+      _dark: "gray.800",
     },
     "menu-item-hover-bg": {
       _light: "violet.50",
-      _dark: "slate.700",
-    },
-    "menu-item-active-bg": {
-      _light: "violet.100",
       _dark: "violet.900",
     },
     "menu-item-active-text": {
       _light: "violet.700",
       _dark: "violet.200",
+    },
+    "menu-border-subtle": {
+      _light: "gray.400",
+      _dark: "gray.600",
     },
 
     // ------------------------------------------
@@ -164,7 +167,7 @@ export const semanticTokens = {
     // ------------------------------------------
     "status-error-bg": {
       _light: "red.50",
-      _dark: "rgba(239, 68, 68, 0.15)", // Прозрачный красный
+      _dark: "rgba(239, 68, 68, 0.15)",
     },
     "status-error-text": {
       _light: "red.600",
@@ -172,7 +175,7 @@ export const semanticTokens = {
     },
     "status-success-bg": {
       _light: "green.50",
-      _dark: "rgba(34, 197, 94, 0.15)", // Прозрачный зеленый
+      _dark: "rgba(34, 197, 94, 0.15)",
     },
     "status-success-text": {
       _light: "green.600",

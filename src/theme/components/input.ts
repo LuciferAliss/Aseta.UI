@@ -1,4 +1,3 @@
-// src/theme/components/input.ts
 import { inputAnatomy } from "@chakra-ui/anatomy";
 import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 
