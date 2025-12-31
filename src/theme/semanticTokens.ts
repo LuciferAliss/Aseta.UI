@@ -37,7 +37,7 @@ export const semanticTokens = {
     },
 
     // ------------------------------------------
-    // COMPONENTS: HEADER
+    // COMPONENTS: HEADER/FOOTER
     // ------------------------------------------
     "header-bg": {
       _light: "white",
@@ -53,7 +53,7 @@ export const semanticTokens = {
     // ------------------------------------------
     "card-bg": {
       _light: "white",
-      _dark: "gray.900",
+      _dark: "gray.850",
     },
     "card-border": {
       _light: "violet.400",
@@ -123,7 +123,7 @@ export const semanticTokens = {
     // ------------------------------------------
     "input-bg": {
       _light: "gray.100",
-      _dark: "gray.800",
+      _dark: "gray.750",
     },
     "input-border": {
       _light: "gray.300",
@@ -160,26 +160,6 @@ export const semanticTokens = {
     "menu-border-subtle": {
       _light: "gray.400",
       _dark: "gray.600",
-    },
-
-    // ------------------------------------------
-    // FEEDBACK (Error / Success)
-    // ------------------------------------------
-    "status-error-bg": {
-      _light: "red.50",
-      _dark: "rgba(239, 68, 68, 0.15)",
-    },
-    "status-error-text": {
-      _light: "red.600",
-      _dark: "red.100",
-    },
-    "status-success-bg": {
-      _light: "green.50",
-      _dark: "rgba(34, 197, 94, 0.15)",
-    },
-    "status-success-text": {
-      _light: "green.600",
-      _dark: "green.100",
     },
   },
 };

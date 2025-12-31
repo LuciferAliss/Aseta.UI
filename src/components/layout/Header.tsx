@@ -14,6 +14,9 @@ const Header = () => {
       bg="header-bg"
       boxShadow="header-bottom-glow"
       data-testid="header"
+      position="sticky"
+      top={0}
+      zIndex={10}
     >
       <Flex alignItems="center">
         <Heading

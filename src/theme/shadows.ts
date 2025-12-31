@@ -8,4 +8,7 @@ export const shadows = {
 
   "header-bottom-glow":
     "0 10px 20px -5px var(--chakra-colors-header-shadow-color)",
+
+  "footer-top-glow":
+    "0 -10px 20px -5px var(--chakra-colors-header-shadow-color)",
 };

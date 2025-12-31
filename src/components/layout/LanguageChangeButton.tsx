@@ -12,10 +12,11 @@ import { ImSphere } from "react-icons/im";
 
 const LanguageChangeButton = () => {
   const { i18n } = useTranslation();
+  const { t } = useTranslation("common");
 
   const languages = [
-    { code: "ru", name: "Русский" },
     { code: "en", name: "English" },
+    { code: "ru", name: "Русский" },
   ];
 
   const currentLanguage = languages.find((lang) => lang.code === i18n.language);
@@ -26,7 +27,11 @@ const LanguageChangeButton = () => {
         {currentLanguage?.name || "English"}
       </MenuButton>
       <MenuList>
-        <MenuOptionGroup value={i18n.language} title="Language" type="radio">
+        <MenuOptionGroup
+          value={i18n.language}
+          title={t("languageChangeButton.title")}
+          type="radio"
+        >
           <MenuDivider />
           {languages.map((lang) => (
             <MenuItemOption
