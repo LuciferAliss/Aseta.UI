@@ -15,7 +15,6 @@ const MainPage = () => {
 
   return (
     <Flex gap="1rem" direction="column" flex="1">
-      {/* Hero Section */}
       <VStack
         spacing={4}
         textAlign="center"
