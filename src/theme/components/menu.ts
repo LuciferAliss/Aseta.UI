@@ -8,8 +8,11 @@ const baseStyle = definePartsStyle({
   list: {
     bg: "card-bg",
 
-    borderWidth: "1px",
-    borderColor: "card-border",
+    borderWidth: "2px",
+    borderColor: "menu-border",
+
+    borderRadius: "xl",
+    boxShadow: "card-glow-lg",
 
     padding: 2,
     zIndex: "popover",

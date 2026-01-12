@@ -29,7 +29,7 @@ const LanguageChangeButton = () => {
       <MenuList>
         <MenuOptionGroup
           value={i18n.language}
-          title={t("languageChangeButton.title")}
+          title={t("header.language_change_button.title")}
           type="radio"
         >
           <MenuDivider />

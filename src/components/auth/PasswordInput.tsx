@@ -3,23 +3,20 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  type InputProps,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
-const PasswordInput = () => {
+const PasswordInput = (props: InputProps) => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const { t } = useTranslation("auth");
 
   return (
     <InputGroup borderColor="app-border">
-      <Input
-        type={show ? "text" : "password"}
-        placeholder={t("password_input_placeholder")}
-        variant="base"
-      />
+      <Input type={show ? "text" : "password"} maxLength={128} {...props} />
       <InputRightElement>
         <IconButton
           icon={show ? <ViewIcon /> : <ViewOffIcon />}

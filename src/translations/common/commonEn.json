@@ -1,5 +1,23 @@
 {
-  "languageChangeButton": {
-    "title": "Language"
+  "header": {
+    "user_menu": {
+      "logout": "Logout",
+      "logout_success_title": "Logout successfully",
+      "profile": "Profile"
+    },
+    "language_change_button": {
+      "title": "Language"
+    }
+  },
+  "backend_error": {
+    "server_error": {
+      "title": "Server error",
+      "description": "An error occurred on the server. Please try again later."
+    }
+  },
+  "datePicker": {
+    "timeCaption": "Time",
+    "dateFormat": "MMMM d, yyyy h:mm aa",
+    "dateFormatDateOnly": "MM/dd/yyyy"
   }
 }

@@ -7,7 +7,9 @@ function App() {
   return (
     <Flex direction="column" minH="100vh">
       <Header />
-      <AppRouters />
+      <Flex flex="1" direction="column">
+        <AppRouters />
+      </Flex>
       <Footer />
     </Flex>
   );

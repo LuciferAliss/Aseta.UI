@@ -91,7 +91,6 @@ export const semanticTokens = {
       _light: "gray.300",
       _dark: "gray.700",
     },
-
     "btn-ghost-active-bg": {
       _light: "violet.200",
       _dark: "violet.666",
@@ -119,6 +118,30 @@ export const semanticTokens = {
     },
 
     // ------------------------------------------
+    // COMPONENTS: RADIO
+    // ------------------------------------------
+    "radio-hover-bg": {
+      _light: "transparent",
+      _dark: "transparent",
+    },
+    "radio-hover-color": {
+      _light: "violet.700",
+      _dark: "violet.300",
+    },
+    "radio-hover-border": {
+      _light: "violet.500",
+      _dark: "violet.600",
+    },
+    "radio-focus-ring": {
+      _light: "violet.600",
+      _dark: "violet.400",
+    },
+    "radio-label-hover-color": {
+      _light: "violet.700",
+      _dark: "violet.300",
+    },
+
+    // ------------------------------------------
     // COMPONENTS: INPUTS
     // ------------------------------------------
     "input-bg": {
@@ -137,6 +160,10 @@ export const semanticTokens = {
       _light: "violet.600",
       _dark: "violet.400",
     },
+    "input-border-error": {
+      _light: "red.600",
+      _dark: "red.500",
+    },
     "input-placeholder": {
       _light: "gray.400",
       _dark: "gray.500",
@@ -149,6 +176,10 @@ export const semanticTokens = {
       _light: "white",
       _dark: "gray.800",
     },
+    "menu-border": {
+      _light: "violet.500",
+      _dark: "violet.600",
+    },
     "menu-item-hover-bg": {
       _light: "violet.50",
       _dark: "violet.900",
@@ -160,6 +191,26 @@ export const semanticTokens = {
     "menu-border-subtle": {
       _light: "gray.400",
       _dark: "gray.600",
+    },
+
+    // ------------------------------------------
+    // COMPONENTS: TABLE
+    // ------------------------------------------
+    "table-bg": {
+      _light: "white",
+      _dark: "gray.800",
+    },
+    "table-border": {
+      _light: "gray.100",
+      _dark: "gray.700",
+    },
+    "table-item-hover-bg": {
+      _light: "violet.50",
+      _dark: "violet.900",
+    },
+    "table-item-active-bg": {
+      _light: "violet.100",
+      _dark: "violet.800",
     },
   },
 };

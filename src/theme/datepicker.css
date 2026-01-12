@@ -1,0 +1,222 @@
+/*
+ * react-datepicker theme overrides
+ */
+
+/* --- ОБЩИЙ КОНТЕЙНЕР --- */
+.react-datepicker {
+  font-family: var(--chakra-fonts-body);
+  background-color: var(--chakra-colors-card-bg);
+  border: 4px solid var(--chakra-colors-card-border);
+  border-radius: var(--chakra-radii-md);
+  box-shadow: 0 4px 6px -1px var(--chakra-colors-card-glow-shadow-color);
+  color: var(--chakra-colors-text-primary);
+}
+
+/* --- ЗАГОЛОВОК --- */
+.react-datepicker__header {
+  background-color: var(--chakra-colors-card-bg);
+  border-bottom: 1px solid var(--chakra-colors-card-border);
+}
+
+/* Месяц и год */
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header,
+.react-datepicker__month-name {
+  color: var(--chakra-colors-text-primary);
+  text-transform: capitalize; /* С большой буквы */
+  font-weight: 600;
+}
+
+/* Дни недели (пн, вт...) */
+.react-datepicker__day-name {
+  color: var(--chakra-colors-text-secondary);
+}
+
+/* Обычные дни */
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: var(--chakra-colors-text-primary);
+}
+
+.react-datepicker-popper {
+  z-index: 9999 !important; 
+}
+
+/* --- ВЫБРАННЫЕ ЭЛЕМЕНТЫ (SELECTED) --- */
+/* Используем !important, чтобы перебить дефолтный синий цвет библиотеки */
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range,
+.react-datepicker__time-list-item--selected {
+  background-color: var(--chakra-colors-btn-primary-bg) !important;
+  color: var(--chakra-colors-btn-primary-text) !important;
+  font-weight: 600;
+}
+
+/* --- HOVER (НАВЕДЕНИЕ) --- */
+/* Для невыбранных дней делаем легкий фиолетовый фон */
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__quarter-text:hover,
+.react-datepicker__year-text:hover {
+  background-color: var(--chakra-colors-btn-ghost-hover-bg) !important;
+  color: var(--chakra-colors-btn-ghost-text);
+  border-radius: var(--chakra-radii-md);
+}
+
+/* Если наводим на УЖЕ выбранный элемент - делаем фон чуть темнее */
+.react-datepicker__day--selected:hover,
+.react-datepicker__day--in-selecting-range:hover,
+.react-datepicker__day--in-range:hover {
+  background-color: var(--chakra-colors-btn-primary-hover-bg) !important;
+}
+
+/* --- KEYBOARD SELECTED (ФОКУС) --- */
+/* Это тот самый стиль, который давал синий цвет. Переопределяем его. */
+
+/* 1. Если день просто в фокусе (клавиатурой бегаем), но не выбран */
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+  background-color: var(--chakra-colors-btn-ghost-hover-bg) !important;
+  color: var(--chakra-colors-text-primary) !important;
+  border-radius: var(--chakra-radii-md);
+}
+
+/* 2. ВАЖНО: Если день ВЫБРАН и находится в ФОКУСЕ (ваш случай на скрине) */
+/* Мы должны форсировать Primary цвет, иначе применится ghost-hover выше */
+.react-datepicker__day--selected.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--selected.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__year-text--selected.react-datepicker__year-text--keyboard-selected {
+  background-color: var(--chakra-colors-btn-primary-bg) !important;
+  color: var(--chakra-colors-btn-primary-text) !important;
+}
+
+/* --- СЕГОДНЯШНИЙ ДЕНЬ (TODAY) --- */
+/* Убираем жирную белую/черную рамку по умолчанию и делаем аккуратно */
+.react-datepicker__day--today {
+  font-weight: bold;
+  border: 1px solid var(--chakra-colors-card-border); /* Рамка в цвет карточки */
+  border-radius: var(--chakra-radii-md);
+}
+/* Если "сегодня" выбрано, убираем рамку, так как фон будет залит */
+.react-datepicker__day--today.react-datepicker__day--selected {
+    border: none;
+}
+
+/* --- НАВИГАЦИЯ (СТРЕЛКИ) --- */
+.react-datepicker__navigation-icon::before {
+  border-color: var(--chakra-colors-text-secondary);
+}
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  border-color: var(--chakra-colors-text-primary);
+}
+
+/* --- ВРЕМЯ (TIME PICKER) --- */
+.react-datepicker__time-container {
+  border-left: 1px solid var(--chakra-colors-card-border);
+}
+
+.react-datepicker__time-list {
+  background-color: var(--chakra-colors-card-bg);
+}
+
+.react-datepicker__time-list-item {
+  color: var(--chakra-colors-text-primary);
+  height: auto !important;
+  padding: 8px 0 !important;
+}
+
+/* Hover в списке времени */
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover {
+  background-color: var(--chakra-colors-btn-ghost-hover-bg) !important;
+  color: var(--chakra-colors-text-primary) !important;
+}
+
+/* Выбранное время */
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
+  background-color: var(--chakra-colors-btn-primary-bg) !important;
+  color: var(--chakra-colors-btn-primary-text) !important;
+  font-weight: 600;
+}
+
+/* Скроллбар для времени (чтобы был красивым) */
+.react-datepicker__time-list::-webkit-scrollbar {
+    width: 8px;
+}
+.react-datepicker__time-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.react-datepicker__time-list::-webkit-scrollbar-thumb {
+    background-color: var(--chakra-colors-menu-border);
+    border-radius: 4px;
+}
+
+/* --- МОБИЛЬНАЯ ВЕРСИЯ --- */
+@media (max-width: 768px) {
+  .react-datepicker {
+    display: flex !important;
+    flex-direction: column; 
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .react-datepicker__month-container {
+    width: 100%;
+    float: none;
+  }
+
+  .react-datepicker__time-container {
+    width: 100%;
+    float: none;
+    border-left: none;
+    border-top: 1px solid var(--chakra-colors-card-border); 
+  }
+
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
+    width: 100%;
+    height: 150px; 
+    border-radius: 0 0 var(--chakra-radii-md) var(--chakra-radii-md);
+  }
+  
+  .react-datepicker__time-container .react-datepicker__time-header {
+      width: 100%;
+  }
+
+  .react-datepicker__portal-container .react-datepicker {
+    transform: scale(0.95); 
+  }
+  
+  .react-datepicker__navigation {
+    top: 10px !important; 
+    width: 30px; 
+    height: 30px;
+    border: none !important; 
+    background: transparent !important; 
+  }
+
+  .react-datepicker__navigation--previous {
+    left: 5px !important;
+  }
+
+  .react-datepicker__navigation--next {
+    right: 5px !important;
+  }
+  
+  .react-datepicker__navigation:focus,
+  .react-datepicker__navigation:active {
+      outline: none;
+      box-shadow: none;
+  }
+}

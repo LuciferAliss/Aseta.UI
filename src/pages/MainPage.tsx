@@ -9,17 +9,21 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useAuth } from "../lib/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../lib/routes";
 
 const MainPage = () => {
-  const isLoggedIn = false;
+  const { isAuth } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <Flex gap="1rem" direction="column" flex="1">
+    <Flex gap="1rem" direction="column">
       <VStack
         spacing={4}
         textAlign="center"
         p={8}
-        _light={{ bg: "violet.450" }}
+        _light={{ bg: "violet.600" }}
         _dark={{ bg: "violet.800" }}
         bgPos="center"
         bgSize="cover"
@@ -50,7 +54,9 @@ const MainPage = () => {
                 другими пользователями.
               </Text>
               <Spacer />
-              <Button w="100%">Перейти к каталогу</Button>
+              <Button w="100%" onClick={() => navigate(ROUTES.inventories)}>
+                Перейти к каталогу
+              </Button>
             </VStack>
           </Container>
 
@@ -68,7 +74,7 @@ const MainPage = () => {
             </VStack>
           </Container>
 
-          {isLoggedIn ? (
+          {isAuth ? (
             <Container variant="card">
               <VStack spacing={4} alignItems="flex-start" h="100%">
                 <Heading as="h3" size="md">

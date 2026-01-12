@@ -2,11 +2,14 @@ import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
-import auth_en from "./auth/authEn.json";
-import auth_ru from "./auth/authRu.json";
+import authEn from "./auth/authEn.json";
+import authRu from "./auth/authRu.json";
 
-import common_en from "./common/commonEn.json";
-import common_ru from "./common/commonRu.json";
+import commonEn from "./common/commonEn.json";
+import commonRu from "./common/commonRu.json";
+
+import inventoryCatalogEn from "./inventoryCatalog/inventoryCatalogEn.json";
+import inventoryCatalogRu from "./inventoryCatalog/inventoryCatalogRu.json";
 
 i18next
   .use(LanguageDetector)
@@ -21,12 +24,14 @@ i18next
     },
     resources: {
       en: {
-        auth: auth_en,
-        common: common_en,
+        auth: authEn,
+        common: commonEn,
+        inventoryCatalog: inventoryCatalogEn,
       },
       ru: {
-        auth: auth_ru,
-        common: common_ru,
+        auth: authRu,
+        common: commonRu,
+        inventoryCatalog: inventoryCatalogRu,
       },
     },
   });

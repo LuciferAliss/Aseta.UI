@@ -5,9 +5,24 @@
     "email_placeholder": "Enter email",
     "password_label": "Password",
     "submit_button": "Sign in",
-    "switch_to_register": "Don't have an account? Sign up"
+    "switch_to_register": "Don't have an account? Sign up",
+    "success_title": "Sign in successfully",
+    "success_description": "User, welcome to the Aseta inventory management system",
+    "backend_errors": {
+      "NotFoundByEmail": {
+        "Title": "Not found user",
+        "Description": "No user found with this email address."
+      },
+      "PasswordIncorrect": {
+        "Title": "Incorrect password",
+        "Description": "The user entered the incorrect password, please try again."
+      }
+    }
   },
-  "password_input_placeholder": "Enter password",
+  "password_input": {
+    "placeholder": "Enter password",
+    "confirm_placeholder": "Enter confirm password"
+  },
   "register": {
     "title": "Sign up",
     "email_label": "Email",
@@ -18,5 +33,27 @@
     "confirm_password_label": "Confirm Password",
     "submit_button": "Sign up",
     "switch_to_login": "Already have an account? Sign in"
+  },
+  "validation_errors": {
+    "email": {
+      "required": "Email is required.",
+      "invalid": "A valid email is required.",
+      "max": "Email must be at most 256 characters long."
+    },
+    "password": {
+      "required": "Password is required.",
+      "min": "Password must be at least 8 characters long.",
+      "max": "Password must be at most 128 characters long.",
+      "uppercase": "Password must contain at least one uppercase letter.",
+      "lowercase": "Password must contain at least one lowercase letter.",
+      "digit": "Password must contain at least one digit.",
+      "special": "Password must contain at least one special character."
+    },
+    "username": {
+      "required": "Username is required.",
+      "min": "Username must be at least 3 characters long.",
+      "max": "Username must be at most 32 characters long."
+    },
+    "passwords_not_match": "Passwords do not match."
   }
 }

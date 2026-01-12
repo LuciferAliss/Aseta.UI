@@ -1,5 +1,7 @@
 export const ROUTES = {
   main: "/",
+  inventories: "/inventories",
+  datepickerTest: "/datepicker-test",
 };
 
 const generatePath = (

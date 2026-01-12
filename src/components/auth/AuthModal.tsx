@@ -47,7 +47,11 @@ const AuthModal = () => {
 
   return (
     <>
-      <Button onClick={openLogin} variant="ghost">
+      <Button
+        size={{ base: "sm", md: "md" }}
+        onClick={openLogin}
+        variant="ghost"
+      >
         Sign in
       </Button>
       <Modal

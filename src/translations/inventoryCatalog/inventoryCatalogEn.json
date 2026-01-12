@@ -1,0 +1,30 @@
+{
+  "filter_sidebar": {
+    "createdAtFrom": "Created At From",
+    "createdAtTo": "Created At To",
+    "validationErrors": {
+      "pageSize": {
+        "required": "Page size is required",
+        "min": "Page size must be at least 1",
+        "max": "Page size must not exceed 100",
+        "integer": "Page size must be an integer"
+      },
+      "minItemsCount": {
+        "min": "Minimum count cannot be negative",
+        "integer": "Minimum count must be an integer"
+      },
+      "maxItemsCount": {
+        "min": "Maximum count cannot be negative",
+        "integer": "Maximum count must be an integer",
+        "greater": "Maximum count must be greater than or equal to minimum count"
+      },
+      "createdAtFrom": {
+        "invalid": "Invalid start date format"
+      },
+      "createdAtTo": {
+        "invalid": "Invalid end date format",
+        "beforeFrom": "End date cannot be earlier than start date"
+      }
+    }
+  }
+}

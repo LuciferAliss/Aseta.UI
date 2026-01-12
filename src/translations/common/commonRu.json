@@ -1,5 +1,23 @@
 {
-  "languageChangeButton": {
-    "title": "Язык"
+  "header": {
+    "user_menu": {
+      "logout": "Выйти",
+      "logout_success_title": "Вы успешно вышли",
+      "profile": "Профиль"
+    },
+    "language_change_button": {
+      "title": "Язык"
+    }
+  },
+  "backend_error": {
+    "server_error": {
+      "title": "Ошибка сервера",
+      "description": "Произошла ошибка на сервере. Попробуйте ещё раз позже."
+    }
+  },
+  "datePicker": {
+    "timeCaption": "Время",
+    "dateFormat": "d MMMM yyyy HH:mm",
+    "dateFormatDateOnly": "dd.MM.yyyy"
   }
 }
