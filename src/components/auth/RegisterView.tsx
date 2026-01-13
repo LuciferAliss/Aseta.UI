@@ -14,7 +14,7 @@ import {
 import PasswordInput from "./PasswordInput";
 import { useTranslation } from "react-i18next";
 import { type RefObject } from "react";
-import { Field, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import { useAppToast } from "../../lib/hooks/useAppToast";
 import { useAuth } from "../../lib/contexts/AuthContext";
 import { VALIDATION_CONSTANTS } from "../../lib/constants";
@@ -110,7 +110,7 @@ const RegisterView = ({ onSwitchToLogin, ref }: RegisterViewProps) => {
       validateOnBlur={false}
     >
       {(props) => (
-        <form onSubmit={props.handleSubmit} noValidate>
+        <Form onSubmit={props.handleSubmit} noValidate>
           <ModalHeader>
             <Center>
               <Text fontSize="4xl" as="b">
@@ -199,7 +199,7 @@ const RegisterView = ({ onSwitchToLogin, ref }: RegisterViewProps) => {
               </Button>
             </VStack>
           </ModalFooter>
-        </form>
+        </Form>
       )}
     </Formik>
   );

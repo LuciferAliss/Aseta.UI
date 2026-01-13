@@ -18,6 +18,8 @@
   "datePicker": {
     "timeCaption": "Время",
     "dateFormat": "d MMMM yyyy HH:mm",
-    "dateFormatDateOnly": "dd.MM.yyyy"
+    "dateFormatDateOnly": "dd.MM.yyyy",
+    "state_change_button_title": "Выберите дату",
+    "clear_button_title": "Очистить"
   }
 }

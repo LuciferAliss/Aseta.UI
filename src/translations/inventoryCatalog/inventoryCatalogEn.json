@@ -25,6 +25,25 @@
         "invalid": "Invalid end date format",
         "beforeFrom": "End date cannot be earlier than start date"
       }
+    },
+    "filters_title": "Filters",
+    "sort_by": "Sort By",
+    "sort_order": "Sort Order",
+    "items_per_page": "Items per page",
+    "item_minimum_count": "Item minimum count",
+    "item_maximum_count": "Item maximum count",
+    "created_at_from": "Created at from",
+    "created_at_to": "Created at to",
+    "apply_filters": "Apply Filters",
+    "sort_options": {
+      "Date": "Date",
+      "Name": "Name",
+      "Creator": "Creator",
+      "NumberOfItems": "Number of Items"
+    },
+    "sort_order_options": {
+      "asc": "Ascending",
+      "desc": "Descending"
     }
   }
 }

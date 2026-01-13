@@ -18,6 +18,8 @@
   "datePicker": {
     "timeCaption": "Time",
     "dateFormat": "MMMM d, yyyy h:mm aa",
-    "dateFormatDateOnly": "MM/dd/yyyy"
+    "dateFormatDateOnly": "MM/dd/yyyy",
+    "state_change_button_title": "Select date",
+    "clear_button_title": "Clear"
   }
 }

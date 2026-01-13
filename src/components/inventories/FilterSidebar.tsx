@@ -7,27 +7,28 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Box,
   FormErrorMessage,
   NumberInput,
   NumberInputField,
-  Input,
 } from "@chakra-ui/react";
-import { Field, type FormikProps, type FieldProps } from "formik";
+import { Field, type FormikProps, type FieldProps, Form } from "formik";
 import { sortByOptions, sortOrderOptions } from "../../types/inventory";
 import type { FilterFormValues } from "../../pages/InventoryCatalogPage";
 import DatePicker from "../layout/DatePicker";
+import { useTranslation } from "react-i18next";
 
 const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
+  const { t } = useTranslation("inventoryCatalog");
+
   return (
-    <Box p={6} as="form" onSubmit={props.handleSubmit} noValidate>
+    <Form onSubmit={props.handleSubmit} noValidate>
       <VStack spacing={6} align="stretch">
         <Heading size="md" textAlign="center">
-          Filters
+          {t("filter_sidebar.filters_title")}
         </Heading>
 
         <FormControl>
-          <FormLabel as="legend">Sort By</FormLabel>
+          <FormLabel as="legend">{t("filter_sidebar.sort_by")}</FormLabel>
           <Field name="sortBy">
             {({ field, form }: FieldProps) => (
               <RadioGroup
@@ -37,7 +38,7 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
                 <Stack spacing={2}>
                   {sortByOptions.map((option) => (
                     <Radio key={option} value={option}>
-                      {option}
+                      {t(`filter_sidebar.sort_options.${option}`)}
                     </Radio>
                   ))}
                 </Stack>
@@ -47,7 +48,7 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
         </FormControl>
 
         <FormControl>
-          <FormLabel as="legend">Sort Order</FormLabel>
+          <FormLabel as="legend">{t("filter_sidebar.sort_order")}</FormLabel>
           <Field name="sortOrder">
             {({ field, form }: FieldProps) => (
               <RadioGroup
@@ -57,7 +58,7 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
                 <Stack spacing={2}>
                   {sortOrderOptions.map((option) => (
                     <Radio key={option} value={option}>
-                      {option}
+                      {t(`filter_sidebar.sort_order_options.${option}`)}
                     </Radio>
                   ))}
                 </Stack>
@@ -71,7 +72,9 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
             <FormControl
               isInvalid={!!form.errors.pageSize && !!form.touched.pageSize}
             >
-              <FormLabel>Items per page</FormLabel>
+              <FormLabel htmlFor="pageSize">
+                {t("filter_sidebar.items_per_page")}
+              </FormLabel>
               <NumberInput
                 {...field}
                 id="pageSize"
@@ -94,7 +97,9 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
                 !!form.errors.minItemsCount && !!form.touched.minItemsCount
               }
             >
-              <FormLabel>Item minimum count</FormLabel>
+              <FormLabel htmlFor="minItemsCount">
+                {t("filter_sidebar.item_minimum_count")}
+              </FormLabel>
               <NumberInput
                 {...field}
                 id="minItemsCount"
@@ -116,7 +121,9 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
                 !!form.errors.maxItemsCount && !!form.touched.maxItemsCount
               }
             >
-              <FormLabel>Item maximum count</FormLabel>
+              <FormLabel htmlFor="maxItemsCount">
+                {t("filter_sidebar.item_maximum_count")}
+              </FormLabel>
               <NumberInput
                 {...field}
                 id="maxItemsCount"
@@ -131,41 +138,59 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
           )}
         </Field>
 
-        <FormControl
-          isInvalid={
-            !!props.errors.createdAtFrom && !!props.touched.createdAtFrom
-          }
-        >
-          <FormLabel>Created At From</FormLabel>
-          <Field name="createdAtFrom">
-            {({ field }: FieldProps<Date | null>) => (
-              <DatePicker
-                selected={field.value}
-                onChange={(date) => props.setFieldValue(field.name, date)}
-                showTimeSelect
-              />
-            )}
-          </Field>
-          <FormErrorMessage>
-            {props.errors.createdAtFrom as string}
-          </FormErrorMessage>
-        </FormControl>
+        <Field name="createdAtFrom">
+          {({ field, form }: FieldProps<Date | null>) => (
+            <FormControl
+              isInvalid={
+                !!form.errors.createdAtFrom && !!form.touched.createdAtFrom
+              }
+            >
+              <VStack align="stretch">
+                <FormLabel htmlFor="createdAtFrom">
+                  {t("filter_sidebar.created_at_from")}
+                </FormLabel>
+                <DatePicker
+                  selected={field.value}
+                  onChange={(date) => form.setFieldValue(field.name, date)}
+                  showTimeSelect
+                />
+              </VStack>
+              <FormErrorMessage>
+                {form.errors.createdAtFrom as string}
+              </FormErrorMessage>
+            </FormControl>
+          )}
+        </Field>
 
-        <FormControl
-          isInvalid={!!props.errors.createdAtTo && !!props.touched.createdAtTo}
-        >
-          <FormLabel>Created At To</FormLabel>
-          <Field name="createdAtTo" component={DatePicker} showTimeSelect />
-          <FormErrorMessage>
-            {props.errors.createdAtTo as string}
-          </FormErrorMessage>
-        </FormControl>
+        <Field name="createdAtTo">
+          {({ field, form }: FieldProps<Date | null>) => (
+            <FormControl
+              isInvalid={
+                !!form.errors.createdAtTo && !!form.touched.createdAtTo
+              }
+            >
+              <VStack align="stretch">
+                <FormLabel htmlFor="createdAtTo">
+                  {t("filter_sidebar.created_at_to")}
+                </FormLabel>
+                <DatePicker
+                  selected={field.value}
+                  onChange={(date) => form.setFieldValue(field.name, date)}
+                  showTimeSelect
+                />
+              </VStack>
+              <FormErrorMessage>
+                {form.errors.createdAtTo as string}
+              </FormErrorMessage>
+            </FormControl>
+          )}
+        </Field>
 
         <Button type="submit" w="full">
-          Apply Filters
+          {t("filter_sidebar.apply_filters")}
         </Button>
       </VStack>
-    </Box>
+    </Form>
   );
 };
 

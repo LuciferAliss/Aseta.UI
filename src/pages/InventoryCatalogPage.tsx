@@ -1,5 +1,4 @@
 import {
-  Box,
   VStack,
   HStack,
   Spinner,
@@ -15,6 +14,7 @@ import {
   DrawerCloseButton,
   useDisclosure,
   Input,
+  Container,
 } from "@chakra-ui/react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useInView } from "react-intersection-observer";
@@ -290,15 +290,16 @@ const InventoryCatalogPage = () => {
         {(props) => (
           <>
             {isDesktop ? (
-              <Box
+              <Container
+                variant="card"
                 as="aside"
-                borderWidth="3px"
-                borderRadius="lg"
-                boxShadow="lg"
                 position="sticky"
+                w="xs"
+                boxShadow="none"
+                p={6}
               >
                 <FilterSidebar {...props} />
-              </Box>
+              </Container>
             ) : (
               <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
                 <DrawerOverlay />
@@ -335,7 +336,10 @@ const InventoryCatalogPage = () => {
 
         <Center ref={ref} h="100px">
           {list.isLoading && list.items.length > 0 && <Spinner size="xl" />}
-          {!hasNextPage && !list.isLoading && <Text>No more inventories</Text>}
+          {(!hasNextPage && !list.isLoading) ||
+            (list.items.length === 0 && !list.isLoading && (
+              <Text>No more inventories</Text>
+            ))}
         </Center>
       </VStack>
     </Flex>
