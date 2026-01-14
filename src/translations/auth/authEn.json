@@ -32,7 +32,32 @@
     "password_label": "Password",
     "confirm_password_label": "Confirm Password",
     "submit_button": "Sign up",
-    "switch_to_login": "Already have an account? Sign in"
+    "switch_to_login": "Already have an account? Sign in",
+    "success_title": "Registration Successful",
+    "success_message": "Please check your email to verify your account.",
+    "error_title": "Registration Failed",
+    "backend_errors": {
+      "User.UserAlreadyExists": {
+        "Title": "User Already Exists",
+        "Description": "A user with this email address already exists."
+      },
+      "User.InvalidEmail": {
+        "Title": "Invalid Email",
+        "Description": "The email format is incorrect."
+      },
+      "User.PasswordTooShort": {
+        "Title": "Password Too Short",
+        "Description": "The provided password is too short."
+      },
+      "User.PasswordTooWeak": {
+        "Title": "Password Too Weak",
+        "Description": "The provided password is too weak."
+      },
+      "User.InvalidUserName": {
+        "Title": "Invalid Username",
+        "Description": "The username format is incorrect."
+      }
+    }
   },
   "validation_errors": {
     "email": {

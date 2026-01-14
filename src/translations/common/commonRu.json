@@ -21,5 +21,15 @@
     "dateFormatDateOnly": "dd.MM.yyyy",
     "state_change_button_title": "Выберите дату",
     "clear_button_title": "Очистить"
+  },
+  "imageUploader": {
+    "imageUploadError": "Ошибка загрузки изображения. Пожалуйста, попробуйте снова.",
+    "imagePreview": "Предпросмотр изображения",
+    "dragAndDrop": "Перетащите",
+    "fileSize": "PNG, JPG, GIF до 10МБ",
+    "selectImage": "Выбрать изображение",
+    "uploadImage": "Загрузить изображение",
+    "removeImage": "Удалить изображение",
+    "imageRequiredError": "Изображение обязательно"
   }
 }

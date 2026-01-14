@@ -32,7 +32,32 @@
     "password_label": "Пароль",
     "confirm_password_label": "Подтвердите пароль",
     "submit_button": "Зарегистрироваться",
-    "switch_to_login": "Уже есть аккаунт? Войти"
+    "switch_to_login": "Уже есть аккаунт? Войти",
+    "success_title": "Регистрация успешна",
+    "success_message": "Пожалуйста, проверьте свою электронную почту для подтверждения аккаунта.",
+    "error_title": "Ошибка регистрации",
+    "backend_errors": {
+      "User.UserAlreadyExists": {
+        "Title": "Пользователь существует",
+        "Description": "Пользователь с указанной электронной почтой уже существует."
+      },
+      "User.InvalidEmail": {
+        "Title": "Неверный Email",
+        "Description": "Неверный формат электронной почты."
+      },
+      "User.PasswordTooShort": {
+        "Title": "Пароль слишком короткий",
+        "Description": "Пароль слишком короткий."
+      },
+      "User.PasswordTooWeak": {
+        "Title": "Пароль слишком слабый",
+        "Description": "Пароль слишком слабый."
+      },
+      "User.InvalidUserName": {
+        "Title": "Неверное имя пользователя",
+        "Description": "Неверный формат имени пользователя."
+      }
+    }
   },
   "validation_errors": {
     "email": {

@@ -6,6 +6,7 @@ import { Modal } from "./modal";
 import { Table } from "./table";
 import Radio from "./radio"; // Import the Radio theme
 import { NumberInput } from "./numberInput";
+import { ImageUploader } from "./imageUploader";
 
 export const components = {
   Container,
@@ -16,4 +17,5 @@ export const components = {
   Table,
   Radio,
   NumberInput,
+  ImageUploader,
 };

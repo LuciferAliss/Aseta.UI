@@ -17,6 +17,7 @@ import { Field, Form, Formik } from "formik";
 import { useAppToast } from "../../lib/hooks/useAppToast";
 import { useAuth } from "../../lib/contexts/AuthContext";
 import { VALIDATION_CONSTANTS } from "../../lib/constants";
+import { getTitleError } from "../../lib/utils/errorUtils";
 
 interface RegisterViewProps {
   onSwitchToLogin: () => void;
@@ -27,7 +28,7 @@ const RegisterView = ({ onSwitchToLogin, ref }: RegisterViewProps) => {
   const { register, isLoading } = useAuth();
   const { showSuccess, showError } = useAppToast();
 
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation(["auth", "common"]);
 
   const validateForm = (values: any) => {
     const errors: any = {};
@@ -101,8 +102,28 @@ const RegisterView = ({ onSwitchToLogin, ref }: RegisterViewProps) => {
             t("register.success_title"),
             t("register.success_message")
           );
+          onSwitchToLogin(); // Switch to login view on success
         } catch (error) {
-          showError(t("register.error_title"), "erwf");
+          const backendErrorTitle = getTitleError(error);
+          const localizedKey = `register.backend_errors.${backendErrorTitle}`;
+          const translatedError = t(localizedKey, { returnObjects: true });
+
+          if (
+            typeof translatedError === "object" &&
+            translatedError &&
+            "Title" in translatedError &&
+            "Description" in translatedError
+          ) {
+            showError(
+              translatedError.Title as string,
+              translatedError.Description as string
+            );
+          } else {
+            showError(
+              t("backend_error.server_error.title", { ns: "common" }),
+              t("backend_error.server_error.description", { ns: "common" })
+            );
+          }
         }
       }}
       validateOnChange={false}

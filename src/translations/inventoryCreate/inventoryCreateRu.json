@@ -1,0 +1,42 @@
+{
+  "create_inventory_title": "Создание инвентаря",
+  "name_label": "Название",
+  "name_placeholder": "Введите название инвентаря",
+  "description_label": "Описание",
+  "description_placeholder": "Введите описание",
+  "category_id_label": "ID категории",
+  "category_id_placeholder": "Введите ID категории",
+  "is_public_label": "Публичный инвентарь",
+  "image_label": "Изображение",
+  "submit_button": "Создать инвентарь",
+  "success_title": "Инвентарь создан",
+  "success_description": "Ваш инвентарь был успешно создан.",
+  "error_title": "Ошибка создания",
+  "validation_errors": {
+    "name_required": "Название обязательно.",
+    "name_min": "Название должно быть не менее 3 символов.",
+    "name_max": "Название должно быть не более 36 символов.",
+    "description_max": "Описание должно быть не более 1000 символов.",
+    "category_required": "ID категории обязателен.",
+    "image_required": "Изображение обязательно."
+  },
+  "backend_errors": {
+    "Category.NotFound": {
+      "Title": "Категория не найдена",
+      "Description": "Категория с указанным идентификатором не найдена."
+    },
+    "Inventory.NameTooShort": {
+      "Title": "Название слишком короткое",
+      "Description": "Название инвентаря слишком короткое."
+    },
+    "Inventory.NameTooLong": {
+      "Title": "Название слишком длинное",
+      "Description": "Название инвентаря слишком длинное."
+    },
+    "Inventory.DescriptionTooLong": {
+      "Title": "Описание слишком длинное",
+      "Description": "Описание инвентаря слишком длинное."
+    }
+  },
+  "not_authenticated_error": "Вы должны быть авторизованы, чтобы создать инвентарь."
+}

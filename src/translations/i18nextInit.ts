@@ -11,6 +11,9 @@ import commonRu from "./common/commonRu.json";
 import inventoryCatalogEn from "./inventoryCatalog/inventoryCatalogEn.json";
 import inventoryCatalogRu from "./inventoryCatalog/inventoryCatalogRu.json";
 
+import inventoryCreateEn from "./inventoryCreate/inventoryCreateEn.json";
+import inventoryCreateRu from "./inventoryCreate/inventoryCreateRu.json";
+
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -27,11 +30,13 @@ i18next
         auth: authEn,
         common: commonEn,
         inventoryCatalog: inventoryCatalogEn,
+        inventoryCreate: inventoryCreateEn,
       },
       ru: {
         auth: authRu,
         common: commonRu,
         inventoryCatalog: inventoryCatalogRu,
+        inventoryCreate: inventoryCreateRu,
       },
     },
   });

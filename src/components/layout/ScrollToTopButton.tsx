@@ -40,7 +40,7 @@ const ScrollToTopButton = () => {
           position="fixed"
           bottom="2rem"
           right="2rem"
-          zIndex="tooltip"
+          zIndex="sticky"
         />
       )}
     </>

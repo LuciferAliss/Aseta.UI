@@ -18,7 +18,7 @@ const UserMenu = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      showSuccess(t("header.logout_success_title"));
+      showSuccess(t("header.user_menu.logout_success_title"));
     } catch (error) {
       showError(
         t("backend_error.server_error.title"),

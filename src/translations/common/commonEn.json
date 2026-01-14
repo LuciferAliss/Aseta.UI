@@ -21,5 +21,15 @@
     "dateFormatDateOnly": "MM/dd/yyyy",
     "state_change_button_title": "Select date",
     "clear_button_title": "Clear"
+  },
+  "imageUploader": {
+    "imageUploadError": "Image upload failed. Please try again.",
+    "imagePreview": "Image Preview",
+    "dragAndDrop": "Drag N Drop",
+    "fileSize": "PNG, JPG, GIF up to 10MB",
+    "selectImage": "Select Image",
+    "uploadImage": "Upload Image",
+    "removeImage": "Remove Image",
+    "imageRequiredError": "Image is required"
   }
 }

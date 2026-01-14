@@ -10,6 +10,15 @@ export const VALIDATION_CONSTANTS = {
     MIN_LENGTH: 3,
     MAX_LENGTH: 32,
   },
+  INVENTORY: {
+    NAME: {
+      MIN_LENGTH: 3,
+      MAX_LENGTH: 36,
+    },
+    DESCRIPTION: {
+      MAX_LENGTH: 1000,
+    },
+  },
   INVENTORY_FILTER: {
     PAGE_SIZE: { MIN: 1, MAX: 100 },
     ITEMS_COUNT: { MIN: 0 },

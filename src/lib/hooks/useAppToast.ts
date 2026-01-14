@@ -28,7 +28,7 @@ export const useAppToast = () => {
   );
 
   const showError = useCallback(
-    (title: string, description: string) => {
+    (title: string, description?: string) => {
       showToast("error", title, description);
     },
     [showToast]

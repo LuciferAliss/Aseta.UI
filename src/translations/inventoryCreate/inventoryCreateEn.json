@@ -1,0 +1,42 @@
+{
+  "create_inventory_title": "Create Inventory",
+  "name_label": "Name",
+  "name_placeholder": "Enter inventory name",
+  "description_label": "Description",
+  "description_placeholder": "Enter a description",
+  "category_id_label": "Category ID",
+  "category_id_placeholder": "Enter category ID",
+  "is_public_label": "Public Inventory",
+  "image_label": "Image",
+  "submit_button": "Create Inventory",
+  "success_title": "Inventory Created",
+  "success_description": "Your inventory has been successfully created.",
+  "error_title": "Creation Failed",
+  "validation_errors": {
+    "name_required": "Name is required.",
+    "name_min": "Name must be at least 3 characters long.",
+    "name_max": "Name must be at most 36 characters long.",
+    "description_max": "Description must be at most 1000 characters long.",
+    "category_required": "Category ID is required.",
+    "image_required": "Image is required."
+  },
+  "backend_errors": {
+    "Category.NotFound": {
+      "Title": "Category Not Found",
+      "Description": "The category with the specified ID was not found."
+    },
+    "Inventory.NameTooShort": {
+      "Title": "Name Too Short",
+      "Description": "The inventory name is too short."
+    },
+    "Inventory.NameTooLong": {
+      "Title": "Name Too Long",
+      "Description": "The inventory name is too long."
+    },
+    "Inventory.DescriptionTooLong": {
+      "Title": "Description Too Long",
+      "Description": "The inventory description is too long."
+    }
+  },
+  "not_authenticated_error": "You must be logged in to create an inventory."
+}
