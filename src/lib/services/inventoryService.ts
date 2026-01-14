@@ -11,6 +11,7 @@ export const getInventories = async (
     const response = await apiClient.get<InventoriesResponse>("/inventories", {
       params: request,
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Get inventories failed:", error);

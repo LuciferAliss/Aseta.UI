@@ -2,6 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import Header from "./components/layout/Header";
 import AppRouters from "./components/routers/AppRouters";
 import Footer from "./components/layout/Footer";
+import ScrollToTopButton from "./components/layout/ScrollToTopButton";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <AppRouters />
       </Flex>
       <Footer />
+      <ScrollToTopButton />
     </Flex>
   );
 }

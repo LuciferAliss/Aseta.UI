@@ -35,6 +35,7 @@
     "created_at_from": "Created at from",
     "created_at_to": "Created at to",
     "apply_filters": "Apply Filters",
+    "reset_filters": "Reset Filters",
     "sort_options": {
       "Date": "Date",
       "Name": "Name",
@@ -45,5 +46,18 @@
       "asc": "Ascending",
       "desc": "Descending"
     }
+  },
+  "noMoreItems": "No more items to load.",
+  "card": {
+    "item_count": "Item count:",
+    "created_at": "Created at:",
+    "creator": "Creator:",
+    "view_button": "View"
+  },
+  "table_header": {
+    "name": "Name",
+    "items_count": "Items Count",
+    "creator": "Creator",
+    "created_at": "Created At"
   }
 }

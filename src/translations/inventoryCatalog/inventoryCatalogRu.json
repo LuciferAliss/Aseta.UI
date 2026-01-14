@@ -35,6 +35,7 @@
     "created_at_from": "Создано с",
     "created_at_to": "Создано по",
     "apply_filters": "Применить фильтры",
+    "reset_filters": "Сбросить фильтры",
     "sort_options": {
       "Date": "Дата",
       "Name": "Название",
@@ -45,5 +46,18 @@
       "asc": "По возрастанию",
       "desc": "По убыванию"
     }
+  },
+  "noMoreItems": "Больше нет предметов для загрузки.",
+  "card": {
+    "item_count": "Кол-во предметов:",
+    "created_at": "Создано:",
+    "creator": "Создатель:",
+    "view_button": "Посмотреть"
+  },
+  "table_header": {
+    "name": "Название",
+    "items_count": "Кол-во предметов",
+    "creator": "Создатель",
+    "created_at": "Дата создания"
   }
 }

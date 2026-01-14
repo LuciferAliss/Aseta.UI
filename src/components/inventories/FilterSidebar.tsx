@@ -17,7 +17,11 @@ import type { FilterFormValues } from "../../pages/InventoryCatalogPage";
 import DatePicker from "../layout/DatePicker";
 import { useTranslation } from "react-i18next";
 
-const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
+interface FilterSidebarProps extends FormikProps<FilterFormValues> {
+  onReset: () => void;
+}
+
+const FilterSidebar = (props: FilterSidebarProps) => {
   const { t } = useTranslation("inventoryCatalog");
 
   return (
@@ -188,6 +192,9 @@ const FilterSidebar = (props: FormikProps<FilterFormValues>) => {
 
         <Button type="submit" w="full">
           {t("filter_sidebar.apply_filters")}
+        </Button>
+        <Button variant="link" w="full" onClick={props.onReset}>
+          {t("filter_sidebar.reset_filters")}
         </Button>
       </VStack>
     </Form>

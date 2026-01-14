@@ -8,12 +8,14 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { type InventoryItem } from "../../types/inventory";
+import { useTranslation } from "react-i18next";
 
 interface InventoryTableProps {
   inventories: InventoryItem[];
 }
 
 const InventoryTable = ({ inventories }: InventoryTableProps) => {
+  const { t } = useTranslation("inventoryCatalog");
   const handleRowClick = (inventory: InventoryItem) => {
     console.log("Inventory clicked:", inventory);
     // User will change this behavior later
@@ -24,10 +26,10 @@ const InventoryTable = ({ inventories }: InventoryTableProps) => {
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>Name</Th>
-            <Th>Items Count</Th>
-            <Th>Creator</Th>
-            <Th>Created At</Th>
+            <Th>{t("table_header.name")}</Th>
+            <Th>{t("table_header.items_count")}</Th>
+            <Th>{t("table_header.creator")}</Th>
+            <Th>{t("table_header.created_at")}</Th>
           </Tr>
         </Thead>
         <Tbody>

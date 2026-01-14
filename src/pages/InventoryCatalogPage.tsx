@@ -29,7 +29,7 @@ import InventoryCardList from "../components/inventories/InventoryCardList";
 import InventoryTable from "../components/inventories/InventoryTable";
 import { ViewIcon, ViewOffIcon, HamburgerIcon } from "@chakra-ui/icons";
 import FilterSidebar from "../components/inventories/FilterSidebar";
-import { Formik } from "formik";
+import { Formik, type FormikProps } from "formik";
 import { useTranslation } from "react-i18next";
 import { VALIDATION_CONSTANTS } from "../lib/constants";
 
@@ -45,17 +45,24 @@ export interface FilterFormValues {
   createdAtTo: string;
 }
 
+const LOCAL_STORAGE_FILTER_KEY = "inventoryFilters";
+
+const DEFAULT_FILTERS: FilterFormValues = {
+  sortBy: "Date",
+  sortOrder: "desc",
+  pageSize: "10",
+  minItemsCount: "",
+  maxItemsCount: "",
+  createdAtFrom: "",
+  createdAtTo: "",
+};
+
 const InventoryCatalogPage = () => {
   const { t } = useTranslation("inventoryCatalog");
   const [searchTerm, setSearchTerm] = useState("");
-  const [appliedFilters, setAppliedFilters] = useState<FilterFormValues>({
-    sortBy: "Date",
-    sortOrder: "desc",
-    pageSize: "10",
-    minItemsCount: "",
-    maxItemsCount: "",
-    createdAtFrom: "",
-    createdAtTo: "",
+  const [appliedFilters, setAppliedFilters] = useState<FilterFormValues>(() => {
+    const savedFilters = localStorage.getItem(LOCAL_STORAGE_FILTER_KEY);
+    return savedFilters ? JSON.parse(savedFilters) : DEFAULT_FILTERS;
   });
   const [hasNextPage, setHasNextPage] = useState(true);
 
@@ -116,6 +123,14 @@ const InventoryCatalogPage = () => {
     list.reload();
   }, [appliedFilters]);
 
+  // Save filters to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(
+      LOCAL_STORAGE_FILTER_KEY,
+      JSON.stringify(appliedFilters)
+    );
+  }, [appliedFilters]);
+
   useEffect(() => {
     if (inView && !list.isLoading && hasNextPage) {
       list.loadMore();
@@ -171,60 +186,45 @@ const InventoryCatalogPage = () => {
     }
 
     // Items Min Count
-    const minCount = minItemsCount;
     if (
-      minCount !== "" &&
-      minCount !== undefined &&
-      minCount !== null &&
-      !Number.isInteger(Number(minCount))
+      minItemsCount !== "" &&
+      minItemsCount !== undefined &&
+      minItemsCount !== null &&
+      !Number.isInteger(Number(minItemsCount))
     ) {
       errors.minItemsCount = t(
         "filter_sidebar.validationErrors.minItemsCount.integer"
       );
-    } else if (
-      minCount !== "" &&
-      minCount !== undefined &&
-      minCount !== null &&
-      Number(minCount) < INVENTORY_FILTER.ITEMS_COUNT.MIN
-    ) {
+    } else if (Number(minItemsCount) < INVENTORY_FILTER.ITEMS_COUNT.MIN) {
       errors.minItemsCount = t(
         "filter_sidebar.validationErrors.minItemsCount.min"
       );
     }
 
     // Items Max Count
-    const maxCount = maxItemsCount;
     if (
-      maxCount !== "" &&
-      maxCount !== undefined &&
-      maxCount !== null &&
-      !Number.isInteger(Number(maxCount))
+      maxItemsCount !== "" &&
+      maxItemsCount !== undefined &&
+      maxItemsCount !== null &&
+      !Number.isInteger(Number(maxItemsCount))
     ) {
       errors.maxItemsCount = t(
         "filter_sidebar.validationErrors.maxItemsCount.integer"
       );
-    } else if (
-      maxCount !== "" &&
-      maxCount !== undefined &&
-      maxCount !== null &&
-      Number(maxCount) < INVENTORY_FILTER.ITEMS_COUNT.MIN
-    ) {
+    } else if (Number(maxItemsCount) < INVENTORY_FILTER.ITEMS_COUNT.MIN) {
       errors.maxItemsCount = t(
         "filter_sidebar.validationErrors.maxItemsCount.min"
       );
-    }
-
-    // Cross-validation
-    if (
-      minCount !== "" &&
-      minCount !== undefined &&
-      minCount !== null &&
-      !Number.isInteger(Number(minCount)) &&
-      maxCount !== "" &&
-      maxCount !== undefined &&
-      maxCount !== null &&
-      !Number.isInteger(Number(maxCount)) &&
-      Number(maxCount) < Number(minCount)
+    } else if (
+      minItemsCount !== "" &&
+      minItemsCount !== undefined &&
+      minItemsCount !== null &&
+      Number.isInteger(Number(minItemsCount)) &&
+      maxItemsCount !== "" &&
+      maxItemsCount !== undefined &&
+      maxItemsCount !== null &&
+      Number.isInteger(Number(maxItemsCount)) &&
+      Number(maxItemsCount) < Number(minItemsCount)
     ) {
       errors.maxItemsCount = t(
         "filter_sidebar.validationErrors.maxItemsCount.greater"
@@ -265,6 +265,11 @@ const InventoryCatalogPage = () => {
     maxItemsCount: appliedFilters.maxItemsCount ?? "",
   };
 
+  const handleResetFilters = (formikProps: FormikProps<FilterFormValues>) => {
+    setAppliedFilters(DEFAULT_FILTERS);
+    formikProps.resetForm({ values: DEFAULT_FILTERS });
+  };
+
   return (
     <Flex direction={{ base: "column", lg: "row" }} p={8} align="start" gap={6}>
       <Formik
@@ -298,7 +303,10 @@ const InventoryCatalogPage = () => {
                 boxShadow="none"
                 p={6}
               >
-                <FilterSidebar {...props} />
+                <FilterSidebar
+                  {...props}
+                  onReset={() => handleResetFilters(props)}
+                />
               </Container>
             ) : (
               <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -306,7 +314,10 @@ const InventoryCatalogPage = () => {
                 <DrawerContent>
                   <DrawerCloseButton />
                   <DrawerBody>
-                    <FilterSidebar {...props} />
+                    <FilterSidebar
+                      {...props}
+                      onReset={() => handleResetFilters(props)}
+                    />
                   </DrawerBody>
                 </DrawerContent>
               </Drawer>
@@ -336,10 +347,9 @@ const InventoryCatalogPage = () => {
 
         <Center ref={ref} h="100px">
           {list.isLoading && list.items.length > 0 && <Spinner size="xl" />}
-          {(!hasNextPage && !list.isLoading) ||
-            (list.items.length === 0 && !list.isLoading && (
-              <Text>No more inventories</Text>
-            ))}
+          {!list.isLoading && (!hasNextPage || list.items.length === 0) && (
+            <Text>{t("noMoreItems")}</Text>
+          )}
         </Center>
       </VStack>
     </Flex>

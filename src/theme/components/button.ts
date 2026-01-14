@@ -89,6 +89,24 @@ export const Button = defineStyleConfig({
         ringOffsetColor: "app-bg",
       },
     },
+
+    outline: {
+      _focusVisible: {
+        ring: "2px",
+        ringColor: "btn-focus-ring",
+        ringOffset: "2px",
+        ringOffsetColor: "app-bg",
+      },
+    },
+
+    unstyled: {
+      _focusVisible: {
+        ring: "2px",
+        ringColor: "btn-focus-ring",
+        ringOffset: "2px",
+        ringOffsetColor: "app-bg",
+      },
+    },
   },
 
   defaultProps: {
