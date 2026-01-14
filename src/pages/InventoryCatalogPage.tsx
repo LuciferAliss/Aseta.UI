@@ -25,10 +25,10 @@ import type {
   GetInventoriesRequest,
   SortByType,
 } from "../types/inventory";
-import InventoryCardList from "../components/inventories/InventoryCardList";
-import InventoryTable from "../components/inventories/InventoryTable";
+import InventoryCardList from "../components/inventoriesCatalog/InventoryCardList";
+import InventoryTable from "../components/inventoriesCatalog/InventoryTable";
 import { ViewIcon, ViewOffIcon, HamburgerIcon } from "@chakra-ui/icons";
-import FilterSidebar from "../components/inventories/FilterSidebar";
+import FilterSidebar from "../components/inventoriesCatalog/FilterSidebar";
 import { Formik, type FormikProps } from "formik";
 import { useTranslation } from "react-i18next";
 import { VALIDATION_CONSTANTS } from "../lib/constants";
