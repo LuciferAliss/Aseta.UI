@@ -1,9 +1,9 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import { type InventoryItem } from "../../types/inventory";
+import { type InventoryCatalogItem } from "../../types/inventory";
 import CardInventory from "./CardInventory";
 
 interface InventoryCardListProps {
-  inventories: InventoryItem[];
+  inventories: InventoryCatalogItem[];
 }
 
 const InventoryCardList = ({ inventories }: InventoryCardListProps) => {

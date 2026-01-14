@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../lib/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../lib/routes";
+import InventoryCreateModal from "../components/inventoriesCreate/InventoryCreateModal";
 
 const MainPage = () => {
   const { isAuth } = useAuth();
@@ -70,7 +71,7 @@ const MainPage = () => {
                 полями и настройками.
               </Text>
               <Spacer />
-              <Button w="100%">Создать</Button>
+              <InventoryCreateModal />
             </VStack>
           </Container>
 

@@ -21,8 +21,8 @@ import { useInView } from "react-intersection-observer";
 import { getInventories } from "../lib/services/inventoryService";
 import { useAsyncList } from "react-stately";
 import type {
-  InventoryItem,
-  GetInventoriesRequest,
+  InventoryCatalogItem,
+  GetInventoriesCatalogRequest,
   SortByType,
 } from "../types/inventory";
 import InventoryCardList from "../components/inventoriesCatalog/InventoryCardList";
@@ -87,7 +87,7 @@ const InventoryCatalogPage = () => {
         toUtc = toDate.toISOString();
       }
 
-      const request: GetInventoriesRequest = {
+      const request: GetInventoriesCatalogRequest = {
         sortBy: appliedFilters.sortBy,
         sortOrder: appliedFilters.sortOrder,
         pageSize: Number(appliedFilters.pageSize),
@@ -110,7 +110,7 @@ const InventoryCatalogPage = () => {
     [appliedFilters]
   );
 
-  const list = useAsyncList<InventoryItem, string>({
+  const list = useAsyncList<InventoryCatalogItem, string>({
     load: loadItems,
   });
 

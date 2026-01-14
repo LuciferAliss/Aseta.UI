@@ -7,22 +7,22 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { type InventoryItem } from "../../types/inventory";
+import { type InventoryCatalogItem } from "../../types/inventory";
 import { useTranslation } from "react-i18next";
 
 interface InventoryTableProps {
-  inventories: InventoryItem[];
+  inventories: InventoryCatalogItem[];
 }
 
 const InventoryTable = ({ inventories }: InventoryTableProps) => {
   const { t } = useTranslation("inventoryCatalog");
-  const handleRowClick = (inventory: InventoryItem) => {
+
+  const handleRowClick = (inventory: InventoryCatalogItem) => {
     console.log("Inventory clicked:", inventory);
-    // User will change this behavior later
   };
 
   return (
-    <TableContainer>
+    <TableContainer hidden={!inventories.length}>
       <Table variant="simple">
         <Thead>
           <Tr>

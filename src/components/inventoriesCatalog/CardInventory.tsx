@@ -9,10 +9,10 @@ import {
   Spacer,
   Container,
 } from "@chakra-ui/react";
-import type { InventoryItem } from "../../types/inventory";
+import type { InventoryCatalogItem } from "../../types/inventory";
 import { useTranslation } from "react-i18next";
 
-const CardInventory = (inventory: InventoryItem) => {
+const CardInventory = (inventory: InventoryCatalogItem) => {
   const { t } = useTranslation("inventoryCatalog");
 
   return (

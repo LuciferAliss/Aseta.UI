@@ -1,18 +1,18 @@
-export interface InventoryItem {
+export interface InventoryCatalogItem {
   id: string;
   name: string;
   description: string;
   imageUrl: string;
   itemsCount: number;
   creatorName: string;
-  createdAt: string; // ISO 8601 date string
+  createdAt: string;
 }
 
-export interface InventoriesResponse {
+export interface InventoriesCatalogResponse {
   inventories: {
     cursor: string | null;
     hasNextPage: boolean;
-    items: InventoryItem[];
+    items: InventoryCatalogItem[];
   };
 }
 
@@ -29,9 +29,9 @@ export type SortOrderType = "asc" | "desc";
 
 export const sortOrderOptions: SortOrderType[] = ["asc", "desc"];
 
-export interface GetInventoriesRequest {
-  createdAtFrom?: string; // ISO 8601 date string
-  createdAtTo?: string; // ISO 8601 date string
+export interface GetInventoriesCatalogRequest {
+  createdAtFrom?: string;
+  createdAtTo?: string;
   tagIds?: string[];
   categoryIds?: string[];
   minItemsCount?: number;
@@ -40,4 +40,12 @@ export interface GetInventoriesRequest {
   pageSize?: number;
   sortBy?: SortByType;
   sortOrder?: "asc" | "desc";
+}
+
+export interface InventoryCreateRequest {
+  name: string;
+  description: string;
+  imageUrl: string;
+  categoryId: string;
+  isPublic: boolean;
 }

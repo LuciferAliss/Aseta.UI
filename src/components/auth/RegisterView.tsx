@@ -1,7 +1,6 @@
 import {
   Button,
   Text,
-  Center,
   Input,
   VStack,
   ModalFooter,
@@ -111,12 +110,10 @@ const RegisterView = ({ onSwitchToLogin, ref }: RegisterViewProps) => {
     >
       {(props) => (
         <Form onSubmit={props.handleSubmit} noValidate>
-          <ModalHeader>
-            <Center>
-              <Text fontSize="4xl" as="b">
-                {t("register.title")}
-              </Text>
-            </Center>
+          <ModalHeader textAlign="center">
+            <Text fontSize="4xl" as="b">
+              {t("register.title")}
+            </Text>
           </ModalHeader>
           <ModalBody>
             <VStack spacing={4}>
