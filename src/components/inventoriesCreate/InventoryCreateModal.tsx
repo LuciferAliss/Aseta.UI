@@ -15,6 +15,10 @@ import {
   FormErrorMessage,
   Input,
   VStack,
+  CheckboxGroup,
+  Checkbox,
+  Stack,
+  Spinner,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
@@ -28,8 +32,10 @@ import { VALIDATION_CONSTANTS } from "../../lib/constants";
 import { useAuth } from "../../lib/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { type CategoryResponse } from "../../types/category";
-import { GetAllCategory } from "../../lib/services/CategoryServicet";
-import { CustomSelect } from "../common/CustomSelect";
+import { GetAllCategory } from "../../lib/services/categoryService";
+import { CustomSelect } from "../layout/CustomSelect";
+import { type TagResponse } from "../../types/tag";
+import { getAllTags } from "../../lib/services/tagService";
 
 interface FormValues extends Omit<InventoryCreateRequest, "imageUrl"> {
   imageFile: File | null;
@@ -41,7 +47,9 @@ const InventoryCreateModal = () => {
   const { showError, showSuccess } = useAppToast();
   const { isAuth } = useAuth();
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
+  const [tags, setTags] = useState<TagResponse[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+  const [isLoadingTags, setIsLoadingTags] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -58,7 +66,22 @@ const InventoryCreateModal = () => {
       }
     };
 
+    const fetchTags = async () => {
+      if (isOpen) {
+        setIsLoadingTags(true);
+        try {
+          const response = await getAllTags();
+          setTags(response.tags);
+        } catch (error) {
+          showError(t("common:backend_error.server_error.title"));
+        } finally {
+          setIsLoadingTags(false);
+        }
+      }
+    };
+
     fetchCategories();
+    fetchTags();
   }, [isOpen, showError, t]);
 
   const handleOpenModal = () => {
@@ -73,6 +96,7 @@ const InventoryCreateModal = () => {
     name: "",
     description: "",
     categoryId: "",
+    tagIds: [],
     isPublic: true,
     imageFile: null,
   };
@@ -124,6 +148,7 @@ const InventoryCreateModal = () => {
         name: values.name,
         description: values.description,
         categoryId: values.categoryId,
+        tagIds: values.tagIds,
         isPublic: values.isPublic,
         imageUrl: imageUrl,
       };
@@ -226,20 +251,46 @@ const InventoryCreateModal = () => {
                       isInvalid={!!errors.categoryId && touched.categoryId}
                     >
                       <FormLabel>{t("category_id_label")}</FormLabel>
-                      <CustomSelect
-                        placeholder={t("category_id_placeholder")}
-                        options={categories.map((cat) => ({
-                          value: cat.id,
-                          label: cat.name,
-                        }))}
-                        value={values.categoryId}
-                        onChange={(value) => {
-                          setFieldValue("categoryId", value);
-                          setFieldError("categoryId", undefined);
-                        }}
-                        disabled={isLoadingCategories}
-                      />
+                      {isLoadingCategories ? (
+                        <Spinner size="sm" />
+                      ) : (
+                        <CustomSelect
+                          placeholder={t("category_id_placeholder")}
+                          options={categories.map((cat) => ({
+                            value: cat.id,
+                            label: cat.name,
+                          }))}
+                          value={values.categoryId}
+                          onChange={(value) => {
+                            setFieldValue("categoryId", value);
+                            setFieldError("categoryId", undefined);
+                          }}
+                          disabled={isLoadingCategories}
+                        />
+                      )}
                       <FormErrorMessage>{errors.categoryId}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.tagIds && touched.tagIds}>
+                      <FormLabel>{t("tags_label")}</FormLabel>
+                      {isLoadingTags ? (
+                        <Spinner size="sm" />
+                      ) : (
+                        <CheckboxGroup
+                          colorScheme="blue"
+                          onChange={(value) => {
+                            setFieldValue("tagIds", value);
+                          }}
+                        >
+                          <Stack spacing={[1, 5]} direction={["column", "row"]}>
+                            {tags.map((tag) => (
+                              <Checkbox key={tag.id} value={tag.id}>
+                                {tag.name}
+                              </Checkbox>
+                            ))}
+                          </Stack>
+                        </CheckboxGroup>
+                      )}
+                      <FormErrorMessage>{errors.tagIds}</FormErrorMessage>
                     </FormControl>
                     <FormControl
                       isInvalid={!!errors.imageFile && touched.imageFile}

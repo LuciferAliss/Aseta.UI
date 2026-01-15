@@ -11,9 +11,12 @@ import {
 } from "@chakra-ui/react";
 import type { InventoryCatalogItem } from "../../types/inventory";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../lib/routes";
 
 const CardInventory = (inventory: InventoryCatalogItem) => {
   const { t } = useTranslation("inventoryCatalog");
+  const navigate = useNavigate();
 
   return (
     <Container variant="card" p={0} overflow="hidden" flexDirection="column">
@@ -47,7 +50,13 @@ const CardInventory = (inventory: InventoryCatalogItem) => {
 
         <Divider />
 
-        <Button w="100%" mt={2}>
+        <Button
+          w="100%"
+          mt={2}
+          onClick={() =>
+            navigate(ROUTES.inventory.replace(":id", inventory.id))
+          }
+        >
           {t("card.view_button")}
         </Button>
       </Flex>

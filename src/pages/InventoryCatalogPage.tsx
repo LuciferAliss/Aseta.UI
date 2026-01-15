@@ -33,7 +33,7 @@ import FilterSidebar from "../components/inventoriesCatalog/FilterSidebar";
 import { Formik, type FormikProps } from "formik";
 import { useTranslation } from "react-i18next";
 import { VALIDATION_CONSTANTS } from "../lib/constants";
-import { GetAllCategory } from "../lib/services/CategoryServicet";
+import { GetAllCategory } from "../lib/services/categoryService";
 import { type CategoryResponse } from "../types/category";
 
 type ViewMode = "card" | "table";
@@ -379,7 +379,7 @@ const InventoryCatalogPage = () => {
         )}
 
         <Center ref={ref} h="100px">
-          {list.isLoading && list.items.length > 0 && <Spinner size="xl" />}
+          {list.isLoading && hasNextPage && <Spinner size="xl" />}
           {!list.isLoading && (!hasNextPage || list.items.length === 0) && (
             <Text>{t("noMoreItems")}</Text>
           )}

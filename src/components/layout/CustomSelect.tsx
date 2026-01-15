@@ -28,7 +28,7 @@ export const CustomSelect = ({
   placeholder,
   disabled,
 }: CustomSelectProps) => {
-  const styles = useMultiStyleConfig("Input", {}); // Reuse Input styles for the button
+  const styles = useMultiStyleConfig("Input", {});
   const selectedOption = options.find((option) => option.value === value);
 
   return (
@@ -37,6 +37,7 @@ export const CustomSelect = ({
         as={Button}
         sx={styles.field}
         w="100%"
+        fontWeight="normal"
         textAlign="left"
         rightIcon={<ChevronDownIcon />}
         isDisabled={disabled}
@@ -45,12 +46,7 @@ export const CustomSelect = ({
       </MenuButton>
       <MenuList>
         {options.map((option) => (
-          <MenuItem
-            key={option.value}
-            onClick={() => onChange(option.value)}
-            // isChecked can be used for visual indication
-            // The hover/focus color is handled by the Menu theme
-          >
+          <MenuItem key={option.value} onClick={() => onChange(option.value)}>
             {option.label}
           </MenuItem>
         ))}

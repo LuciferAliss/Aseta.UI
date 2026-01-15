@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { type InventoryCatalogItem } from "../../types/inventory";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../lib/routes";
 
 interface InventoryTableProps {
   inventories: InventoryCatalogItem[];
@@ -16,15 +18,16 @@ interface InventoryTableProps {
 
 const InventoryTable = ({ inventories }: InventoryTableProps) => {
   const { t } = useTranslation("inventoryCatalog");
+  const navigate = useNavigate();
 
   const handleRowClick = (inventory: InventoryCatalogItem) => {
-    console.log("Inventory clicked:", inventory);
+    navigate(ROUTES.inventory.replace(":id", inventory.id));
   };
 
   return (
     <TableContainer hidden={!inventories.length}>
       <Table variant="simple">
-        <Thead>
+        <Thead cursor="default">
           <Tr>
             <Th>{t("table_header.name")}</Th>
             <Th>{t("table_header.items_count")}</Th>
@@ -33,7 +36,7 @@ const InventoryTable = ({ inventories }: InventoryTableProps) => {
             <Th>{t("table_header.created_at")}</Th>
           </Tr>
         </Thead>
-        <Tbody>
+        <Tbody cursor="pointer">
           {inventories.map((inventory) => (
             <Tr key={inventory.id} onClick={() => handleRowClick(inventory)}>
               <Td>{inventory.name}</Td>

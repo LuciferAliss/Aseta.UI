@@ -3,6 +3,7 @@ import type {
   InventoriesCatalogResponse,
   InventoryCreateRequest,
   InventoryCatalogItem,
+  InventoryResponse,
 } from "../../types/inventory";
 import apiClient from "../axios";
 
@@ -34,6 +35,18 @@ export const createInventory = async (
     return response.data;
   } catch (error) {
     console.error("Create inventory failed:", error);
+    throw error;
+  }
+};
+
+export const getInventoryById = async (
+  id: string
+): Promise<InventoryResponse> => {
+  try {
+    const response = await apiClient.get<InventoryResponse>(`/inventories/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Get inventory by id failed:", error);
     throw error;
   }
 };

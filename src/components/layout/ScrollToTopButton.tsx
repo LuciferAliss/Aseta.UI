@@ -38,8 +38,8 @@ const ScrollToTopButton = () => {
           icon={<ArrowUpIcon />}
           onClick={scrollToTop}
           position="fixed"
-          bottom="2rem"
-          right="2rem"
+          bottom="5rem"
+          right={{ base: "1rem", md: "3rem" }}
           zIndex="sticky"
         />
       )}

@@ -1,11 +1,12 @@
+import type { CategoryResponse } from "./category";
+
 export interface InventoryCatalogItem {
   id: string;
   name: string;
-  description: string;
   imageUrl: string;
   itemsCount: number;
   creatorName: string;
-  category: Category;
+  category: CategoryResponse;
   createdAt: string;
 }
 
@@ -48,10 +49,30 @@ export interface InventoryCreateRequest {
   description: string;
   imageUrl: string;
   categoryId: string;
+  tagIds: string[];
   isPublic: boolean;
 }
 
-export interface Category {
+export interface Tag {
   id: string;
   name: string;
+}
+
+export interface InventoryResponse {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  creator: string;
+  category: CategoryResponse;
+  isPublic: boolean;
+  createdAt: Date;
+  tags: Tag[];
+  customFieldsDefinition: CustomFieldsDefinition[];
+}
+
+export interface CustomFieldsDefinition {
+  id: string;
+  name: string;
+  type: string;
 }
