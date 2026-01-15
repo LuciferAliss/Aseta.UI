@@ -35,6 +35,8 @@ import { useTranslation } from "react-i18next";
 import { VALIDATION_CONSTANTS } from "../lib/constants";
 import { GetAllCategory } from "../lib/services/categoryService";
 import { type CategoryResponse } from "../types/category";
+import { getAllTags } from "../lib/services/tagService";
+import type { TagResponse } from "../types/tag";
 
 type ViewMode = "card" | "table";
 
@@ -47,6 +49,7 @@ export interface FilterFormValues {
   createdAtFrom: string;
   createdAtTo: string;
   categoryIds: string[];
+  tagIds: string[];
 }
 
 const LOCAL_STORAGE_FILTER_KEY = "inventoryFilters";
@@ -60,6 +63,7 @@ const DEFAULT_FILTERS: FilterFormValues = {
   createdAtFrom: "",
   createdAtTo: "",
   categoryIds: [],
+  tagIds: [],
 };
 
 const InventoryCatalogPage = () => {
@@ -67,6 +71,8 @@ const InventoryCatalogPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [tags, setTags] = useState<TagResponse[]>([]);
+  const [isLoadingTags, setIsLoadingTags] = useState(true);
 
   const [appliedFilters, setAppliedFilters] = useState<FilterFormValues>(() => {
     const savedFilters = localStorage.getItem(LOCAL_STORAGE_FILTER_KEY);
@@ -93,16 +99,29 @@ const InventoryCatalogPage = () => {
       }
     };
 
+    const fetchTags = async () => {
+      try {
+        const response = await getAllTags();
+        setTags(response.tags);
+      } catch (error) {
+        console.error("Failed to fetch tags", error);
+      } finally {
+        setIsLoadingTags(false);
+      }
+    };
+
     fetchCategories();
+    fetchTags();
   }, []);
 
   const loadItems = useCallback(
     async ({ cursor }: { cursor?: string }) => {
-      if (isLoadingCategories) {
+      if (isLoadingCategories || isLoadingTags) {
         return { items: [], cursor: undefined };
       }
 
-      const { createdAtFrom, createdAtTo, categoryIds } = appliedFilters;
+      const { createdAtFrom, createdAtTo, categoryIds, tagIds } =
+        appliedFilters;
       let fromUtc: string | undefined;
       if (createdAtFrom) {
         const fromDate = new Date(createdAtFrom);
@@ -123,6 +142,7 @@ const InventoryCatalogPage = () => {
         createdAtFrom: fromUtc,
         createdAtTo: toUtc,
         categoryIds: categoryIds.length > 0 ? categoryIds : undefined,
+        tagIds: tagIds.length > 0 ? tagIds : undefined,
         cursor: cursor || undefined,
       };
 
@@ -133,7 +153,7 @@ const InventoryCatalogPage = () => {
         cursor: response.inventories.cursor ?? undefined,
       };
     },
-    [appliedFilters, isLoadingCategories]
+    [appliedFilters, isLoadingCategories, isLoadingTags]
   );
 
   const list = useAsyncList<InventoryCatalogItem, string>({
@@ -146,10 +166,10 @@ const InventoryCatalogPage = () => {
       isFirstRun.current = false;
       return;
     }
-    if (!isLoadingCategories) {
+    if (!isLoadingCategories && !isLoadingTags) {
       list.reload();
     }
-  }, [appliedFilters, isLoadingCategories]);
+  }, [appliedFilters, isLoadingCategories, isLoadingTags]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -291,6 +311,7 @@ const InventoryCatalogPage = () => {
     minItemsCount: appliedFilters.minItemsCount ?? "",
     maxItemsCount: appliedFilters.maxItemsCount ?? "",
     categoryIds: appliedFilters.categoryIds ?? [],
+    tagIds: appliedFilters.tagIds ?? [],
   };
 
   const handleResetFilters = (formikProps: FormikProps<FilterFormValues>) => {
@@ -315,6 +336,7 @@ const InventoryCatalogPage = () => {
             createdAtFrom: values.createdAtFrom,
             createdAtTo: values.createdAtTo,
             categoryIds: values.categoryIds,
+            tagIds: values.tagIds,
           };
           setAppliedFilters(newFilters);
           onClose();
@@ -337,6 +359,8 @@ const InventoryCatalogPage = () => {
                   onReset={() => handleResetFilters(props)}
                   categories={categories}
                   isLoadingCategories={isLoadingCategories}
+                  tags={tags}
+                  isLoadingTags={isLoadingTags}
                 />
               </Container>
             ) : (
@@ -350,6 +374,8 @@ const InventoryCatalogPage = () => {
                       onReset={() => handleResetFilters(props)}
                       categories={categories}
                       isLoadingCategories={isLoadingCategories}
+                      tags={tags}
+                      isLoadingTags={isLoadingTags}
                     />
                   </DrawerBody>
                 </DrawerContent>
@@ -368,7 +394,9 @@ const InventoryCatalogPage = () => {
           />
           {isDesktop ? toggleViewButton : filtersButton}
         </HStack>
-        {(list.isLoading && list.items.length === 0) || isLoadingCategories ? (
+        {(list.isLoading && list.items.length === 0) ||
+        isLoadingCategories ||
+        isLoadingTags ? (
           <Center h="200px">
             <Spinner size="xl" />
           </Center>

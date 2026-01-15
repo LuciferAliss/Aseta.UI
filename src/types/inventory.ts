@@ -7,6 +7,7 @@ export interface InventoryCatalogItem {
   itemsCount: number;
   creatorName: string;
   category: CategoryResponse;
+  tags: Tag[];
   createdAt: string;
 }
 

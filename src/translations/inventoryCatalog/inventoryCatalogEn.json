@@ -1,6 +1,7 @@
 {
   "filter_sidebar": {
     "categories_title": "Categories",
+    "tags_title": "Tags",
     "createdAtFrom": "Created At From",
     "createdAtTo": "Created At To",
     "validationErrors": {
@@ -54,7 +55,9 @@
     "created_at": "Created at:",
     "creator": "Creator:",
     "view_button": "View",
-    "category": "Category:"
+    "category": "Category:",
+    "tag_title": "Tags",
+    "no_tags": "No tags"
   },
   "table_header": {
     "name": "Name",

@@ -21,16 +21,19 @@ import type { FilterFormValues } from "../../pages/InventoryCatalogPage";
 import DatePicker from "../layout/DatePicker";
 import { useTranslation } from "react-i18next";
 import { type CategoryResponse } from "../../types/category";
+import { type TagResponse } from "../../types/tag";
 
 interface FilterSidebarProps extends FormikProps<FilterFormValues> {
   onReset: () => void;
   categories: CategoryResponse[];
   isLoadingCategories: boolean;
+  tags: TagResponse[];
+  isLoadingTags: boolean;
 }
 
 const FilterSidebar = (props: FilterSidebarProps) => {
   const { t } = useTranslation("inventoryCatalog");
-  const { categories, isLoadingCategories } = props;
+  const { categories, isLoadingCategories, tags, isLoadingTags } = props;
 
   return (
     <Form onSubmit={props.handleSubmit} noValidate>
@@ -217,6 +220,34 @@ const FilterSidebar = (props: FilterSidebarProps) => {
                     {categories.map((category) => (
                       <Checkbox key={category.id} value={category.id}>
                         {category.name}
+                      </Checkbox>
+                    ))}
+                  </Stack>
+                </CheckboxGroup>
+              )}
+            </Field>
+          )}
+        </FormControl>
+
+        <FormControl>
+          <FormLabel as="legend">
+            {t("filter_sidebar.tags_title")}
+          </FormLabel>
+          {isLoadingTags ? (
+            <Center>
+              <Spinner />
+            </Center>
+          ) : (
+            <Field name="tagIds">
+              {({ field, form }: FieldProps) => (
+                <CheckboxGroup
+                  {...field}
+                  onChange={(val) => form.setFieldValue(field.name, val)}
+                >
+                  <Stack spacing={2}>
+                    {tags.map((tag) => (
+                      <Checkbox key={tag.id} value={tag.id}>
+                        {tag.name}
                       </Checkbox>
                     ))}
                   </Stack>

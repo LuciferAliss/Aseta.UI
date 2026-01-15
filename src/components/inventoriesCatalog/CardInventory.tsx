@@ -8,6 +8,15 @@ import {
   Flex,
   Spacer,
   Container,
+  Tag,
+  Wrap,
+  WrapItem,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  // Добавляем Portal, чтобы меню не обрезалось границами карточки (опционально)
+  Portal,
 } from "@chakra-ui/react";
 import type { InventoryCatalogItem } from "../../types/inventory";
 import { useTranslation } from "react-i18next";
@@ -17,6 +26,9 @@ import { ROUTES } from "../../lib/routes";
 const CardInventory = (inventory: InventoryCatalogItem) => {
   const { t } = useTranslation("inventoryCatalog");
   const navigate = useNavigate();
+
+  // 1. Безопасное получение тегов. Больше не нужно делать slice.
+  const tags = inventory.tags || [];
 
   return (
     <Container variant="card" p={0} overflow="hidden" flexDirection="column">
@@ -45,6 +57,44 @@ const CardInventory = (inventory: InventoryCatalogItem) => {
         <Text fontSize="sm" color="text-secondary">
           {t("card.creator")} {inventory.creatorName}
         </Text>
+
+        <Popover trigger="hover" placement="top-start" isLazy>
+          <PopoverTrigger>
+            <Tag
+              size="md"
+              variant="subtle"
+              colorScheme="purple"
+              cursor="help"
+              w="fit-content"
+            >
+              {t("card.tag_title")}: {tags.length}
+            </Tag>
+          </PopoverTrigger>
+
+          <Portal>
+            <PopoverContent w="auto" maxW="300px" boxShadow="xl">
+              <PopoverBody p={2}>
+                <Wrap>
+                  {tags.length === 0 ? (
+                    <WrapItem>
+                      <Tag size="sm" variant="solid" colorScheme="gray">
+                        {t("card.no_tags")}
+                      </Tag>
+                    </WrapItem>
+                  ) : (
+                    tags.map((tag) => (
+                      <WrapItem key={tag.id}>
+                        <Tag size="sm" variant="solid" colorScheme="gray">
+                          {tag.name}
+                        </Tag>
+                      </WrapItem>
+                    ))
+                  )}
+                </Wrap>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
 
         <Spacer />
 

@@ -7,6 +7,7 @@ import { Table } from "./table";
 import Radio from "./radio";
 import { NumberInput } from "./numberInput";
 import { ImageUploader } from "./imageUploader";
+import { Checkbox } from "./checkbox";
 
 export const components = {
   Container,
@@ -16,6 +17,7 @@ export const components = {
   Menu,
   Table,
   Radio,
+  Checkbox,
   NumberInput,
   ImageUploader,
 };

@@ -1,6 +1,7 @@
 {
   "filter_sidebar": {
     "categories_title": "Категории",
+    "tags_title": "Теги",
     "createdAtFrom": "Создано с",
     "createdAtTo": "Создано по",
     "validationErrors": {
@@ -54,7 +55,9 @@
     "created_at": "Создано:",
     "creator": "Создатель:",
     "view_button": "Посмотреть",
-    "category": "Категория:"
+    "category": "Категория:",
+    "tag_title": "Теги",
+    "no_tags": "Нет тегов"
   },
   "table_header": {
     "name": "Название",
