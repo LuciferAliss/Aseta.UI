@@ -24,6 +24,7 @@ import type {
   InventoryCatalogItem,
   GetInventoriesCatalogRequest,
   SortByType,
+  SortOrderType,
 } from "../types/inventory";
 import InventoryCardList from "../components/inventoriesCatalog/InventoryCardList";
 import InventoryTable from "../components/inventoriesCatalog/InventoryTable";
@@ -32,17 +33,20 @@ import FilterSidebar from "../components/inventoriesCatalog/FilterSidebar";
 import { Formik, type FormikProps } from "formik";
 import { useTranslation } from "react-i18next";
 import { VALIDATION_CONSTANTS } from "../lib/constants";
+import { GetAllCategory } from "../lib/services/CategoryServicet";
+import { type CategoryResponse } from "../types/category";
 
 type ViewMode = "card" | "table";
 
 export interface FilterFormValues {
   sortBy: SortByType;
-  sortOrder: "asc" | "desc";
+  sortOrder: SortOrderType;
   pageSize: string;
   minItemsCount: string;
   maxItemsCount: string;
   createdAtFrom: string;
   createdAtTo: string;
+  categoryIds: string[];
 }
 
 const LOCAL_STORAGE_FILTER_KEY = "inventoryFilters";
@@ -55,11 +59,15 @@ const DEFAULT_FILTERS: FilterFormValues = {
   maxItemsCount: "",
   createdAtFrom: "",
   createdAtTo: "",
+  categoryIds: [],
 };
 
 const InventoryCatalogPage = () => {
   const { t } = useTranslation("inventoryCatalog");
   const [searchTerm, setSearchTerm] = useState("");
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+
   const [appliedFilters, setAppliedFilters] = useState<FilterFormValues>(() => {
     const savedFilters = localStorage.getItem(LOCAL_STORAGE_FILTER_KEY);
     return savedFilters ? JSON.parse(savedFilters) : DEFAULT_FILTERS;
@@ -73,9 +81,28 @@ const InventoryCatalogPage = () => {
     rootMargin: "300px",
   });
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await GetAllCategory();
+        setCategories(response.categories);
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const loadItems = useCallback(
     async ({ cursor }: { cursor?: string }) => {
-      const { createdAtFrom, createdAtTo } = appliedFilters;
+      if (isLoadingCategories) {
+        return { items: [], cursor: undefined };
+      }
+
+      const { createdAtFrom, createdAtTo, categoryIds } = appliedFilters;
       let fromUtc: string | undefined;
       if (createdAtFrom) {
         const fromDate = new Date(createdAtFrom);
@@ -95,19 +122,18 @@ const InventoryCatalogPage = () => {
         maxItemsCount: Number(appliedFilters.maxItemsCount) || undefined,
         createdAtFrom: fromUtc,
         createdAtTo: toUtc,
+        categoryIds: categoryIds.length > 0 ? categoryIds : undefined,
         cursor: cursor || undefined,
       };
 
       const response = await getInventories(request);
-
       setHasNextPage(response.inventories.hasNextPage);
-
       return {
         items: response.inventories.items,
         cursor: response.inventories.cursor ?? undefined,
       };
     },
-    [appliedFilters]
+    [appliedFilters, isLoadingCategories]
   );
 
   const list = useAsyncList<InventoryCatalogItem, string>({
@@ -120,10 +146,11 @@ const InventoryCatalogPage = () => {
       isFirstRun.current = false;
       return;
     }
-    list.reload();
-  }, [appliedFilters]);
+    if (!isLoadingCategories) {
+      list.reload();
+    }
+  }, [appliedFilters, isLoadingCategories]);
 
-  // Save filters to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem(
       LOCAL_STORAGE_FILTER_KEY,
@@ -263,6 +290,7 @@ const InventoryCatalogPage = () => {
     ...appliedFilters,
     minItemsCount: appliedFilters.minItemsCount ?? "",
     maxItemsCount: appliedFilters.maxItemsCount ?? "",
+    categoryIds: appliedFilters.categoryIds ?? [],
   };
 
   const handleResetFilters = (formikProps: FormikProps<FilterFormValues>) => {
@@ -286,6 +314,7 @@ const InventoryCatalogPage = () => {
             maxItemsCount: values.maxItemsCount,
             createdAtFrom: values.createdAtFrom,
             createdAtTo: values.createdAtTo,
+            categoryIds: values.categoryIds,
           };
           setAppliedFilters(newFilters);
           onClose();
@@ -306,6 +335,8 @@ const InventoryCatalogPage = () => {
                 <FilterSidebar
                   {...props}
                   onReset={() => handleResetFilters(props)}
+                  categories={categories}
+                  isLoadingCategories={isLoadingCategories}
                 />
               </Container>
             ) : (
@@ -317,6 +348,8 @@ const InventoryCatalogPage = () => {
                     <FilterSidebar
                       {...props}
                       onReset={() => handleResetFilters(props)}
+                      categories={categories}
+                      isLoadingCategories={isLoadingCategories}
                     />
                   </DrawerBody>
                 </DrawerContent>
@@ -335,7 +368,7 @@ const InventoryCatalogPage = () => {
           />
           {isDesktop ? toggleViewButton : filtersButton}
         </HStack>
-        {list.isLoading && list.items.length === 0 ? (
+        {(list.isLoading && list.items.length === 0) || isLoadingCategories ? (
           <Center h="200px">
             <Spinner size="xl" />
           </Center>

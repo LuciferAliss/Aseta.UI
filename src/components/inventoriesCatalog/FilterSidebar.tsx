@@ -10,19 +10,27 @@ import {
   FormErrorMessage,
   NumberInput,
   NumberInputField,
+  Checkbox,
+  CheckboxGroup,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import { Field, type FormikProps, type FieldProps, Form } from "formik";
 import { sortByOptions, sortOrderOptions } from "../../types/inventory";
 import type { FilterFormValues } from "../../pages/InventoryCatalogPage";
 import DatePicker from "../layout/DatePicker";
 import { useTranslation } from "react-i18next";
+import { type CategoryResponse } from "../../types/category";
 
 interface FilterSidebarProps extends FormikProps<FilterFormValues> {
   onReset: () => void;
+  categories: CategoryResponse[];
+  isLoadingCategories: boolean;
 }
 
 const FilterSidebar = (props: FilterSidebarProps) => {
   const { t } = useTranslation("inventoryCatalog");
+  const { categories, isLoadingCategories } = props;
 
   return (
     <Form onSubmit={props.handleSubmit} noValidate>
@@ -189,6 +197,34 @@ const FilterSidebar = (props: FilterSidebarProps) => {
             </FormControl>
           )}
         </Field>
+
+        <FormControl>
+          <FormLabel as="legend">
+            {t("filter_sidebar.categories_title")}
+          </FormLabel>
+          {isLoadingCategories ? (
+            <Center>
+              <Spinner />
+            </Center>
+          ) : (
+            <Field name="categoryIds">
+              {({ field, form }: FieldProps) => (
+                <CheckboxGroup
+                  {...field}
+                  onChange={(val) => form.setFieldValue(field.name, val)}
+                >
+                  <Stack spacing={2}>
+                    {categories.map((category) => (
+                      <Checkbox key={category.id} value={category.id}>
+                        {category.name}
+                      </Checkbox>
+                    ))}
+                  </Stack>
+                </CheckboxGroup>
+              )}
+            </Field>
+          )}
+        </FormControl>
 
         <Button type="submit" w="full">
           {t("filter_sidebar.apply_filters")}

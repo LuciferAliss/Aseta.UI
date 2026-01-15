@@ -28,6 +28,7 @@ const InventoryTable = ({ inventories }: InventoryTableProps) => {
           <Tr>
             <Th>{t("table_header.name")}</Th>
             <Th>{t("table_header.items_count")}</Th>
+            <Th>{t("table_header.category")}</Th>
             <Th>{t("table_header.creator")}</Th>
             <Th>{t("table_header.created_at")}</Th>
           </Tr>
@@ -37,6 +38,7 @@ const InventoryTable = ({ inventories }: InventoryTableProps) => {
             <Tr key={inventory.id} onClick={() => handleRowClick(inventory)}>
               <Td>{inventory.name}</Td>
               <Td>{inventory.itemsCount}</Td>
+              <Td>{inventory.category.name}</Td>
               <Td>{inventory.creatorName}</Td>
               <Td>{new Date(inventory.createdAt).toLocaleString()}</Td>
             </Tr>

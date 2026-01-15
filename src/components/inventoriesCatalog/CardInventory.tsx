@@ -36,6 +36,10 @@ const CardInventory = (inventory: InventoryCatalogItem) => {
         </Text>
 
         <Text fontSize="sm" color="text-secondary">
+          {t("card.category")} {inventory.category.name}
+        </Text>
+
+        <Text fontSize="sm" color="text-secondary">
           {t("card.creator")} {inventory.creatorName}
         </Text>
 

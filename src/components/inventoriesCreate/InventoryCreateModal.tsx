@@ -26,6 +26,10 @@ import { uploadImage } from "../../lib/services/cloudinaryService";
 import { getTitleError } from "../../lib/utils/errorUtils";
 import { VALIDATION_CONSTANTS } from "../../lib/constants";
 import { useAuth } from "../../lib/contexts/AuthContext";
+import { useState, useEffect } from "react";
+import { type CategoryResponse } from "../../types/category";
+import { GetAllCategory } from "../../lib/services/CategoryServicet";
+import { CustomSelect } from "../common/CustomSelect";
 
 interface FormValues extends Omit<InventoryCreateRequest, "imageUrl"> {
   imageFile: File | null;
@@ -36,6 +40,26 @@ const InventoryCreateModal = () => {
   const { t } = useTranslation(["inventoryCreate", "common"]);
   const { showError, showSuccess } = useAppToast();
   const { isAuth } = useAuth();
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      if (isOpen) {
+        setIsLoadingCategories(true);
+        try {
+          const response = await GetAllCategory();
+          setCategories(response.categories);
+        } catch (error) {
+          showError(t("common:backend_error.server_error.title"));
+        } finally {
+          setIsLoadingCategories(false);
+        }
+      }
+    };
+
+    fetchCategories();
+  }, [isOpen, showError, t]);
 
   const handleOpenModal = () => {
     if (!isAuth) {
@@ -162,6 +186,7 @@ const InventoryCreateModal = () => {
               isSubmitting,
               setFieldValue,
               errors,
+              values,
               touched,
               setFieldError,
             }) => (
@@ -201,11 +226,18 @@ const InventoryCreateModal = () => {
                       isInvalid={!!errors.categoryId && touched.categoryId}
                     >
                       <FormLabel>{t("category_id_label")}</FormLabel>
-                      <Field
-                        as={Input}
-                        name="categoryId"
-                        onFocus={() => setFieldError("categoryId", undefined)}
+                      <CustomSelect
                         placeholder={t("category_id_placeholder")}
+                        options={categories.map((cat) => ({
+                          value: cat.id,
+                          label: cat.name,
+                        }))}
+                        value={values.categoryId}
+                        onChange={(value) => {
+                          setFieldValue("categoryId", value);
+                          setFieldError("categoryId", undefined);
+                        }}
+                        disabled={isLoadingCategories}
                       />
                       <FormErrorMessage>{errors.categoryId}</FormErrorMessage>
                     </FormControl>

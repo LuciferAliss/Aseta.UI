@@ -5,6 +5,7 @@ export interface InventoryCatalogItem {
   imageUrl: string;
   itemsCount: number;
   creatorName: string;
+  category: Category;
   createdAt: string;
 }
 
@@ -48,4 +49,9 @@ export interface InventoryCreateRequest {
   imageUrl: string;
   categoryId: string;
   isPublic: boolean;
+}
+
+export interface Category {
+  id: string;
+  name: string;
 }

@@ -1,9 +1,16 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { refreshToken } from "./services/userService";
+import qs from "qs";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:8080",
   withCredentials: true,
+  paramsSerializer: {
+    serialize: (params) => {
+      // Use qs.stringify to serialize params, especially for arrayFormat
+      return qs.stringify(params, { arrayFormat: "repeat" });
+    },
+  },
 });
 
 apiClient.interceptors.request.use(

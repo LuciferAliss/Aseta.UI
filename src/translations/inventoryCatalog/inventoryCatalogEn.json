@@ -1,5 +1,6 @@
 {
   "filter_sidebar": {
+    "categories_title": "Categories",
     "createdAtFrom": "Created At From",
     "createdAtTo": "Created At To",
     "validationErrors": {
@@ -52,12 +53,14 @@
     "item_count": "Item count:",
     "created_at": "Created at:",
     "creator": "Creator:",
-    "view_button": "View"
+    "view_button": "View",
+    "category": "Category:"
   },
   "table_header": {
     "name": "Name",
     "items_count": "Items Count",
     "creator": "Creator",
-    "created_at": "Created At"
+    "created_at": "Created At",
+    "category": "Category"
   }
 }

@@ -1,5 +1,6 @@
 {
   "filter_sidebar": {
+    "categories_title": "Категории",
     "createdAtFrom": "Создано с",
     "createdAtTo": "Создано по",
     "validationErrors": {
@@ -52,12 +53,14 @@
     "item_count": "Кол-во предметов:",
     "created_at": "Создано:",
     "creator": "Создатель:",
-    "view_button": "Посмотреть"
+    "view_button": "Посмотреть",
+    "category": "Категория:"
   },
   "table_header": {
     "name": "Название",
     "items_count": "Кол-во предметов",
     "creator": "Создатель",
-    "created_at": "Дата создания"
+    "created_at": "Дата создания",
+    "category": "Категория"
   }
 }
