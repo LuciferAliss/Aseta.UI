@@ -126,6 +126,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         role: decoded.role,
       };
 
+      console.log(currentUser);
+
       setUser(currentUser);
       setIsAuth(true);
     } catch (error) {

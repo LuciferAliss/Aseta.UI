@@ -67,7 +67,7 @@ export interface InventoryResponse {
   creator: string;
   category: CategoryResponse;
   isPublic: boolean;
-  createdAt: Date;
+  createdAt: string;
   tags: Tag[];
   customFieldsDefinition: CustomFieldsDefinition[];
 }
@@ -77,3 +77,5 @@ export interface CustomFieldsDefinition {
   name: string;
   type: string;
 }
+
+export type InventoryRole = "owner" | "editor";

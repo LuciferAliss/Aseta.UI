@@ -31,5 +31,6 @@
     "uploadImage": "Upload Image",
     "removeImage": "Remove Image",
     "imageRequiredError": "Image is required"
-  }
+  },
+  "delete": "Delete"
 }

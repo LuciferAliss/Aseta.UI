@@ -1,0 +1,58 @@
+{
+  "name": "Name",
+  "creator": "Creator",
+  "category": "Category",
+  "createdAt": "Created At",
+  "updatedAt": "Updated At",
+  "tags": "Tags",
+  "items": "Items",
+  "customId": "Custom ID",
+  "creatorName": "Creator",
+  "updaterName": "Updater",
+  "actions": "Actions",
+  "noMoreItems": "No more items to load.",
+  "inventoryNotFound": "Inventory not found",
+  "itemModal": {
+    "validation": {
+      "numberType": "Must be a number",
+      "dateType": "Must be a valid date"
+    }
+  },
+  "createItemModal": {
+    "title": "Create New Item",
+    "nameLabel": "Name",
+    "validation": {
+      "nameRequired": "Name is required"
+    },
+    "cancelButton": "Cancel",
+    "createButton": "Create",
+    "success": "Item created successfully!",
+    "errors": {
+      "unauthorized": "You are not authorized to perform this action.",
+      "generic": "An error occurred. Please try again."
+    }
+  },
+  "updateItemModal": {
+    "title": "Update Item",
+    "success": "Item updated successfully!",
+    "cancelButton": "Cancel",
+    "updateButton": "Update",
+    "errors": {
+      "unauthorized": "You are not authorized to perform this action.",
+      "generic": "An error occurred. Please try again."
+    }
+  },
+  "deleteItems": {
+    "button": "Delete ({{count}})",
+    "title": "Delete Items",
+    "body": "Are you sure you want to delete {{count}} selected item(s)? This action cannot be undone.",
+    "success": "Items deleted successfully.",
+    "error": "Failed to delete items."
+  },
+  "errors": {
+    "not_found": {
+      "title": "Inventory not found",
+      "description": "The inventory with the specified ID was not found."
+    }
+  }
+}
