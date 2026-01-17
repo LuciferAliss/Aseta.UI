@@ -13,11 +13,23 @@ import {
   GridItem,
   Container,
   useBreakpointValue,
-  IconButton,
   useDisclosure,
   Button,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon, DeleteIcon } from "@chakra-ui/icons";
+import {
+  ViewIcon,
+  ViewOffIcon,
+  DeleteIcon,
+  ChevronDownIcon,
+  AddIcon,
+  SettingsIcon,
+} from "@chakra-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { getInventoryById } from "../lib/services/inventoryService";
@@ -34,6 +46,11 @@ import { useAppToast } from "../lib/hooks/useAppToast";
 import { getItems, bulkDeleteItems } from "../lib/services/itemService";
 import ItemTable from "../components/inventoryPage/ItemTable";
 import type { Item } from "../types/item";
+import CustomFieldCreateModal from "../components/inventoryPage/CustomFieldCreateModal";
+import ManageCustomFieldsModal from "../components/inventoryPage/ManageCustomFieldsModal";
+import CustomFieldEditModal from "../components/inventoryPage/CustomFieldEditModal";
+import { deleteCustomField } from "../lib/services/customFieldService";
+import type { CustomFieldData } from "../types/customField";
 
 type ItemViewMode = "card" | "table";
 
@@ -63,12 +80,37 @@ const InventoryPage = () => {
     onOpen: onDeleteConfirmOpen,
     onClose: onDeleteConfirmClose,
   } = useDisclosure();
+  const {
+    isOpen: isManageFieldsOpen,
+    onOpen: onManageFieldsOpen,
+    onClose: onManageFieldsClose,
+  } = useDisclosure();
+  const {
+    isOpen: isEditCustomFieldOpen,
+    onOpen: onEditCustomFieldOpen,
+    onClose: onEditCustomFieldClose,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteCustomFieldConfirmOpen,
+    onOpen: onDeleteCustomFieldConfirmOpen,
+    onClose: onDeleteCustomFieldConfirmClose,
+  } = useDisclosure();
 
   const [selectedItemForEdit, setSelectedItemForEdit] = useState<Item | null>(
     null
   );
+  const [selectedCustomField, setSelectedCustomField] =
+    useState<CustomFieldData | null>(null);
+  const [customFieldToDelete, setCustomFieldToDelete] =
+    useState<CustomFieldData | null>(null);
 
-  const isDesktop = useBreakpointValue({ base: false, lg: true });
+  const isDesktop = useBreakpointValue({ base: false, xl: true });
+
+  useEffect(() => {
+    if (!isDesktop) {
+      setSelectedItems([]);
+    }
+  }, [isDesktop]);
 
   const [itemViewMode, setItemViewMode] = useState<ItemViewMode>(() => {
     return (localStorage.getItem("itemViewMode") as ItemViewMode) || "card";
@@ -82,24 +124,21 @@ const InventoryPage = () => {
 
   const effectiveItemViewMode = isDesktop ? itemViewMode : "card";
 
-  useEffect(() => {
-    const loadInventory = async () => {
-      try {
-        const response = await getInventoryById(id || "");
-        setInventory(response);
-      } catch (error) {
-        showError(
-          t("errors.not_found.title"),
-          t("errors.not_found.description")
-        );
-        navigate(ROUTES.inventories);
-      } finally {
-        setLoadingInventory(false);
-      }
-    };
-
-    loadInventory();
+  const loadInventory = useCallback(async () => {
+    try {
+      const response = await getInventoryById(id || "");
+      setInventory(response);
+    } catch (error) {
+      showError(t("errors.not_found.title"), t("errors.not_found.description"));
+      navigate(ROUTES.inventories);
+    } finally {
+      setLoadingInventory(false);
+    }
   }, [id, showError, t, navigate]);
+
+  useEffect(() => {
+    loadInventory();
+  }, [loadInventory]);
 
   const loadItems = useCallback(
     async ({ cursor }: { cursor?: string }) => {
@@ -179,6 +218,30 @@ const InventoryPage = () => {
     }
   };
 
+  const handleEditCustomField = (field: CustomFieldData) => {
+    setSelectedCustomField(field);
+    onEditCustomFieldOpen();
+  };
+
+  const handleDeleteCustomField = (field: CustomFieldData) => {
+    setCustomFieldToDelete(field);
+    onDeleteCustomFieldConfirmOpen();
+  };
+
+  const handleConfirmDeleteCustomField = async () => {
+    if (!id || !customFieldToDelete) return;
+    try {
+      await deleteCustomField(id, customFieldToDelete.fieldId);
+      showSuccess(t("manageCustomFieldsModal.deleteSuccess"));
+      loadInventory();
+    } catch (error) {
+      showError(t("manageCustomFieldsModal.deleteError"));
+    } finally {
+      onDeleteCustomFieldConfirmClose();
+      setCustomFieldToDelete(null);
+    }
+  };
+
   if (isLoadingInventory) {
     return (
       <Center minH="calc(100vh - 80px)">
@@ -195,14 +258,6 @@ const InventoryPage = () => {
     );
   }
 
-  const toggleItemViewModeButton = (
-    <IconButton
-      aria-label="Toggle item view"
-      icon={itemViewMode === "card" ? <ViewOffIcon /> : <ViewIcon />}
-      onClick={toggleItemViewMode}
-    />
-  );
-
   return (
     <Box mx="auto" p={{ base: 4, md: 8 }}>
       <Grid
@@ -214,7 +269,7 @@ const InventoryPage = () => {
             <Image
               src={inventory.imageUrl}
               alt={inventory.name}
-              w="100%"
+              w="full"
               h="auto"
               objectFit="cover"
             />
@@ -255,32 +310,83 @@ const InventoryPage = () => {
         </GridItem>
       </Grid>
 
-      <VStack as="main" flex="1" spacing={4} align="stretch" w="100%" mt={10}>
-        <HStack justifyContent="space-between">
+      <VStack as="main" flex="1" spacing={4} align="stretch" w="full" mt={10}>
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          flexWrap="wrap"
+          gap={4}
+        >
           <Heading size="lg">{t("items")}</Heading>
-          <HStack>
-            {selectedItems.length > 0 && (
-              <Button
-                leftIcon={<DeleteIcon />}
-                colorScheme="red"
-                onClick={handleDeleteRequest}
-              >
-                {t("deleteItems.button", { count: selectedItems.length })}
-              </Button>
-            )}
-            <ItemCreateModal
-              inventoryId={id || ""}
-              customFieldsDefinition={inventory.customFieldsDefinition}
-              onItemCreated={list.reload}
-            />
-            {isDesktop && toggleItemViewModeButton}
-          </HStack>
-        </HStack>
-        {list.isLoading && list.items.length === 0 ? (
-          <Center h="200px">
-            <Spinner size="xl" />
-          </Center>
-        ) : effectiveItemViewMode === "card" ? (
+          <Flex
+            gap={2}
+            flexWrap="wrap"
+            justifyContent={{ base: "flex-start", md: "flex-end" }}
+          >
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                {t("actions")}
+              </MenuButton>
+              <MenuList>
+                {selectedItems.length > 0 && (
+                  <>
+                    <MenuItem
+                      icon={<DeleteIcon />}
+                      onClick={handleDeleteRequest}
+                      color="red.500"
+                    >
+                      {t("deleteItems.button", {
+                        count: selectedItems.length,
+                      })}
+                    </MenuItem>
+                    <MenuDivider />
+                  </>
+                )}
+                <ItemCreateModal
+                  inventoryId={id || ""}
+                  customFieldsDefinition={inventory.customFieldsDefinition}
+                  onItemCreated={list.reload}
+                  trigger={(onClick) => (
+                    <MenuItem icon={<AddIcon />} onClick={onClick}>
+                      {t("createItemModal.createButton")}
+                    </MenuItem>
+                  )}
+                />
+                <CustomFieldCreateModal
+                  inventoryId={id || ""}
+                  onCustomFieldCreated={loadInventory}
+                  trigger={(onClick) => (
+                    <MenuItem icon={<AddIcon />} onClick={onClick}>
+                      {t("customFieldCreateModal.createButton")}
+                    </MenuItem>
+                  )}
+                />
+                <MenuDivider />
+                <MenuItem icon={<SettingsIcon />} onClick={onManageFieldsOpen}>
+                  {t("manageCustomFieldsModal.manageMenuItem")}
+                </MenuItem>
+                {isDesktop && (
+                  <>
+                    <MenuDivider />
+                    <MenuItem
+                      icon={
+                        itemViewMode === "card" ? <ViewOffIcon /> : <ViewIcon />
+                      }
+                      onClick={toggleItemViewMode}
+                    >
+                      {t(
+                        itemViewMode === "card"
+                          ? "switchToTableView"
+                          : "switchToCardView"
+                      )}
+                    </MenuItem>
+                  </>
+                )}
+              </MenuList>
+            </Menu>
+          </Flex>
+        </Flex>
+        {effectiveItemViewMode === "card" ? (
           <ItemCardList
             items={list.items}
             customFieldsDefinition={inventory.customFieldsDefinition}
@@ -292,6 +398,7 @@ const InventoryPage = () => {
             items={list.items}
             customFieldsDefinition={inventory.customFieldsDefinition}
             onEditItem={handleEditItem}
+            onDeleteItem={handleDeleteSingleItem}
             selectedItems={selectedItems}
             onSelectItem={handleSelectItem}
             onSelectAll={handleSelectAll}
@@ -301,9 +408,7 @@ const InventoryPage = () => {
         {!isLoadingInventory && (
           <Center ref={ref} h="100px">
             {list.isLoading && hasNextPage && <Spinner size="xl" />}
-            {!list.isLoading && !hasNextPage && list.items.length > 0 && (
-              <Text>{t("noMoreItems")}</Text>
-            )}
+            {!list.isLoading && !hasNextPage && <Text>{t("noMoreItems")}</Text>}
           </Center>
         )}
       </VStack>
@@ -326,6 +431,28 @@ const InventoryPage = () => {
         isLoading={isDeleting}
         title={t("deleteItems.title")}
         bodyText={t("deleteItems.body", { count: selectedItems.length })}
+      />
+      <ManageCustomFieldsModal
+        isOpen={isManageFieldsOpen}
+        onClose={onManageFieldsClose}
+        customFields={inventory.customFieldsDefinition}
+        onEdit={handleEditCustomField}
+        onDelete={handleDeleteCustomField}
+      />
+      <CustomFieldEditModal
+        isOpen={isEditCustomFieldOpen}
+        onClose={onEditCustomFieldClose}
+        onCustomFieldUpdated={loadInventory}
+        customField={selectedCustomField}
+        inventoryId={id || ""}
+      />
+      <DeleteConfirmationModal
+        isOpen={isDeleteCustomFieldConfirmOpen}
+        onClose={onDeleteCustomFieldConfirmClose}
+        onConfirm={handleConfirmDeleteCustomField}
+        isLoading={false}
+        title={t("manageCustomFieldsModal.deleteAriaLabel")}
+        bodyText={t("deleteItems.body", { count: 1 })}
       />
     </Box>
   );

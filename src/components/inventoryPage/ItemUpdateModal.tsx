@@ -30,6 +30,7 @@ import type {
   Item,
 } from "../../types/item";
 import { useAuth } from "../../lib/contexts/AuthContext";
+import { CustomFieldType } from "../../types/customField";
 
 interface ItemUpdateModalProps {
   isOpen: boolean;
@@ -61,7 +62,7 @@ const ItemUpdateModal = ({
       (cv) => cv.fieldId === fieldDef.id
     );
     switch (fieldDef.type) {
-      case "Checkbox":
+      case CustomFieldType.CheckboxType:
         acc[fieldDef.id] = existingValue
           ? existingValue.value === "true"
           : false;
@@ -78,12 +79,12 @@ const ItemUpdateModal = ({
     customFieldsDefinition.forEach((field) => {
       const value = values[field.id];
       switch (field.type) {
-        case "Number":
+        case CustomFieldType.NumberType:
           if (value && isNaN(Number(value))) {
             errors[field.id] = t("itemModal.validation.numberType");
           }
           break;
-        case "Date":
+        case CustomFieldType.DateType:
           if (value && isNaN(new Date(value).getTime())) {
             errors[field.id] = t("itemModal.validation.dateType");
           }
@@ -96,7 +97,7 @@ const ItemUpdateModal = ({
   const renderField = (fieldDef: CustomFieldsDefinition) => {
     const name = fieldDef.id;
     switch (fieldDef.type) {
-      case "Number":
+      case CustomFieldType.NumberType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -118,7 +119,7 @@ const ItemUpdateModal = ({
             )}
           </Field>
         );
-      case "Checkbox":
+      case CustomFieldType.CheckboxType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -145,7 +146,7 @@ const ItemUpdateModal = ({
             )}
           </Field>
         );
-      case "Date":
+      case CustomFieldType.DateType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -161,7 +162,7 @@ const ItemUpdateModal = ({
             )}
           </Field>
         );
-      case "MultiLineText":
+      case CustomFieldType.MultiLineTextType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -177,7 +178,7 @@ const ItemUpdateModal = ({
             )}
           </Field>
         );
-      case "SingleLineText":
+      case CustomFieldType.SingleLineTextType:
       default:
         return (
           <Field name={name}>

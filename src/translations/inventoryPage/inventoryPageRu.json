@@ -6,12 +6,16 @@
   "updatedAt": "Дата обновления",
   "tags": "Теги",
   "items": "Предметы",
+  "editItem": "Редактировать",
+  "deleteItem": "Удалить",
   "customId": "Пользовательский ID",
   "creatorName": "Создатель",
   "updaterName": "Обновил",
   "actions": "Действия",
   "noMoreItems": "Нет больше предметов для загрузки.",
   "inventoryNotFound": "Инвентарь не найден",
+  "switchToTableView": "Переключить на таблицу",
+  "switchToCardView": "Переключить на карточки",
   "itemModal": {
     "validation": {
       "numberType": "Должно быть числом",
@@ -48,6 +52,54 @@
     "body": "Вы уверены, что хотите удалить {{count}} выбранных предметов? Это действие нельзя будет отменить.",
     "success": "Предметы успешно удалены.",
     "error": "Не удалось удалить предметы."
+  },
+  "customFieldCreateModal": {
+    "title": "Создать новое поле",
+    "createButton": "Добавить поле",
+    "name_label": "Название поля",
+    "name_placeholder": "Введите название поля",
+    "type_label": "Тип поля",
+    "type_placeholder": "Выберите тип поля",
+    "success": "Поле успешно создано!",
+    "submit_button": "Отправить",
+    "add_field_button": "Добавить поле",
+    "remove_field_button": "Удалить поле",
+    "validation": {
+      "name_required": "Название поля обязательно"
+    },
+    "errors": {
+      "unauthorized": "У вас нет прав для создания пользовательских полей.",
+      "generic": "Произошла ошибка при создании пользовательского поля. Пожалуйста, попробуйте еще раз."
+    },
+    "fieldTypes": {
+      "SingleLineText": "Однострочный текст",
+      "MultiLineText": "Многострочный текст",
+      "Number": "Число",
+      "Date": "Дата",
+      "Checkbox": "Чекбокс"
+    }
+  },
+  "manageCustomFieldsModal": {
+    "title": "Управление полями",
+    "editAriaLabel": "Редактировать поле",
+    "deleteAriaLabel": "Удалить поле",
+    "closeButton": "Закрыть",
+    "manageMenuItem": "Управление полями",
+    "deleteSuccess": "Поле успешно удалено!",
+    "deleteError": "Не удалось удалить поле."
+  },
+  "customFieldEditModal": {
+    "title": "Редактировать поле",
+    "validation": {
+      "name_required": "Название обязательно"
+    },
+    "name_label": "Название поля",
+    "cancelButton": "Отмена",
+    "updateButton": "Обновить",
+    "success": "Поле успешно обновлено!",
+    "errors": {
+      "generic": "Произошла ошибка. Пожалуйста, попробуйте еще раз."
+    }
   },
   "errors": {
     "not_found": {

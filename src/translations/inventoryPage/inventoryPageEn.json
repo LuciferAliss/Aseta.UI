@@ -6,12 +6,16 @@
   "updatedAt": "Updated At",
   "tags": "Tags",
   "items": "Items",
+  "editItem": "Edit",
+  "deleteItem": "Delete",
   "customId": "Custom ID",
   "creatorName": "Creator",
   "updaterName": "Updater",
   "actions": "Actions",
   "noMoreItems": "No more items to load.",
   "inventoryNotFound": "Inventory not found",
+  "switchToTableView": "Switch to Table View",
+  "switchToCardView": "Switch to Card View",
   "itemModal": {
     "validation": {
       "numberType": "Must be a number",
@@ -48,6 +52,54 @@
     "body": "Are you sure you want to delete {{count}} selected item(s)? This action cannot be undone.",
     "success": "Items deleted successfully.",
     "error": "Failed to delete items."
+  },
+  "customFieldCreateModal": {
+    "title": "Create Custom Field",
+    "createButton": "Add Custom Field",
+    "name_label": "Field Name",
+    "name_placeholder": "Enter field name",
+    "type_label": "Field Type",
+    "type_placeholder": "Select field type",
+    "success": "Custom field created successfully!",
+    "submit_button": "Submit",
+    "add_field_button": "Add field",
+    "remove_field_button": "Remove field",
+    "validation": {
+      "name_required": "Field name is required"
+    },
+    "errors": {
+      "unauthorized": "You are not authorized to create custom fields.",
+      "generic": "An error occurred while creating the custom field. Please try again."
+    },
+    "fieldTypes": {
+      "SingleLineText": "Single Line Text",
+      "MultiLineText": "Multi Line Text",
+      "Number": "Number",
+      "Date": "Date",
+      "Checkbox": "Checkbox"
+    }
+  },
+  "manageCustomFieldsModal": {
+    "title": "Manage Custom Fields",
+    "editAriaLabel": "Edit custom field",
+    "deleteAriaLabel": "Delete custom field",
+    "closeButton": "Close",
+    "manageMenuItem": "Manage Fields",
+    "deleteSuccess": "Custom field deleted successfully!",
+    "deleteError": "Failed to delete custom field."
+  },
+  "customFieldEditModal": {
+    "title": "Edit Custom Field",
+    "validation": {
+      "name_required": "Name is required"
+    },
+    "name_label": "Field Name",
+    "cancelButton": "Cancel",
+    "updateButton": "Update",
+    "success": "Custom field updated successfully!",
+    "errors": {
+      "generic": "An error occurred. Please try again."
+    }
   },
   "errors": {
     "not_found": {

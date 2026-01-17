@@ -394,13 +394,8 @@ const InventoryCatalogPage = () => {
           />
           {isDesktop ? toggleViewButton : filtersButton}
         </HStack>
-        {(list.isLoading && list.items.length === 0) ||
-        isLoadingCategories ||
-        isLoadingTags ? (
-          <Center h="200px">
-            <Spinner size="xl" />
-          </Center>
-        ) : effectiveViewMode === "card" ? (
+
+        {effectiveViewMode === "card" ? (
           <InventoryCardList inventories={list.items} />
         ) : (
           <InventoryTable inventories={list.items} />

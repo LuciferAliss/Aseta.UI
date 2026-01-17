@@ -6,6 +6,7 @@ import {
   HStack,
   Tooltip,
   IconButton,
+  Box,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import type { Item, CustomFieldValue } from "../../types/item";
@@ -58,14 +59,27 @@ const ItemCard = ({
               fieldDef
             );
             return (
-              <HStack key={fieldDef.id} justifyContent="space-between" w="100%">
-                <Text fontSize="sm" color="text-secondary" fontWeight="bold">
+              <HStack
+                key={fieldDef.id}
+                justifyContent="space-between"
+                w="100%"
+                spacing={4} // Добавляем небольшой отступ для надежности
+              >
+                <Text
+                  fontSize="sm"
+                  color="text-secondary"
+                  fontWeight="bold"
+                  whiteSpace="nowrap"
+                >
                   {fieldDef.name}:
                 </Text>
-                <Tooltip label={value} placement="top" hasArrow>
-                  <Text fontSize="sm" noOfLines={1}>
-                    {value}
-                  </Text>
+                <Tooltip label={value.toString()} placement="top" hasArrow>
+                  {/* Вот ключевое исправление: */}
+                  <Box flexShrink={1} minWidth={0}>
+                    <Text fontSize="sm" noOfLines={1} textAlign="right">
+                      {value.toString()}
+                    </Text>
+                  </Box>
                 </Tooltip>
               </HStack>
             );

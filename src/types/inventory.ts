@@ -1,4 +1,5 @@
 import type { CategoryResponse } from "./category";
+import type { CustomFieldData } from "./customField";
 
 export interface InventoryCatalogItem {
   id: string;
@@ -69,13 +70,7 @@ export interface InventoryResponse {
   isPublic: boolean;
   createdAt: string;
   tags: Tag[];
-  customFieldsDefinition: CustomFieldsDefinition[];
-}
-
-export interface CustomFieldsDefinition {
-  id: string;
-  name: string;
-  type: string;
+  customFieldsDefinition: CustomFieldData[];
 }
 
 export type InventoryRole = "owner" | "editor";

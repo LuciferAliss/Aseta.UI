@@ -22,23 +22,26 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { Formik, Form, Field, type FieldProps } from "formik";
-import type { CustomFieldsDefinition } from "../../types/inventory";
+import type { CustomFieldData } from "../../types/customField";
 import { useTranslation } from "react-i18next";
 import { useAppToast } from "../../lib/hooks/useAppToast";
 import { useAuth } from "../../lib/contexts/AuthContext";
 import { createItem } from "../../lib/services/itemService";
 import type { CreateItemRequest, CustomFieldValue } from "../../types/item";
+import { CustomFieldType } from "../../types/customField";
 
 interface ItemCreateModalProps {
   inventoryId: string;
-  customFieldsDefinition: CustomFieldsDefinition[];
+  customFieldsDefinition: CustomFieldData[];
   onItemCreated: () => void;
+  trigger?: (onClick: () => void) => React.ReactNode;
 }
 
 const ItemCreateModal = ({
   inventoryId,
   customFieldsDefinition,
   onItemCreated,
+  trigger,
 }: ItemCreateModalProps) => {
   const { t } = useTranslation(["inventoryPage", "common"]);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,11 +58,11 @@ const ItemCreateModal = ({
 
   const initialValues = customFieldsDefinition.reduce((acc, field) => {
     switch (field.type) {
-      case "Checkbox":
-        acc[field.id] = false;
+      case CustomFieldType.CheckboxType:
+        acc[field.fieldId] = false;
         break;
       default:
-        acc[field.id] = "";
+        acc[field.fieldId] = "";
         break;
     }
     return acc;
@@ -68,16 +71,16 @@ const ItemCreateModal = ({
   const validateItem = (values: Record<string, any>) => {
     const errors: Record<string, string> = {};
     customFieldsDefinition.forEach((field) => {
-      const value = values[field.id];
+      const value = values[field.fieldId];
       switch (field.type) {
-        case "Number":
+        case CustomFieldType.NumberType:
           if (value && isNaN(Number(value))) {
-            errors[field.id] = t("itemModal.validation.numberType");
+            errors[field.fieldId] = t("itemModal.validation.numberType");
           }
           break;
-        case "Date":
+        case CustomFieldType.DateType:
           if (value && isNaN(new Date(value).getTime())) {
-            errors[field.id] = t("itemModal.validation.dateType");
+            errors[field.fieldId] = t("itemModal.validation.dateType");
           }
           break;
       }
@@ -86,10 +89,10 @@ const ItemCreateModal = ({
     return errors;
   };
 
-  const renderField = (fieldDef: CustomFieldsDefinition) => {
-    const name = fieldDef.id;
+  const renderField = (fieldDef: CustomFieldData) => {
+    const name = fieldDef.fieldId;
     switch (fieldDef.type) {
-      case "Number":
+      case CustomFieldType.NumberType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -111,7 +114,7 @@ const ItemCreateModal = ({
             )}
           </Field>
         );
-      case "Checkbox":
+      case CustomFieldType.CheckboxType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -138,7 +141,7 @@ const ItemCreateModal = ({
             )}
           </Field>
         );
-      case "Date":
+      case CustomFieldType.DateType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -154,7 +157,7 @@ const ItemCreateModal = ({
             )}
           </Field>
         );
-      case "MultiLineText":
+      case CustomFieldType.MultiLineTextType:
         return (
           <Field name={name}>
             {({ field, form }: FieldProps) => (
@@ -170,7 +173,7 @@ const ItemCreateModal = ({
             )}
           </Field>
         );
-      case "SingleLineText":
+      case CustomFieldType.SingleLineTextType:
       default:
         return (
           <Field name={name}>
@@ -197,8 +200,8 @@ const ItemCreateModal = ({
     try {
       const customFields: CustomFieldValue[] = customFieldsDefinition.map(
         (field) => ({
-          fieldId: field.id,
-          value: values[field.id].toString(),
+          fieldId: field.fieldId,
+          value: values[field.fieldId].toString(),
         })
       );
 
@@ -219,9 +222,13 @@ const ItemCreateModal = ({
 
   return (
     <>
-      <Button onClick={handleOpen} leftIcon={<AddIcon />}>
-        {t("createItemModal.createButton")}
-      </Button>
+      {trigger ? (
+        trigger(handleOpen)
+      ) : (
+        <Button onClick={handleOpen} leftIcon={<AddIcon />}>
+          {t("createItemModal.createButton")}
+        </Button>
+      )}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -248,7 +255,7 @@ const ItemCreateModal = ({
               <ModalBody>
                 <VStack spacing={4}>
                   {customFieldsDefinition.map((fieldDef) => (
-                    <Box key={fieldDef.id} w="100%">
+                    <Box key={fieldDef.fieldId} w="100%">
                       {renderField(fieldDef)}
                     </Box>
                   ))}

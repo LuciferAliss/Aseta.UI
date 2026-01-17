@@ -13,7 +13,6 @@ const Header = () => {
   return (
     <Box
       as="header"
-      // 1. Уменьшаем паддинги на мобилках (base: 2), на десктопе оставляем 4
       py={2}
       px={{ base: 2, md: 4 }}
       bg="header-bg"
@@ -22,19 +21,18 @@ const Header = () => {
       position="sticky"
       top={0}
       zIndex={10}
-      w="100%" // Явно задаем ширину
+      w="full"
     >
       <Flex alignItems="center">
         <Heading
           as={Link}
           to={ROUTES.main}
-          // 2. Уменьшаем размер шрифта логотипа на мобилках
           size={{ base: "md", md: "lg" }}
           fontWeight="extrabold"
           letterSpacing="tight"
           bg="text-brand"
           bgClip="text"
-          mr={2} // Небольшой отступ справа от логотипа
+          mr={2}
           _hover={{
             bg: "text-brand-hover",
             bgClip: "text",
@@ -53,7 +51,6 @@ const Header = () => {
 
         <Spacer />
 
-        {/* 3. Уменьшаем расстояние между кнопками (gap) */}
         <Flex gap={{ base: 1, md: 2 }} alignItems="center">
           <LanguageChangeButton />
           <ThemeChangeButton />
