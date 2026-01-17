@@ -30,6 +30,7 @@ import {
   AddIcon,
   SettingsIcon,
 } from "@chakra-ui/icons";
+import { FaUsers } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { getInventoryById } from "../lib/services/inventoryService";
@@ -52,6 +53,7 @@ import CustomFieldEditModal from "../components/inventoryPage/CustomFieldEditMod
 import { deleteCustomField } from "../lib/services/customFieldService";
 import type { CustomFieldData } from "../types/customField";
 import { useAuth } from "../lib/contexts/AuthContext";
+import ManageInventoryUsersModal from "../components/inventoryPage/ManageInventoryUsersModal";
 
 type ItemViewMode = "card" | "table";
 
@@ -59,7 +61,7 @@ const InventoryPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation("inventoryPage");
   const { showError, showSuccess } = useAppToast();
-  const { user } = useAuth();
+  const { user, isLoading: isLoadingAuth } = useAuth();
 
   const [inventory, setInventory] = useState<InventoryResponse | null>(null);
   const [isLoadingInventory, setLoadingInventory] = useState(true);
@@ -72,10 +74,10 @@ const InventoryPage = () => {
     rootMargin: "300px",
   });
 
-  const isAdmin = user?.role === "Admin";
-  const isOwner = inventory?.userRole === "Owner";
+  const isAdmin = !isLoadingAuth && user?.role === "Admin";
+  const isOwner = !isLoadingInventory && inventory?.userRole === "Owner";
   const canManageInventory = isAdmin || isOwner;
-  const isEditor = inventory?.userRole === "Editor";
+  const isEditor = !isLoadingInventory && inventory?.userRole === "Editor";
   const canEditItems = canManageInventory || isEditor;
 
   const {
@@ -102,6 +104,21 @@ const InventoryPage = () => {
     isOpen: isDeleteCustomFieldConfirmOpen,
     onOpen: onDeleteCustomFieldConfirmOpen,
     onClose: onDeleteCustomFieldConfirmClose,
+  } = useDisclosure();
+  const {
+    isOpen: isManageUsersOpen,
+    onOpen: onManageUsersOpen,
+    onClose: onManageUsersClose,
+  } = useDisclosure();
+  const {
+    isOpen: isItemCreateModalOpen,
+    onOpen: onItemCreateModalOpen,
+    onClose: onItemCreateModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isCustomFieldCreateOpen,
+    onOpen: onCustomFieldCreateOpen,
+    onClose: onCustomFieldCreateClose,
   } = useDisclosure();
 
   const [selectedItemForEdit, setSelectedItemForEdit] = useState<Item | null>(
@@ -146,8 +163,11 @@ const InventoryPage = () => {
   }, [id, showError, t, navigate]);
 
   useEffect(() => {
-    loadInventory();
-  }, [loadInventory]);
+    if (!isLoadingAuth) {
+      // Only load inventory after authentication status is known
+      loadInventory();
+    }
+  }, [loadInventory, isLoadingAuth]); // Add isLoadingAuth to dependencies
 
   const loadItems = useCallback(
     async ({ cursor }: { cursor?: string }) => {
@@ -251,7 +271,7 @@ const InventoryPage = () => {
     }
   };
 
-  if (isLoadingInventory) {
+  if (isLoadingInventory || isLoadingAuth) {
     return (
       <Center minH="calc(100vh - 80px)">
         <Spinner size="xl" />
@@ -327,82 +347,84 @@ const InventoryPage = () => {
           gap={4}
         >
           <Heading size="lg">{t("items")}</Heading>
-          <Flex
-            gap={2}
-            flexWrap="wrap"
-            justifyContent={{ base: "flex-start", md: "flex-end" }}
-          >
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                {t("actions")}
-              </MenuButton>
-              <MenuList>
-                {canEditItems && selectedItems.length > 0 && (
-                  <>
-                    <MenuItem
-                      icon={<DeleteIcon />}
-                      onClick={handleDeleteRequest}
-                      color="red.500"
-                    >
-                      {t("deleteItems.button", {
-                        count: selectedItems.length,
-                      })}
-                    </MenuItem>
-                    <MenuDivider />
-                  </>
-                )}
-                {canEditItems && (
-                  <ItemCreateModal
-                    inventoryId={id || ""}
-                    customFieldsDefinition={inventory.customFieldsDefinition}
-                    onItemCreated={list.reload}
-                    trigger={(onClick) => (
-                      <MenuItem icon={<AddIcon />} onClick={onClick}>
-                        {t("createItemModal.createButton")}
+          {(canEditItems || canManageInventory || isDesktop) && (
+            <Flex
+              gap={2}
+              flexWrap="wrap"
+              justifyContent={{ base: "flex-start", md: "flex-end" }}
+            >
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  {t("actions")}
+                </MenuButton>
+                <MenuList>
+                  {canEditItems && selectedItems.length > 0 && (
+                    <>
+                      <MenuItem
+                        icon={<DeleteIcon />}
+                        onClick={handleDeleteRequest}
+                        color="red.500"
+                      >
+                        {t("deleteItems.button", {
+                          count: selectedItems.length,
+                        })}
                       </MenuItem>
-                    )}
-                  />
-                )}
-                {canManageInventory && (
-                  <>
-                    <CustomFieldCreateModal
-                      inventoryId={id || ""}
-                      onCustomFieldCreated={loadInventory}
-                      trigger={(onClick) => (
-                        <MenuItem icon={<AddIcon />} onClick={onClick}>
-                          {t("customFieldCreateModal.createButton")}
-                        </MenuItem>
-                      )}
-                    />
-                    <MenuDivider />
+                      <MenuDivider />
+                    </>
+                  )}
+                  {canEditItems && (
                     <MenuItem
-                      icon={<SettingsIcon />}
-                      onClick={onManageFieldsOpen}
+                      icon={<AddIcon />}
+                      onClick={onItemCreateModalOpen}
                     >
-                      {t("manageCustomFieldsModal.manageMenuItem")}
+                      {t("createItemModal.createButton")}
                     </MenuItem>
-                  </>
-                )}
-                {isDesktop && (
-                  <>
-                    <MenuDivider />
-                    <MenuItem
-                      icon={
-                        itemViewMode === "card" ? <ViewOffIcon /> : <ViewIcon />
-                      }
-                      onClick={toggleItemViewMode}
-                    >
-                      {t(
-                        itemViewMode === "card"
-                          ? "switchToTableView"
-                          : "switchToCardView"
-                      )}
-                    </MenuItem>
-                  </>
-                )}
-              </MenuList>
-            </Menu>
-          </Flex>
+                  )}
+                  {canManageInventory && (
+                    <>
+                      <MenuItem
+                        icon={<AddIcon />}
+                        onClick={onCustomFieldCreateOpen}
+                      >
+                        {t("customFieldCreateModal.createButton")}
+                      </MenuItem>
+                      <MenuDivider />
+                      <MenuItem
+                        icon={<SettingsIcon />}
+                        onClick={onManageFieldsOpen}
+                      >
+                        {t("manageCustomFieldsModal.manageMenuItem")}
+                      </MenuItem>
+                      <MenuItem icon={<FaUsers />} onClick={onManageUsersOpen}>
+                        {t("manageUsersModal.manageMenuItem")}
+                      </MenuItem>
+                    </>
+                  )}
+                  {isDesktop && (
+                    <>
+                      <MenuDivider />
+                      <MenuItem
+                        icon={
+                          itemViewMode === "card" ? (
+                            <ViewOffIcon />
+                          ) : (
+                            <ViewIcon />
+                          )
+                        }
+                        onClick={toggleItemViewMode}
+                      >
+                        {t(
+                          itemViewMode === "card"
+                            ? "switchToTableView"
+                            : "switchToCardView"
+                        )}
+                      </MenuItem>
+                    </>
+                  )}
+                </MenuList>
+              </Menu>
+            </Flex>
+          )}
         </Flex>
         {effectiveItemViewMode === "card" ? (
           <ItemCardList
@@ -474,6 +496,24 @@ const InventoryPage = () => {
         isLoading={false}
         title={t("manageCustomFieldsModal.deleteAriaLabel")}
         bodyText={t("deleteItems.body", { count: 1 })}
+      />
+      <ManageInventoryUsersModal
+        isOpen={isManageUsersOpen}
+        onClose={onManageUsersClose}
+        inventoryId={id || ""}
+      />
+      <ItemCreateModal
+        isOpen={isItemCreateModalOpen}
+        onClose={onItemCreateModalClose}
+        inventoryId={id || ""}
+        customFieldsDefinition={inventory.customFieldsDefinition}
+        onItemCreated={list.reload}
+      />
+      <CustomFieldCreateModal
+        onClose={onCustomFieldCreateClose}
+        isOpen={isCustomFieldCreateOpen}
+        inventoryId={id || ""}
+        onCustomFieldCreated={loadInventory}
       />
     </Box>
   );

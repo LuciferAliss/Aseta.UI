@@ -17,21 +17,20 @@ import {
   Switch,
   HStack,
   Box,
-  useDisclosure,
   Textarea,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
 import { Formik, Form, Field, type FieldProps } from "formik";
 import type { CustomFieldData } from "../../types/customField";
 import { useTranslation } from "react-i18next";
 import { useAppToast } from "../../lib/hooks/useAppToast";
-import { useAuth } from "../../lib/contexts/AuthContext";
 import { createItem } from "../../lib/services/itemService";
 import type { CreateItemRequest, CustomFieldValue } from "../../types/item";
 import { CustomFieldType } from "../../types/customField";
 import DatePicker from "../layout/DatePicker";
 
 interface ItemCreateModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   inventoryId: string;
   customFieldsDefinition: CustomFieldData[];
   onItemCreated: () => void;
@@ -39,23 +38,14 @@ interface ItemCreateModalProps {
 }
 
 const ItemCreateModal = ({
+  isOpen,
+  onClose,
   inventoryId,
   customFieldsDefinition,
   onItemCreated,
-  trigger,
 }: ItemCreateModalProps) => {
   const { t } = useTranslation(["inventoryPage", "common"]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { showSuccess, showError } = useAppToast();
-  const { user } = useAuth();
-
-  const handleOpen = () => {
-    if (user?.role !== "Admin") {
-      showError(t("createItemModal.errors.unauthorized"));
-      return;
-    }
-    onOpen();
-  };
 
   const initialValues = customFieldsDefinition.reduce((acc, field) => {
     switch (field.type) {
@@ -244,60 +234,51 @@ const ItemCreateModal = ({
   };
 
   return (
-    <>
-      {trigger ? (
-        trigger(handleOpen)
-      ) : (
-        <Button onClick={handleOpen} leftIcon={<AddIcon />}>
-          {t("createItemModal.createButton")}
-        </Button>
-      )}
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        closeOnOverlayClick={false}
-        isCentered
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnOverlayClick={false}
+      isCentered
+    >
+      <ModalOverlay />
+      <Formik
+        initialValues={initialValues}
+        validate={validateItem}
+        onSubmit={handleSubmit}
       >
-        <ModalOverlay />
-        <Formik
-          initialValues={initialValues}
-          validate={validateItem}
-          onSubmit={handleSubmit}
-        >
-          {(props) => (
-            <ModalContent as={Form}>
-              <ModalHeader>{t("createItemModal.title")}</ModalHeader>
-              <ModalCloseButton
-                _focusVisible={{
-                  ring: "2px",
-                  ringColor: "btn-focus-ring",
-                  ringOffset: "2px",
-                  ringOffsetColor: "app-bg",
-                }}
-              />
-              <ModalBody>
-                <VStack spacing={4}>
-                  {customFieldsDefinition.map((fieldDef, index) => (
-                    <Box key={fieldDef.id || index} w="100%">
-                      {renderField(fieldDef)}
-                    </Box>
-                  ))}
-                </VStack>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  type="submit"
-                  isLoading={props.isSubmitting}
-                  colorScheme="blue"
-                >
-                  {t("createItemModal.createButton")}
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          )}
-        </Formik>
-      </Modal>
-    </>
+        {(props) => (
+          <ModalContent as={Form}>
+            <ModalHeader>{t("createItemModal.title")}</ModalHeader>
+            <ModalCloseButton
+              _focusVisible={{
+                ring: "2px",
+                ringColor: "btn-focus-ring",
+                ringOffset: "2px",
+                ringOffsetColor: "app-bg",
+              }}
+            />
+            <ModalBody>
+              <VStack spacing={4}>
+                {customFieldsDefinition.map((fieldDef, index) => (
+                  <Box key={fieldDef.id || index} w="100%">
+                    {renderField(fieldDef)}
+                  </Box>
+                ))}
+              </VStack>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                type="submit"
+                isLoading={props.isSubmitting}
+                colorScheme="blue"
+              >
+                {t("createItemModal.createButton")}
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        )}
+      </Formik>
+    </Modal>
   );
 };
 

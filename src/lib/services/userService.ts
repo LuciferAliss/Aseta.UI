@@ -2,8 +2,23 @@ import type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
+  UserSearchResponse,
 } from "../../types/user";
 import apiClient from "../axios";
+
+export const searchUsers = async (
+  searchTerm: string
+): Promise<{ users: UserSearchResponse[] }> => {
+  try {
+    const response = await apiClient.get<{ users: UserSearchResponse[] }>(
+      `/users/search/${searchTerm}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Search users failed:", error);
+    throw error;
+  }
+};
 
 export const loginUser = async (
   request: LoginRequest

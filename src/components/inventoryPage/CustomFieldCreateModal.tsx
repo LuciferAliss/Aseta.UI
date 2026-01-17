@@ -32,6 +32,8 @@ import {
 import { createCustomFields } from "../../lib/services/customFieldService";
 
 interface CustomFieldCreateModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   inventoryId: string;
   onCustomFieldCreated: () => void;
   trigger?: (onClick: () => void) => React.ReactNode;
@@ -55,22 +57,14 @@ const FormikCustomSelect = ({
 };
 
 const CustomFieldCreateModal = ({
+  isOpen,
+  onClose,
   inventoryId,
   onCustomFieldCreated,
   trigger,
 }: CustomFieldCreateModalProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { t } = useTranslation("inventoryPage");
   const { showError, showSuccess } = useAppToast();
-  const { isAuth, user } = useAuth();
-
-  const handleOpenModal = () => {
-    if (!isAuth || user?.role !== "Admin") {
-      showError(t("customFieldCreateModal.errors.unauthorized"));
-      return;
-    }
-    onOpen();
-  };
 
   const initialValues: CustomFieldsCreateRequest = {
     customFields: [{ name: "", type: CustomFieldType.SingleLineTextType }],
@@ -119,138 +113,128 @@ const CustomFieldCreateModal = ({
   }));
 
   return (
-    <>
-      {trigger ? (
-        trigger(handleOpenModal)
-      ) : (
-        <Button onClick={handleOpenModal} w="full">
-          {t("customFieldCreateModal.createButton")}
-        </Button>
-      )}
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        closeOnOverlayClick={false}
-        isCentered
-        size="xl"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton
-            _focusVisible={{
-              ring: "2px",
-              ringColor: "btn-focus-ring",
-              ringOffset: "2px",
-              ringOffsetColor: "app-bg",
-            }}
-          />
-          <Formik
-            initialValues={initialValues}
-            validate={validateForm}
-            onSubmit={handleSubmit}
-            validateOnChange={false}
-            validateOnBlur={false}
-          >
-            {({ isSubmitting, errors, values, touched }) => (
-              <Form noValidate>
-                <ModalHeader>
-                  <Center>
-                    <Text fontSize="2xl" as="b">
-                      {t("customFieldCreateModal.title")}
-                    </Text>
-                  </Center>
-                </ModalHeader>
-                <ModalBody>
-                  <FieldArray name="customFields">
-                    {({ remove, push }) => (
-                      <VStack spacing={6}>
-                        {values.customFields.map((_, index) => (
-                          <HStack
-                            key={index}
-                            w="full"
-                            spacing={2}
-                            alignItems="flex-end"
-                          >
-                            <VStack w="full" spacing={4}>
-                              <FormControl
-                                isInvalid={
-                                  !!(errors.customFields?.[index] as any)
-                                    ?.name &&
-                                  (touched.customFields?.[index] as any)?.name
-                                }
-                              >
-                                <FormLabel>
-                                  {t("customFieldCreateModal.name_label")}
-                                </FormLabel>
-                                <Field
-                                  as={Input}
-                                  name={`customFields.${index}.name`}
-                                  placeholder={t(
-                                    "customFieldCreateModal.name_placeholder"
-                                  )}
-                                />
-                                <FormErrorMessage>
-                                  {(errors.customFields?.[index] as any)?.name}
-                                </FormErrorMessage>
-                              </FormControl>
-                              <FormControl>
-                                <FormLabel>
-                                  {t("customFieldCreateModal.type_label")}
-                                </FormLabel>
-                                <Field
-                                  name={`customFields.${index}.type`}
-                                  component={FormikCustomSelect}
-                                  placeholder={t(
-                                    "customFieldCreateModal.type_placeholder"
-                                  )}
-                                  options={fieldTypeOptions}
-                                />
-                              </FormControl>
-                            </VStack>
-                            <IconButton
-                              aria-label={t(
-                                "customFieldCreateModal.remove_field_button"
-                              )}
-                              icon={<DeleteIcon />}
-                              onClick={() => remove(index)}
-                              colorScheme="red"
-                              variant="ghost"
-                              isDisabled={values.customFields.length <= 1}
-                            />
-                          </HStack>
-                        ))}
-                        <Button
-                          onClick={() =>
-                            push({
-                              name: "",
-                              type: CustomFieldType.SingleLineTextType,
-                            })
-                          }
-                          leftIcon={<AddIcon />}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnOverlayClick={false}
+      isCentered
+      size="xl"
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton
+          _focusVisible={{
+            ring: "2px",
+            ringColor: "btn-focus-ring",
+            ringOffset: "2px",
+            ringOffsetColor: "app-bg",
+          }}
+        />
+        <Formik
+          initialValues={initialValues}
+          validate={validateForm}
+          onSubmit={handleSubmit}
+          validateOnChange={false}
+          validateOnBlur={false}
+        >
+          {({ isSubmitting, errors, values, touched }) => (
+            <Form noValidate>
+              <ModalHeader>
+                <Center>
+                  <Text fontSize="2xl" as="b">
+                    {t("customFieldCreateModal.title")}
+                  </Text>
+                </Center>
+              </ModalHeader>
+              <ModalBody>
+                <FieldArray name="customFields">
+                  {({ remove, push }) => (
+                    <VStack spacing={6}>
+                      {values.customFields.map((_, index) => (
+                        <HStack
+                          key={index}
                           w="full"
+                          spacing={2}
+                          alignItems="flex-end"
                         >
-                          {t("customFieldCreateModal.add_field_button")}
-                        </Button>
-                      </VStack>
-                    )}
-                  </FieldArray>
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    type="submit"
-                    colorScheme="blue"
-                    isLoading={isSubmitting}
-                    w="full"
-                  >
-                    {t("customFieldCreateModal.submit_button")}
-                  </Button>
-                </ModalFooter>
-              </Form>
-            )}
-          </Formik>
-        </ModalContent>
-      </Modal>
-    </>
+                          <VStack w="full" spacing={4}>
+                            <FormControl
+                              isInvalid={
+                                !!(errors.customFields?.[index] as any)?.name &&
+                                (touched.customFields?.[index] as any)?.name
+                              }
+                            >
+                              <FormLabel>
+                                {t("customFieldCreateModal.name_label")}
+                              </FormLabel>
+                              <Field
+                                as={Input}
+                                name={`customFields.${index}.name`}
+                                placeholder={t(
+                                  "customFieldCreateModal.name_placeholder"
+                                )}
+                              />
+                              <FormErrorMessage>
+                                {(errors.customFields?.[index] as any)?.name}
+                              </FormErrorMessage>
+                            </FormControl>
+                            <FormControl>
+                              <FormLabel>
+                                {t("customFieldCreateModal.type_label")}
+                              </FormLabel>
+                              <Field
+                                name={`customFields.${index}.type`}
+                                component={FormikCustomSelect}
+                                placeholder={t(
+                                  "customFieldCreateModal.type_placeholder"
+                                )}
+                                options={fieldTypeOptions}
+                              />
+                            </FormControl>
+                          </VStack>
+                          <IconButton
+                            aria-label={t(
+                              "customFieldCreateModal.remove_field_button"
+                            )}
+                            icon={<DeleteIcon />}
+                            onClick={() => remove(index)}
+                            colorScheme="red"
+                            variant="ghost"
+                            isDisabled={values.customFields.length <= 1}
+                          />
+                        </HStack>
+                      ))}
+                      <Button
+                        onClick={() =>
+                          push({
+                            name: "",
+                            type: CustomFieldType.SingleLineTextType,
+                          })
+                        }
+                        leftIcon={<AddIcon />}
+                        w="full"
+                      >
+                        {t("customFieldCreateModal.add_field_button")}
+                      </Button>
+                    </VStack>
+                  )}
+                </FieldArray>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  isLoading={isSubmitting}
+                  w="full"
+                >
+                  {t("customFieldCreateModal.submit_button")}
+                </Button>
+              </ModalFooter>
+            </Form>
+          )}
+        </Formik>
+      </ModalContent>
+    </Modal>
   );
 };
 

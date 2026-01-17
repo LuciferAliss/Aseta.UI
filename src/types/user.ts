@@ -5,6 +5,12 @@ export interface User {
   role: string;
 }
 
+export interface UserSearchResponse {
+  id: string;
+  userName: string;
+  email: string;
+}
+
 export interface RegisterRequest {
   userName: string;
   email: string;

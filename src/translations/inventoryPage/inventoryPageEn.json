@@ -88,6 +88,28 @@
     "deleteSuccess": "Custom field deleted successfully!",
     "deleteError": "Failed to delete custom field."
   },
+  "manageUsersModal": {
+    "manageMenuItem": "Manage users",
+    "title": "Manage Inventory Users",
+    "addUserLabel": "Add user by email:",
+    "emailPlaceholder": "Enter user email",
+    "addButton": "Add",
+    "searchButton": "Search",
+    "alreadyAdded": "Added",
+    "setEditor": "Set as Editor",
+    "setOwner": "Set as Owner",
+    "removeUser": "Remove User",
+    "addSuccess": "User added successfully.",
+    "updateSuccess": "User role updated successfully.",
+    "removeSuccess": "User removed successfully.",
+    "errors": {
+      "fetchError": "Failed to load users.",
+      "addError": "Failed to add user.",
+      "updateError": "Failed to update user role.",
+      "removeError": "Failed to remove user.",
+      "searchError": "User not found or an error occurred."
+    }
+  },
   "customFieldEditModal": {
     "title": "Edit Custom Field",
     "validation": {

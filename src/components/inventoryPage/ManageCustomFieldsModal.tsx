@@ -34,7 +34,12 @@ const ManageCustomFieldsModal = ({
   const { t } = useTranslation("inventoryPage");
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      closeOnOverlayClick={false}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{t("manageCustomFieldsModal.title")}</ModalHeader>

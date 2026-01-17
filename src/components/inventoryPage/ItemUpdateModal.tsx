@@ -29,7 +29,6 @@ import type {
   CustomFieldValue,
   Item,
 } from "../../types/item";
-import { useAuth } from "../../lib/contexts/AuthContext";
 import { CustomFieldType } from "../../types/customField";
 
 interface ItemUpdateModalProps {
@@ -51,7 +50,6 @@ const ItemUpdateModal = ({
 }: ItemUpdateModalProps) => {
   const { t } = useTranslation(["inventoryPage", "common"]);
   const { showSuccess, showError } = useAppToast();
-  const { user } = useAuth();
 
   if (!item) {
     return null;
@@ -202,12 +200,6 @@ const ItemUpdateModal = ({
     values: Record<string, any>,
     actions: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    if (!item || user?.role !== "Admin") {
-      showError(t("updateItemModal.errors.unauthorized"));
-      actions.setSubmitting(false);
-      return;
-    }
-
     try {
       const customFields: CustomFieldValue[] = customFieldsDefinition.map(
         (field) => ({
