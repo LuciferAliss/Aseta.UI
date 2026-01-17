@@ -15,19 +15,20 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
-import { type CustomFieldsDefinition } from "../../types/inventory";
+import { type CustomFieldData } from "../../types/customField";
 import { useTranslation } from "react-i18next";
 import type { Item } from "../../types/item";
 import { useState } from "react";
 
 interface ItemTableProps {
   items: Item[];
-  customFieldsDefinition: CustomFieldsDefinition[];
+  customFieldsDefinition: CustomFieldData[];
   onEditItem: (item: Item) => void;
   onDeleteItem: (itemId: string) => void;
   selectedItems: string[];
   onSelectItem: (itemId: string) => void;
   onSelectAll: (areAllSelected: boolean) => void;
+  canEditItems?: boolean;
 }
 
 const ItemTable = ({
@@ -38,6 +39,7 @@ const ItemTable = ({
   selectedItems,
   onSelectItem,
   onSelectAll,
+  canEditItems,
 }: ItemTableProps) => {
   const { t } = useTranslation("inventoryPage");
   const [contextMenu, setContextMenu] = useState<{
@@ -51,7 +53,9 @@ const ItemTable = ({
 
   const handleContextMenu = (event: React.MouseEvent, item: Item) => {
     event.preventDefault();
-    setContextMenu({ x: event.clientX, y: event.clientY, item });
+    if (canEditItems) {
+      setContextMenu({ x: event.clientX, y: event.clientY, item });
+    }
   };
 
   const handleCloseContextMenu = () => {
@@ -60,7 +64,7 @@ const ItemTable = ({
 
   return (
     <TableContainer w="full">
-      {contextMenu && (
+      {canEditItems && contextMenu && (
         <Menu isOpen={true} onClose={handleCloseContextMenu}>
           <MenuButton
             style={{
@@ -96,19 +100,21 @@ const ItemTable = ({
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>
-              <Checkbox
-                isChecked={areAllSelected}
-                onChange={() => onSelectAll(areAllSelected)}
-                aria-label="Select all items"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    onSelectAll(areAllSelected);
-                  }
-                }}
-              />
-            </Th>
+            {canEditItems && (
+              <Th>
+                <Checkbox
+                  isChecked={areAllSelected}
+                  onChange={() => onSelectAll(areAllSelected)}
+                  aria-label="Select all items"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      onSelectAll(areAllSelected);
+                    }
+                  }}
+                />
+              </Th>
+            )}
             <Th>{t("customId")}</Th>
             {customFieldsDefinition.map((field) => (
               <Th key={field.id}>{field.name}</Th>
@@ -127,22 +133,24 @@ const ItemTable = ({
                 onSelectItem(item.id);
               }}
               onContextMenu={(e) => handleContextMenu(e, item)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: canEditItems ? "context-menu" : "pointer" }}
             >
-              <Td>
-                <Checkbox
-                  isChecked={selectedItems.includes(item.id)}
-                  onChange={() => onSelectItem(item.id)}
-                  onClick={(e) => e.stopPropagation()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      onSelectItem(item.id);
-                      e.stopPropagation();
-                    }
-                  }}
-                />
-              </Td>
+              {canEditItems && (
+                <Td>
+                  <Checkbox
+                    isChecked={selectedItems.includes(item.id)}
+                    onChange={() => onSelectItem(item.id)}
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        onSelectItem(item.id);
+                        e.stopPropagation();
+                      }
+                    }}
+                  />
+                </Td>
+              )}
               <Td maxWidth="150px">
                 <Tooltip label={item.customId} placement="top" hasArrow>
                   <Text noOfLines={1}>{item.customId}</Text>

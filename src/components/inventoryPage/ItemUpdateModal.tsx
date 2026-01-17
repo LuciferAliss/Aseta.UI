@@ -20,7 +20,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Formik, Form, Field, type FieldProps } from "formik";
-import type { CustomFieldsDefinition } from "../../types/inventory";
+import type { CustomFieldData } from "../../types/customField";
 import { useTranslation } from "react-i18next";
 import { useAppToast } from "../../lib/hooks/useAppToast";
 import { updateItem } from "../../lib/services/itemService";
@@ -37,7 +37,7 @@ interface ItemUpdateModalProps {
   onClose: () => void;
   inventoryId: string;
   item: Item | null;
-  customFieldsDefinition: CustomFieldsDefinition[];
+  customFieldsDefinition: CustomFieldData[];
   onItemUpdated: () => void;
 }
 
@@ -94,7 +94,7 @@ const ItemUpdateModal = ({
     return errors;
   };
 
-  const renderField = (fieldDef: CustomFieldsDefinition) => {
+  const renderField = (fieldDef: CustomFieldData) => {
     const name = fieldDef.id;
     switch (fieldDef.type) {
       case CustomFieldType.NumberType:

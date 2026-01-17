@@ -32,5 +32,8 @@
     "removeImage": "Remove Image",
     "imageRequiredError": "Image is required"
   },
-  "delete": "Delete"
+  "deleteConfirmationModal": {
+    "delete": "Delete",
+    "cancel": "Cancel"
+  }
 }

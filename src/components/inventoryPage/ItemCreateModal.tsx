@@ -29,6 +29,7 @@ import { useAuth } from "../../lib/contexts/AuthContext";
 import { createItem } from "../../lib/services/itemService";
 import type { CreateItemRequest, CustomFieldValue } from "../../types/item";
 import { CustomFieldType } from "../../types/customField";
+import DatePicker from "../layout/DatePicker";
 
 interface ItemCreateModalProps {
   inventoryId: string;
@@ -59,10 +60,13 @@ const ItemCreateModal = ({
   const initialValues = customFieldsDefinition.reduce((acc, field) => {
     switch (field.type) {
       case CustomFieldType.CheckboxType:
-        acc[field.fieldId] = false;
+        acc[field.id] = false;
+        break;
+      case CustomFieldType.DateType:
+        acc[field.id] = null;
         break;
       default:
-        acc[field.fieldId] = "";
+        acc[field.id] = "";
         break;
     }
     return acc;
@@ -71,16 +75,16 @@ const ItemCreateModal = ({
   const validateItem = (values: Record<string, any>) => {
     const errors: Record<string, string> = {};
     customFieldsDefinition.forEach((field) => {
-      const value = values[field.fieldId];
+      const value = values[field.id];
       switch (field.type) {
         case CustomFieldType.NumberType:
           if (value && isNaN(Number(value))) {
-            errors[field.fieldId] = t("itemModal.validation.numberType");
+            errors[field.id] = t("itemModal.validation.numberType");
           }
           break;
         case CustomFieldType.DateType:
           if (value && isNaN(new Date(value).getTime())) {
-            errors[field.fieldId] = t("itemModal.validation.dateType");
+            errors[field.id] = t("itemModal.validation.dateType");
           }
           break;
       }
@@ -90,7 +94,7 @@ const ItemCreateModal = ({
   };
 
   const renderField = (fieldDef: CustomFieldData) => {
-    const name = fieldDef.fieldId;
+    const name = fieldDef.id;
     switch (fieldDef.type) {
       case CustomFieldType.NumberType:
         return (
@@ -148,8 +152,14 @@ const ItemCreateModal = ({
               <FormControl
                 isInvalid={!!form.errors[name] && !!form.touched[name]}
               >
-                <FormLabel htmlFor={name}>{fieldDef.name}</FormLabel>
-                <Input type="date" id={name} {...field} />
+                <VStack align="stretch">
+                  <FormLabel htmlFor={name}>{fieldDef.name}</FormLabel>
+                  <DatePicker
+                    selected={field.value}
+                    showTimeSelect
+                    onChange={(date) => form.setFieldValue(field.name, date)}
+                  />
+                </VStack>
                 <FormErrorMessage>
                   {form.errors[name] as string}
                 </FormErrorMessage>
@@ -199,10 +209,23 @@ const ItemCreateModal = ({
   ) => {
     try {
       const customFields: CustomFieldValue[] = customFieldsDefinition.map(
-        (field) => ({
-          fieldId: field.fieldId,
-          value: values[field.fieldId].toString(),
-        })
+        (field) => {
+          const fieldValue = values[field.id];
+          let processedValue = "";
+
+          if (fieldValue !== null && fieldValue !== undefined) {
+            if (fieldValue instanceof Date) {
+              processedValue = fieldValue.toISOString().split("T")[0];
+            } else {
+              processedValue = fieldValue.toString();
+            }
+          }
+
+          return {
+            fieldId: field.id,
+            value: processedValue,
+          };
+        }
       );
 
       const requestBody: CreateItemRequest = {
@@ -254,8 +277,8 @@ const ItemCreateModal = ({
               />
               <ModalBody>
                 <VStack spacing={4}>
-                  {customFieldsDefinition.map((fieldDef) => (
-                    <Box key={fieldDef.fieldId} w="100%">
+                  {customFieldsDefinition.map((fieldDef, index) => (
+                    <Box key={fieldDef.id || index} w="100%">
                       {renderField(fieldDef)}
                     </Box>
                   ))}

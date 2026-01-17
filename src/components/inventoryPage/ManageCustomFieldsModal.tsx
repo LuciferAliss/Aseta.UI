@@ -20,6 +20,7 @@ interface ManageCustomFieldsModalProps {
   customFields: CustomFieldData[];
   onEdit: (field: CustomFieldData) => void;
   onDelete: (field: CustomFieldData) => void;
+  canManageInventory?: boolean;
 }
 
 const ManageCustomFieldsModal = ({
@@ -28,6 +29,7 @@ const ManageCustomFieldsModal = ({
   customFields,
   onEdit,
   onDelete,
+  canManageInventory,
 }: ManageCustomFieldsModalProps) => {
   const { t } = useTranslation("inventoryPage");
 
@@ -36,29 +38,38 @@ const ManageCustomFieldsModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{t("manageCustomFieldsModal.title")}</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton
+          _focusVisible={{
+            ring: "2px",
+            ringColor: "btn-focus-ring",
+            ringOffset: "2px",
+            ringOffsetColor: "app-bg",
+          }}
+        />
         <ModalBody>
           <VStack spacing={4}>
-            {customFields.map((field) => (
+            {customFields.map((field, index) => (
               <HStack
-                key={field.fieldId}
+                key={field.id || index}
                 w="full"
                 justifyContent="space-between"
               >
                 <Text>{field.name}</Text>
-                <HStack>
-                  <IconButton
-                    aria-label={t("manageCustomFieldsModal.editAriaLabel")}
-                    icon={<EditIcon />}
-                    onClick={() => onEdit(field)}
-                  />
-                  <IconButton
-                    aria-label={t("manageCustomFieldsModal.deleteAriaLabel")}
-                    icon={<DeleteIcon />}
-                    onClick={() => onDelete(field)}
-                    colorScheme="red"
-                  />
-                </HStack>
+                {canManageInventory && (
+                  <HStack>
+                    <IconButton
+                      aria-label={t("manageCustomFieldsModal.editAriaLabel")}
+                      icon={<EditIcon />}
+                      onClick={() => onEdit(field)}
+                    />
+                    <IconButton
+                      aria-label={t("manageCustomFieldsModal.deleteAriaLabel")}
+                      icon={<DeleteIcon />}
+                      onClick={() => onDelete(field)}
+                      colorScheme="red"
+                    />
+                  </HStack>
+                )}
               </HStack>
             ))}
           </VStack>

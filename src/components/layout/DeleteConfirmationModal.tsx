@@ -35,20 +35,23 @@ const DeleteConfirmationModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton
+          _focusVisible={{
+            ring: "2px",
+            ringColor: "btn-focus-ring",
+            ringOffset: "2px",
+            ringOffsetColor: "app-bg",
+          }}
+        />
         <ModalBody>
           <Text>{bodyText}</Text>
         </ModalBody>
         <ModalFooter>
           <Button variant="ghost" mr={3} onClick={onClose}>
-            {t("cancel")}
+            {t("deleteConfirmationModal.cancel")}
           </Button>
-          <Button
-            colorScheme="red"
-            onClick={onConfirm}
-            isLoading={isLoading}
-          >
-            {t("delete")}
+          <Button colorScheme="red" onClick={onConfirm} isLoading={isLoading}>
+            {t("deleteConfirmationModal.delete")}
           </Button>
         </ModalFooter>
       </ModalContent>

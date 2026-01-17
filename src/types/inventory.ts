@@ -71,6 +71,7 @@ export interface InventoryResponse {
   createdAt: string;
   tags: Tag[];
   customFieldsDefinition: CustomFieldData[];
+  userRole: string;
 }
 
 export type InventoryRole = "owner" | "editor";

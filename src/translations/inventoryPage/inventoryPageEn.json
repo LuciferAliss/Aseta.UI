@@ -91,9 +91,12 @@
   "customFieldEditModal": {
     "title": "Edit Custom Field",
     "validation": {
-      "name_required": "Name is required"
+      "name_required": "Name is required",
+      "type_required": "Type is required"
     },
     "name_label": "Field Name",
+    "type_label": "Field Type",
+    "type_placeholder": "Select field type",
     "cancelButton": "Cancel",
     "updateButton": "Update",
     "success": "Custom field updated successfully!",

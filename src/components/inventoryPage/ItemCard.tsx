@@ -10,19 +10,20 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import type { Item, CustomFieldValue } from "../../types/item";
-import type { CustomFieldsDefinition } from "../../types/inventory";
+import type { CustomFieldData } from "../../types/customField";
 import { useTranslation } from "react-i18next";
 
 interface ItemCardProps {
   item: Item;
-  customFieldsDefinition: CustomFieldsDefinition[];
+  customFieldsDefinition: CustomFieldData[];
   onEditItem: (item: Item) => void;
   onDeleteItem: (itemId: string) => void;
+  canEditItems?: boolean;
 }
 
 const findAndRenderCustomFieldValue = (
   customFieldValues: CustomFieldValue[],
-  fieldDef: CustomFieldsDefinition
+  fieldDef: CustomFieldData
 ) => {
   const field = customFieldValues.find((f) => f.fieldId === fieldDef.id);
   if (field === undefined) return "N/A";
@@ -35,6 +36,7 @@ const ItemCard = ({
   customFieldsDefinition,
   onEditItem,
   onDeleteItem,
+  canEditItems,
 }: ItemCardProps) => {
   const { t } = useTranslation("inventoryPage");
   return (
@@ -124,22 +126,26 @@ const ItemCard = ({
             </Text>
           </HStack>
         </VStack>
-        <Divider />
-        <HStack w="100%" justifyContent="flex-end">
-          <IconButton
-            aria-label="Edit item"
-            icon={<EditIcon />}
-            onClick={() => onEditItem(item)}
-            variant="ghost"
-          />
-          <IconButton
-            aria-label="Delete item"
-            icon={<DeleteIcon />}
-            variant="ghost"
-            colorScheme="red"
-            onClick={() => onDeleteItem(item.id)}
-          />
-        </HStack>
+        {canEditItems && (
+          <>
+            <Divider />
+            <HStack w="100%" justifyContent="flex-end">
+              <IconButton
+                aria-label="Edit item"
+                icon={<EditIcon />}
+                onClick={() => onEditItem(item)}
+                variant="ghost"
+              />
+              <IconButton
+                aria-label="Delete item"
+                icon={<DeleteIcon />}
+                variant="ghost"
+                colorScheme="red"
+                onClick={() => onDeleteItem(item.id)}
+              />
+            </HStack>
+          </>
+        )}
       </VStack>
     </Container>
   );

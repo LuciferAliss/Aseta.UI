@@ -29,7 +29,7 @@ export interface CustomFieldUpdateRequest {
 }
 
 export interface CustomFieldData {
-  fieldId: string;
+  id: string;
   name: string;
   type: CustomFieldType;
 }

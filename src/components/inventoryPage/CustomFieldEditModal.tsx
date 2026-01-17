@@ -82,7 +82,7 @@ const CustomFieldEditModal = ({
     if (!customField) return;
 
     try {
-      await updateCustomField(inventoryId, customField.fieldId, {
+      await updateCustomField(inventoryId, customField.id, {
         name: values.name,
         type: values.type,
       });
@@ -113,7 +113,14 @@ const CustomFieldEditModal = ({
           {({ isSubmitting, errors, touched }) => (
             <Form>
               <ModalHeader>{t("customFieldEditModal.title")}</ModalHeader>
-              <ModalCloseButton />
+              <ModalCloseButton
+                _focusVisible={{
+                  ring: "2px",
+                  ringColor: "btn-focus-ring",
+                  ringOffset: "2px",
+                  ringOffsetColor: "app-bg",
+                }}
+              />
               <ModalBody>
                 <VStack spacing={4}>
                   <FormControl isInvalid={!!errors.name && touched.name}>

@@ -7,7 +7,6 @@ const apiClient = axios.create({
   withCredentials: true,
   paramsSerializer: {
     serialize: (params) => {
-      // Use qs.stringify to serialize params, especially for arrayFormat
       return qs.stringify(params, { arrayFormat: "repeat" });
     },
   },
@@ -24,27 +23,68 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+let isRefreshing = false;
+let failedQueue: {
+  resolve: (value: unknown) => void;
+  reject: (reason?: any) => void;
+}[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 ||
+        (error.code === "ERR_NETWORK" && !error.response)) &&
+      !originalRequest._retry
+    ) {
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = "Bearer " + token;
+            return apiClient(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        const refreshResponse = await refreshToken();
-        const newAccessToken = refreshResponse.accessToken;
-        localStorage.setItem("access_token", newAccessToken);
+        const { accessToken } = await refreshToken();
+        localStorage.setItem("access_token", accessToken);
         apiClient.defaults.headers.common[
           "Authorization"
-        ] = `Bearer ${newAccessToken}`;
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        ] = `Bearer ${accessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
+        processQueue(null, accessToken);
         return apiClient(originalRequest);
       } catch (refreshError) {
+        processQueue(refreshError, null);
         localStorage.removeItem("access_token");
+
         window.location.href = "/";
+
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 

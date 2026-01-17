@@ -51,6 +51,7 @@ import ManageCustomFieldsModal from "../components/inventoryPage/ManageCustomFie
 import CustomFieldEditModal from "../components/inventoryPage/CustomFieldEditModal";
 import { deleteCustomField } from "../lib/services/customFieldService";
 import type { CustomFieldData } from "../types/customField";
+import { useAuth } from "../lib/contexts/AuthContext";
 
 type ItemViewMode = "card" | "table";
 
@@ -58,6 +59,7 @@ const InventoryPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation("inventoryPage");
   const { showError, showSuccess } = useAppToast();
+  const { user } = useAuth();
 
   const [inventory, setInventory] = useState<InventoryResponse | null>(null);
   const [isLoadingInventory, setLoadingInventory] = useState(true);
@@ -69,6 +71,12 @@ const InventoryPage = () => {
   const { ref, inView } = useInView({
     rootMargin: "300px",
   });
+
+  const isAdmin = user?.role === "Admin";
+  const isOwner = inventory?.userRole === "Owner";
+  const canManageInventory = isAdmin || isOwner;
+  const isEditor = inventory?.userRole === "Editor";
+  const canEditItems = canManageInventory || isEditor;
 
   const {
     isOpen: isUpdateModalOpen,
@@ -117,6 +125,7 @@ const InventoryPage = () => {
   });
 
   const toggleItemViewMode = () => {
+    setSelectedItems([]);
     const newViewMode = itemViewMode === "card" ? "table" : "card";
     setItemViewMode(newViewMode);
     localStorage.setItem("itemViewMode", newViewMode);
@@ -231,7 +240,7 @@ const InventoryPage = () => {
   const handleConfirmDeleteCustomField = async () => {
     if (!id || !customFieldToDelete) return;
     try {
-      await deleteCustomField(id, customFieldToDelete.fieldId);
+      await deleteCustomField(id, customFieldToDelete.id);
       showSuccess(t("manageCustomFieldsModal.deleteSuccess"));
       loadInventory();
     } catch (error) {
@@ -328,7 +337,7 @@ const InventoryPage = () => {
                 {t("actions")}
               </MenuButton>
               <MenuList>
-                {selectedItems.length > 0 && (
+                {canEditItems && selectedItems.length > 0 && (
                   <>
                     <MenuItem
                       icon={<DeleteIcon />}
@@ -342,29 +351,38 @@ const InventoryPage = () => {
                     <MenuDivider />
                   </>
                 )}
-                <ItemCreateModal
-                  inventoryId={id || ""}
-                  customFieldsDefinition={inventory.customFieldsDefinition}
-                  onItemCreated={list.reload}
-                  trigger={(onClick) => (
-                    <MenuItem icon={<AddIcon />} onClick={onClick}>
-                      {t("createItemModal.createButton")}
+                {canEditItems && (
+                  <ItemCreateModal
+                    inventoryId={id || ""}
+                    customFieldsDefinition={inventory.customFieldsDefinition}
+                    onItemCreated={list.reload}
+                    trigger={(onClick) => (
+                      <MenuItem icon={<AddIcon />} onClick={onClick}>
+                        {t("createItemModal.createButton")}
+                      </MenuItem>
+                    )}
+                  />
+                )}
+                {canManageInventory && (
+                  <>
+                    <CustomFieldCreateModal
+                      inventoryId={id || ""}
+                      onCustomFieldCreated={loadInventory}
+                      trigger={(onClick) => (
+                        <MenuItem icon={<AddIcon />} onClick={onClick}>
+                          {t("customFieldCreateModal.createButton")}
+                        </MenuItem>
+                      )}
+                    />
+                    <MenuDivider />
+                    <MenuItem
+                      icon={<SettingsIcon />}
+                      onClick={onManageFieldsOpen}
+                    >
+                      {t("manageCustomFieldsModal.manageMenuItem")}
                     </MenuItem>
-                  )}
-                />
-                <CustomFieldCreateModal
-                  inventoryId={id || ""}
-                  onCustomFieldCreated={loadInventory}
-                  trigger={(onClick) => (
-                    <MenuItem icon={<AddIcon />} onClick={onClick}>
-                      {t("customFieldCreateModal.createButton")}
-                    </MenuItem>
-                  )}
-                />
-                <MenuDivider />
-                <MenuItem icon={<SettingsIcon />} onClick={onManageFieldsOpen}>
-                  {t("manageCustomFieldsModal.manageMenuItem")}
-                </MenuItem>
+                  </>
+                )}
                 {isDesktop && (
                   <>
                     <MenuDivider />
@@ -392,6 +410,7 @@ const InventoryPage = () => {
             customFieldsDefinition={inventory.customFieldsDefinition}
             onEditItem={handleEditItem}
             onDeleteItem={handleDeleteSingleItem}
+            canEditItems={canEditItems}
           />
         ) : (
           <ItemTable
@@ -402,6 +421,7 @@ const InventoryPage = () => {
             selectedItems={selectedItems}
             onSelectItem={handleSelectItem}
             onSelectAll={handleSelectAll}
+            canEditItems={canEditItems}
           />
         )}
 
@@ -438,6 +458,7 @@ const InventoryPage = () => {
         customFields={inventory.customFieldsDefinition}
         onEdit={handleEditCustomField}
         onDelete={handleDeleteCustomField}
+        canManageInventory={canManageInventory}
       />
       <CustomFieldEditModal
         isOpen={isEditCustomFieldOpen}

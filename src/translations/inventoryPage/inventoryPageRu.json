@@ -91,9 +91,12 @@
   "customFieldEditModal": {
     "title": "Редактировать поле",
     "validation": {
-      "name_required": "Название обязательно"
+      "name_required": "Название обязательно",
+      "type_required": "Тип обязателен"
     },
     "name_label": "Название поля",
+    "type_label": "Тип поля",
+    "type_placeholder": "Выберите тип поля",
     "cancelButton": "Отмена",
     "updateButton": "Обновить",
     "success": "Поле успешно обновлено!",

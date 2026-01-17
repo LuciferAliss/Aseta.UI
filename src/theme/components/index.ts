@@ -8,11 +8,13 @@ import Radio from "./radio";
 import { NumberInput } from "./numberInput";
 import { ImageUploader } from "./imageUploader";
 import { Checkbox } from "./checkbox";
+import { Textarea } from "./textarea";
 
 export const components = {
   Container,
   Button,
   Input,
+  Textarea,
   Modal,
   Menu,
   Table,
