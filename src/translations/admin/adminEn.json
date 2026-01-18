@@ -1,0 +1,74 @@
+{
+  "title": "Admin Panel",
+  "tags": {
+    "title": "Tags",
+    "create": "Create Tag",
+    "deleteSelected": "Delete Selected ({{count}})",
+    "switchToCard": "Switch to Card View",
+    "switchToTable": "Switch to Table View",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "name": "Name",
+    "toasts": {
+      "fetch_error": "Failed to fetch tags.",
+      "delete_success": "Tags deleted successfully.",
+      "delete_error": "Failed to delete tags.",
+      "create_success": "Tag created successfully.",
+      "create_error": "Failed to create tag.",
+      "update_success": "Tag updated successfully.",
+      "update_error": "Failed to update tag."
+    },
+    "createModalTitle": "Create New Tag",
+    "editModalTitle": "Edit Tag",
+    "tagNameLabel": "Tag Name",
+    "tagNamePlaceholder": "Enter tag name",
+    "createButton": "Create",
+    "updateButton": "Update",
+    "cancelButton": "Cancel"
+  },
+  "categories": {
+    "title": "Categories",
+    "create": "Create Category",
+    "deleteSelected": "Delete Selected ({{count}})",
+    "switchToCard": "Switch to Card View",
+    "switchToTable": "Switch to Table View",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "name": "Name",
+    "toasts": {
+      "fetch_error": "Failed to fetch categories.",
+      "delete_success": "Categories deleted successfully.",
+      "delete_error": "Failed to delete categories.",
+      "create_success": "Category created successfully.",
+      "create_error": "Failed to create category.",
+      "update_success": "Category updated successfully.",
+      "update_error": "Failed to update category."
+    },
+    "createModalTitle": "Create New Category",
+    "editModalTitle": "Edit Category",
+    "categoryNameLabel": "Category Name",
+    "categoryNamePlaceholder": "Enter category name",
+    "createButton": "Create",
+    "updateButton": "Update",
+    "cancelButton": "Cancel"
+  },
+  "users": {
+    "title": "Users",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "block": "Block",
+    "unlock": "Unlock",
+    "searchPlaceholder": "Search by name or email...",
+    "toasts": {
+      "fetch_error": "Failed to fetch users.",
+      "lock_success": "User locked successfully.",
+      "lock_error": "Failed to lock user.",
+      "unlock_success": "User unlocked successfully.",
+      "unlock_error": "Failed to unlock user."
+    }
+  }
+}

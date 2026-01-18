@@ -1,4 +1,5 @@
 import type {
+  UsersResponse,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
@@ -6,12 +7,41 @@ import type {
 } from "../../types/user";
 import apiClient from "../axios";
 
+export const getAllUsers = async (): Promise<UsersResponse> => {
+  try {
+    const response = await apiClient.get<UsersResponse>("/users/all");
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Get all users failed:", error);
+    throw error;
+  }
+};
+
+export const lockUser = async (userId: string): Promise<void> => {
+  try {
+    await apiClient.put(`/users/${userId}/lock`);
+  } catch (error) {
+    console.error("Lock user failed:", error);
+    throw error;
+  }
+};
+
+export const unlockUser = async (userId: string): Promise<void> => {
+  try {
+    await apiClient.put(`/users/${userId}/unlock`);
+  } catch (error) {
+    console.error("Unlock user failed:", error);
+    throw error;
+  }
+};
+
 export const searchUsers = async (
-  searchTerm: string
+  searchTerm: string,
 ): Promise<{ users: UserSearchResponse[] }> => {
   try {
     const response = await apiClient.get<{ users: UserSearchResponse[] }>(
-      `/users/search/${searchTerm}`
+      `/users/search/${searchTerm}`,
     );
     return response.data;
   } catch (error) {
@@ -21,7 +51,7 @@ export const searchUsers = async (
 };
 
 export const loginUser = async (
-  request: LoginRequest
+  request: LoginRequest,
 ): Promise<LoginResponse> => {
   try {
     const response = await apiClient.post("/user-sessions", request);

@@ -1,0 +1,74 @@
+{
+  "title": "Панель администратора",
+  "tags": {
+    "title": "Теги",
+    "create": "Создать тег",
+    "deleteSelected": "Удалить выбранные ({{count}})",
+    "switchToCard": "Переключить на карточки",
+    "switchToTable": "Переключить на таблицу",
+    "actions": "Действия",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "name": "Название",
+    "toasts": {
+      "fetch_error": "Не удалось загрузить теги.",
+      "delete_success": "Теги успешно удалены.",
+      "delete_error": "Не удалось удалить теги.",
+      "create_success": "Тег успешно создан.",
+      "create_error": "Не удалось создать тег.",
+      "update_success": "Тег успешно обновлен.",
+      "update_error": "Не удалось обновить тег."
+    },
+    "createModalTitle": "Создать новый тег",
+    "editModalTitle": "Редактировать тег",
+    "tagNameLabel": "Название тега",
+    "tagNamePlaceholder": "Введите название тега",
+    "createButton": "Создать",
+    "updateButton": "Обновить",
+    "cancelButton": "Отмена"
+  },
+  "categories": {
+    "title": "Категории",
+    "create": "Создать категорию",
+    "deleteSelected": "Удалить выбранные ({{count}})",
+    "switchToCard": "Переключить на карточки",
+    "switchToTable": "Переключить на таблицу",
+    "actions": "Действия",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "name": "Название",
+    "toasts": {
+      "fetch_error": "Не удалось загрузить категории.",
+      "delete_success": "Категории успешно удалены.",
+      "delete_error": "Не удалось удалить категории.",
+      "create_success": "Категория успешно создана.",
+      "create_error": "Не удалось создать категорию.",
+      "update_success": "Категория успешно обновлена.",
+      "update_error": "Не удалось обновить категорию."
+    },
+    "createModalTitle": "Создать новую категорию",
+    "editModalTitle": "Редактировать категорию",
+    "categoryNameLabel": "Название категории",
+    "categoryNamePlaceholder": "Введите название категории",
+    "createButton": "Создать",
+    "updateButton": "Обновить",
+    "cancelButton": "Отмена"
+  },
+  "users": {
+    "title": "Пользователи",
+    "name": "Имя",
+    "email": "Email",
+    "role": "Роль",
+    "status": "Статус",
+    "block": "Заблокировать",
+    "unlock": "Разблокировать",
+    "searchPlaceholder": "Поиск по имени или email...",
+    "toasts": {
+      "fetch_error": "Не удалось загрузить пользователей.",
+      "lock_success": "Пользователь успешно заблокирован.",
+      "lock_error": "Не удалось заблокировать пользователя.",
+      "unlock_success": "Пользователь успешно разблокирован.",
+      "unlock_error": "Не удалось разблокировать пользователя."
+    }
+  }
+}

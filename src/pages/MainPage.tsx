@@ -13,10 +13,13 @@ import { useAuth } from "../lib/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../lib/routes";
 import InventoryCreateModal from "../components/inventoriesCreate/InventoryCreateModal";
+import { useTranslation } from "react-i18next";
+import AuthModal from "../components/auth/AuthModal";
 
 const MainPage = () => {
   const { isAuth } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation("main");
 
   return (
     <Flex gap="1rem" direction="column">
@@ -32,31 +35,37 @@ const MainPage = () => {
         maxW="100vw"
         justifyContent="center"
       >
-        <Heading as="h1" size="4xl">
-          Добро пожаловать в Aseta!
+        <Heading
+          as="h1"
+          size={{ base: "2xl", md: "3xl", lg: "4xl" }}
+          fontWeight="extrabold"
+        >
+          {t("hero.title")}
         </Heading>
-        <Text fontSize="2xl">
-          Порядок в каждой детали. Ваши инвентари под полным контролем.
+        <Text fontSize={{ base: "lg", md: "xl", lg: "2xl" }}>
+          {t("hero.subtitle")}
         </Text>
       </VStack>
 
       <Box p={10}>
-        <Heading as="h2" size="xl" textAlign="center" mb={10}>
-          Основные действия
+        <Heading
+          as="h2"
+          size={{ base: "lg", md: "xl" }}
+          textAlign="center"
+          mb={10}
+        >
+          {t("actions.title")}
         </Heading>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
           <Container variant="card">
             <VStack spacing={4} alignItems="flex-start" h="100%">
               <Heading as="h3" size="md">
-                Каталог инвентарей
+                {t("actions.catalog.title")}
               </Heading>
-              <Text>
-                Изучайте и ищите среди всех общедоступных инвентарей, созданных
-                другими пользователями.
-              </Text>
+              <Text>{t("actions.catalog.description")}</Text>
               <Spacer />
               <Button w="100%" onClick={() => navigate(ROUTES.inventories)}>
-                Перейти к каталогу
+                {t("actions.catalog.button")}
               </Button>
             </VStack>
           </Container>
@@ -64,12 +73,9 @@ const MainPage = () => {
           <Container variant="card">
             <VStack spacing={4} alignItems="flex-start" h="100%">
               <Heading as="h3" size="md">
-                Создать инвентарь
+                {t("actions.create.title")}
               </Heading>
-              <Text>
-                Начните с нуля и создайте свой личный инвентарь с уникальными
-                полями и настройками.
-              </Text>
+              <Text>{t("actions.create.description")}</Text>
               <Spacer />
               <InventoryCreateModal />
             </VStack>
@@ -79,28 +85,22 @@ const MainPage = () => {
             <Container variant="card">
               <VStack spacing={4} alignItems="flex-start" h="100%">
                 <Heading as="h3" size="md">
-                  Ваш профиль
+                  {t("actions.profile.title")}
                 </Heading>
-                <Text>
-                  Управляйте настройками своего аккаунта, отслеживайте
-                  активность и личные данные.
-                </Text>
+                <Text>{t("actions.profile.description")}</Text>
                 <Spacer />
-                <Button w="100%">Перейти в профиль</Button>
+                <Button w="100%">{t("actions.profile.button")}</Button>
               </VStack>
             </Container>
           ) : (
             <Container variant="card">
               <VStack spacing={4} alignItems="flex-start" h="100%">
                 <Heading as="h3" size="md">
-                  Вход
+                  {t("actions.login.title")}
                 </Heading>
-                <Text>
-                  Войдите в свой профиль, чтобы управлять личными инвентарями,
-                  или зарегистрируйтесь, чтобы начать.
-                </Text>
+                <Text>{t("actions.login.description")}</Text>
                 <Spacer />
-                <Button w="100%">Войти</Button>
+                <AuthModal variant="base" w="full" />
               </VStack>
             </Container>
           )}

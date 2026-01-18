@@ -5,12 +5,13 @@ import {
   ModalContent,
   ModalOverlay,
   useDisclosure,
+  type ButtonProps,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import LoginView from "./LoginView";
 import RegisterView from "./RegisterView";
 
-const AuthModal = () => {
+const AuthModal = (props: ButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [initialView, setInitialView] = useState<"login" | "register">("login");
 
@@ -51,6 +52,7 @@ const AuthModal = () => {
         size={{ base: "sm", md: "md" }}
         onClick={openLogin}
         variant="ghost"
+        {...props}
       >
         Sign in
       </Button>

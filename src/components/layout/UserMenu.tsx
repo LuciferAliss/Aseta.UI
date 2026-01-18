@@ -9,11 +9,14 @@ import {
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/contexts/AuthContext";
 import { useAppToast } from "../../lib/hooks/useAppToast";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../lib/routes";
 
 const UserMenu = () => {
   const { t } = useTranslation("common");
-  const { user, logout, isLoading } = useAuth();
+  const { user, logout, isLoading, isAuth } = useAuth();
   const { showSuccess, showError } = useAppToast();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -22,7 +25,7 @@ const UserMenu = () => {
     } catch (error) {
       showError(
         t("backend_error.server_error.title"),
-        t("backend_error.server_error.description")
+        t("backend_error.server_error.description"),
       );
     }
   };
@@ -36,6 +39,11 @@ const UserMenu = () => {
         <MenuItem>
           <Text fontWeight="bold">{t("header.user_menu.profile")}</Text>
         </MenuItem>
+        {isAuth && user?.role === "Admin" && (
+          <MenuItem onClick={() => navigate(ROUTES.admin)}>
+            {t("header.admin_panel")}
+          </MenuItem>
+        )}
         <MenuItem onClick={handleLogout} isDisabled={isLoading}>
           {t("header.user_menu.logout")}
         </MenuItem>

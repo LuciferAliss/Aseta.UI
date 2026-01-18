@@ -7,7 +7,8 @@
     },
     "language_change_button": {
       "title": "Язык"
-    }
+    },
+    "admin_panel": "Панель администратора"
   },
   "backend_error": {
     "server_error": {

@@ -17,6 +17,12 @@ import inventoryCreateRu from "./inventoryCreate/inventoryCreateRu.json";
 import inventoryPageEn from "./inventoryPage/inventoryPageEn.json";
 import inventoryPageRu from "./inventoryPage/inventoryPageRu.json";
 
+import adminEn from "./admin/adminEn.json";
+import adminRu from "./admin/adminRu.json";
+
+import mainPageEn from "./main/mainPageEn.json";
+import mainPageRu from "./main/mainPageRu.json";
+
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -35,6 +41,8 @@ i18next
         inventoryCatalog: inventoryCatalogEn,
         inventoryCreate: inventoryCreateEn,
         inventoryPage: inventoryPageEn,
+        admin: adminEn,
+        main: mainPageEn,
       },
       ru: {
         auth: authRu,
@@ -42,6 +50,8 @@ i18next
         inventoryCatalog: inventoryCatalogRu,
         inventoryCreate: inventoryCreateRu,
         inventoryPage: inventoryPageRu,
+        admin: adminRu,
+        main: mainPageRu,
       },
     },
   });

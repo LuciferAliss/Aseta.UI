@@ -1,8 +1,8 @@
 export const ROUTES = {
   main: "/",
   inventories: "/inventories",
-  inventory: "/inventory/:id",
-  datepickerTest: "/datepicker-test",
+  inventory: "/inventories/:id",
+  admin: "/admin",
 };
 
 const generatePath = (

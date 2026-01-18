@@ -5,6 +5,18 @@ export interface User {
   role: string;
 }
 
+export interface UserResponse {
+  id: string;
+  userName: string;
+  email: string;
+  role: string;
+  isLocked: boolean;
+}
+
+export interface UsersResponse {
+  users: UserResponse[];
+}
+
 export interface UserSearchResponse {
   id: string;
   userName: string;

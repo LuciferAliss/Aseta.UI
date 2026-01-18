@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "title": "Welcome to Aseta!",
+    "subtitle": "Order in every detail. Your inventories are under full control."
+  },
+  "actions": {
+    "title": "Main Actions",
+    "catalog": {
+      "title": "Inventory Catalog",
+      "description": "Explore and search among all public inventories created by other users.",
+      "button": "Go to Catalog"
+    },
+    "create": {
+      "title": "Create Inventory",
+      "description": "Start from scratch and create your personal inventory with unique fields and settings."
+    },
+    "profile": {
+      "title": "Your Profile",
+      "description": "Manage your account settings, track activity, and personal data.",
+      "button": "Go to Profile"
+    },
+    "login": {
+      "title": "Login",
+      "description": "Log in to your profile to manage your personal inventories, or register to get started.",
+      "button": "Login"
+    }
+  }
+}

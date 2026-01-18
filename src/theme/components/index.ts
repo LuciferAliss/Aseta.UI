@@ -9,6 +9,7 @@ import { NumberInput } from "./numberInput";
 import { ImageUploader } from "./imageUploader";
 import { Checkbox } from "./checkbox";
 import { Textarea } from "./textarea";
+import { Tabs } from "./tabs";
 
 export const components = {
   Container,
@@ -22,4 +23,5 @@ export const components = {
   Checkbox,
   NumberInput,
   ImageUploader,
+  Tabs,
 };
