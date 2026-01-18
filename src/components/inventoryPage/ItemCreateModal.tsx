@@ -47,20 +47,23 @@ const ItemCreateModal = ({
   const { t } = useTranslation(["inventoryPage", "common"]);
   const { showSuccess, showError } = useAppToast();
 
-  const initialValues = customFieldsDefinition.reduce((acc, field) => {
-    switch (field.type) {
-      case CustomFieldType.CheckboxType:
-        acc[field.id] = false;
-        break;
-      case CustomFieldType.DateType:
-        acc[field.id] = null;
-        break;
-      default:
-        acc[field.id] = "";
-        break;
-    }
-    return acc;
-  }, {} as Record<string, any>);
+  const initialValues = customFieldsDefinition.reduce(
+    (acc, field) => {
+      switch (field.type) {
+        case CustomFieldType.CheckboxType:
+          acc[field.id] = false;
+          break;
+        case CustomFieldType.DateType:
+          acc[field.id] = null;
+          break;
+        default:
+          acc[field.id] = "";
+          break;
+      }
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 
   const validateItem = (values: Record<string, any>) => {
     const errors: Record<string, string> = {};
@@ -146,7 +149,6 @@ const ItemCreateModal = ({
                   <FormLabel htmlFor={name}>{fieldDef.name}</FormLabel>
                   <DatePicker
                     selected={field.value}
-                    showTimeSelect
                     onChange={(date) => form.setFieldValue(field.name, date)}
                   />
                 </VStack>
@@ -195,7 +197,7 @@ const ItemCreateModal = ({
 
   const handleSubmit = async (
     values: Record<string, any>,
-    actions: { setSubmitting: (isSubmitting: boolean) => void }
+    actions: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
     try {
       const customFields: CustomFieldValue[] = customFieldsDefinition.map(
@@ -215,7 +217,7 @@ const ItemCreateModal = ({
             fieldId: field.id,
             value: processedValue,
           };
-        }
+        },
       );
 
       const requestBody: CreateItemRequest = {

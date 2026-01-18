@@ -1,6 +1,7 @@
 {
   "create_inventory_title": "Create Inventory",
   "name_label": "Name",
+  "tags_label": "Tags",
   "name_placeholder": "Enter inventory name",
   "description_label": "Description",
   "description_placeholder": "Enter a description",

@@ -30,6 +30,7 @@ import type {
   Item,
 } from "../../types/item";
 import { CustomFieldType } from "../../types/customField";
+import DatePicker from "../layout/DatePicker";
 
 interface ItemUpdateModalProps {
   isOpen: boolean;
@@ -55,22 +56,25 @@ const ItemUpdateModal = ({
     return null;
   }
 
-  const initialValues = customFieldsDefinition.reduce((acc, fieldDef) => {
-    const existingValue = item.customFieldValues.find(
-      (cv) => cv.fieldId === fieldDef.id
-    );
-    switch (fieldDef.type) {
-      case CustomFieldType.CheckboxType:
-        acc[fieldDef.id] = existingValue
-          ? existingValue.value === "true"
-          : false;
-        break;
-      default:
-        acc[fieldDef.id] = existingValue ? existingValue.value : "";
-        break;
-    }
-    return acc;
-  }, {} as Record<string, any>);
+  const initialValues = customFieldsDefinition.reduce(
+    (acc, fieldDef) => {
+      const existingValue = item.customFieldValues.find(
+        (cv) => cv.fieldId === fieldDef.id,
+      );
+      switch (fieldDef.type) {
+        case CustomFieldType.CheckboxType:
+          acc[fieldDef.id] = existingValue
+            ? existingValue.value === "true"
+            : false;
+          break;
+        default:
+          acc[fieldDef.id] = existingValue ? existingValue.value : "";
+          break;
+      }
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 
   const validateItem = (values: Record<string, any>) => {
     const errors: Record<string, string> = {};
@@ -151,8 +155,13 @@ const ItemUpdateModal = ({
               <FormControl
                 isInvalid={!!form.errors[name] && !!form.touched[name]}
               >
-                <FormLabel htmlFor={name}>{fieldDef.name}</FormLabel>
-                <Input type="date" id={name} {...field} />
+                <VStack align="stretch">
+                  <FormLabel htmlFor={name}>{fieldDef.name}</FormLabel>
+                  <DatePicker
+                    selected={field.value}
+                    onChange={(date) => form.setFieldValue(field.name, date)}
+                  />
+                </VStack>
                 <FormErrorMessage>
                   {form.errors[name] as string}
                 </FormErrorMessage>
@@ -198,14 +207,27 @@ const ItemUpdateModal = ({
 
   const handleSubmit = async (
     values: Record<string, any>,
-    actions: { setSubmitting: (isSubmitting: boolean) => void }
+    actions: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
     try {
       const customFields: CustomFieldValue[] = customFieldsDefinition.map(
-        (field) => ({
-          fieldId: field.id,
-          value: values[field.id].toString(),
-        })
+        (field) => {
+          const fieldValue = values[field.id];
+          let processedValue = "";
+
+          if (fieldValue !== null && fieldValue !== undefined) {
+            if (fieldValue instanceof Date) {
+              processedValue = fieldValue.toISOString().split("T")[0];
+            } else {
+              processedValue = fieldValue.toString();
+            }
+          }
+
+          return {
+            fieldId: field.id,
+            value: processedValue,
+          };
+        },
       );
 
       const requestBody: UpdateItemRequest = {

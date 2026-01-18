@@ -1,6 +1,7 @@
 {
   "create_inventory_title": "Создание инвентаря",
   "name_label": "Название",
+  "tags_label": "Теги",
   "name_placeholder": "Введите название инвентаря",
   "description_label": "Описание",
   "description_placeholder": "Введите описание",

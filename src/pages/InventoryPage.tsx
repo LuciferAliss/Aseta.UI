@@ -45,8 +45,10 @@ import DeleteConfirmationModal from "../components/layout/DeleteConfirmationModa
 import { ROUTES } from "../lib/routes";
 import { useAppToast } from "../lib/hooks/useAppToast";
 import { getItems, bulkDeleteItems } from "../lib/services/itemService";
+import { getComments, deleteComment } from "../lib/services/commentService";
 import ItemTable from "../components/inventoryPage/ItemTable";
 import type { Item } from "../types/item";
+import type { Comment } from "../types/comment";
 import CustomFieldCreateModal from "../components/inventoryPage/CustomFieldCreateModal";
 import ManageCustomFieldsModal from "../components/inventoryPage/ManageCustomFieldsModal";
 import CustomFieldEditModal from "../components/inventoryPage/CustomFieldEditModal";
@@ -54,6 +56,7 @@ import { deleteCustomField } from "../lib/services/customFieldService";
 import type { CustomFieldData } from "../types/customField";
 import { useAuth } from "../lib/contexts/AuthContext";
 import ManageInventoryUsersModal from "../components/inventoryPage/ManageInventoryUsersModal";
+import CommentsSection from "../components/comments/CommentsSection";
 
 type ItemViewMode = "card" | "table";
 
@@ -65,12 +68,19 @@ const InventoryPage = () => {
 
   const [inventory, setInventory] = useState<InventoryResponse | null>(null);
   const [isLoadingInventory, setLoadingInventory] = useState(true);
-  const [hasNextPage, setHasNextPage] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
-
   const navigate = useNavigate();
-  const { ref, inView } = useInView({
+
+  // --- Items state and handlers ---
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const { ref: itemsRef, inView: itemsInView } = useInView({
+    rootMargin: "300px",
+  });
+
+  // --- Comments state and handlers ---
+  const [hasNextPageComments, setHasNextPageComments] = useState(true);
+  const { ref: commentsRef, inView: commentsInView } = useInView({
     rootMargin: "300px",
   });
 
@@ -122,12 +132,14 @@ const InventoryPage = () => {
   } = useDisclosure();
 
   const [selectedItemForEdit, setSelectedItemForEdit] = useState<Item | null>(
-    null
+    null,
   );
   const [selectedCustomField, setSelectedCustomField] =
     useState<CustomFieldData | null>(null);
   const [customFieldToDelete, setCustomFieldToDelete] =
     useState<CustomFieldData | null>(null);
+
+  const [activeTab, setActiveTab] = useState<"items" | "comments">("items");
 
   const isDesktop = useBreakpointValue({ base: false, xl: true });
 
@@ -164,10 +176,9 @@ const InventoryPage = () => {
 
   useEffect(() => {
     if (!isLoadingAuth) {
-      // Only load inventory after authentication status is known
       loadInventory();
     }
-  }, [loadInventory, isLoadingAuth]); // Add isLoadingAuth to dependencies
+  }, [loadInventory, isLoadingAuth]);
 
   const loadItems = useCallback(
     async ({ cursor }: { cursor?: string }) => {
@@ -182,22 +193,47 @@ const InventoryPage = () => {
         cursor: response.items.cursor ?? undefined,
       };
     },
-    [isLoadingInventory, id]
+    [isLoadingInventory, id],
   );
 
-  const list = useAsyncList({ load: loadItems });
+  const itemsList = useAsyncList({ load: loadItems });
+
+  useEffect(() => {
+    if (itemsInView && !itemsList.isLoading && hasNextPage) {
+      itemsList.loadMore();
+    }
+  }, [itemsInView, itemsList, hasNextPage]);
+
+  const loadComments = useCallback(
+    async ({ cursor }: { cursor?: string }) => {
+      if (isLoadingInventory || !id) {
+        return { items: [], cursor: undefined };
+      }
+      const request = { inventoryId: id, pageSize: 10, cursor };
+      const response = await getComments(request);
+      setHasNextPageComments(response.comments.hasNextPage);
+      return {
+        items: response.comments.items,
+        cursor: response.comments.cursor ?? undefined,
+      };
+    },
+    [isLoadingInventory, id],
+  );
+
+  const commentsList = useAsyncList<Comment>({ load: loadComments });
+
+  useEffect(() => {
+    if (commentsInView && !commentsList.isLoading && hasNextPageComments) {
+      commentsList.loadMore();
+    }
+  }, [commentsInView, commentsList, hasNextPageComments]);
 
   useEffect(() => {
     if (!isLoadingInventory) {
-      list.reload();
+      itemsList.reload();
+      commentsList.reload();
     }
   }, [isLoadingInventory]);
-
-  useEffect(() => {
-    if (inView && !list.isLoading && hasNextPage) {
-      list.loadMore();
-    }
-  }, [inView, list, hasNextPage]);
 
   const handleEditItem = (item: Item) => {
     setSelectedItemForEdit(item);
@@ -213,7 +249,7 @@ const InventoryPage = () => {
     setSelectedItems((prev) =>
       prev.includes(itemId)
         ? prev.filter((id) => id !== itemId)
-        : [...prev, itemId]
+        : [...prev, itemId],
     );
   };
 
@@ -221,7 +257,7 @@ const InventoryPage = () => {
     if (areAllSelected) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(list.items.map((item) => item.id));
+      setSelectedItems(itemsList.items.map((item) => item.id));
     }
   };
 
@@ -238,7 +274,7 @@ const InventoryPage = () => {
       await bulkDeleteItems(id, { itemIds: selectedItems });
       showSuccess(t("deleteItems.success"));
       setSelectedItems([]);
-      list.reload();
+      itemsList.reload();
     } catch (error) {
       showError(t("deleteItems.error"));
     } finally {
@@ -271,6 +307,16 @@ const InventoryPage = () => {
     }
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      await deleteComment(commentId);
+      showSuccess(t("comments.deleteSuccess"));
+      commentsList.reload();
+    } catch (error) {
+      showError(t("comments.deleteError"));
+    }
+  };
+
   if (isLoadingInventory || isLoadingAuth) {
     return (
       <Center minH="calc(100vh - 80px)">
@@ -288,7 +334,7 @@ const InventoryPage = () => {
   }
 
   return (
-    <Box mx="auto" p={{ base: 4, md: 8 }}>
+    <Box mx="auto" p={{ base: 4, md: 8 }} w="full">
       <Grid
         templateColumns={{ base: "1fr", md: "250px 1fr" }}
         gap={{ base: 6, md: 10 }}
@@ -339,121 +385,161 @@ const InventoryPage = () => {
         </GridItem>
       </Grid>
 
-      <VStack as="main" flex="1" spacing={4} align="stretch" w="full" mt={10}>
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          flexWrap="wrap"
-          gap={4}
+      <HStack spacing={4} mt={10}>
+        <Button
+          onClick={() => setActiveTab("items")}
+          colorScheme={activeTab === "items" ? "blue" : "gray"}
         >
-          <Heading size="lg">{t("items")}</Heading>
-          {(canEditItems || canManageInventory || isDesktop) && (
-            <Flex
-              gap={2}
-              flexWrap="wrap"
-              justifyContent={{ base: "flex-start", md: "flex-end" }}
-            >
-              <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                  {t("actions")}
-                </MenuButton>
-                <MenuList>
-                  {canEditItems && selectedItems.length > 0 && (
-                    <>
-                      <MenuItem
-                        icon={<DeleteIcon />}
-                        onClick={handleDeleteRequest}
-                        color="red.500"
-                      >
-                        {t("deleteItems.button", {
-                          count: selectedItems.length,
-                        })}
-                      </MenuItem>
-                      <MenuDivider />
-                    </>
-                  )}
-                  {canEditItems && (
-                    <MenuItem
-                      icon={<AddIcon />}
-                      onClick={onItemCreateModalOpen}
-                    >
-                      {t("createItemModal.createButton")}
-                    </MenuItem>
-                  )}
-                  {canManageInventory && (
-                    <>
+          {t("items")}
+        </Button>
+        <Button
+          onClick={() => setActiveTab("comments")}
+          colorScheme={activeTab === "comments" ? "blue" : "gray"}
+        >
+          {t("comments.sectionTitle")}
+        </Button>
+      </HStack>
+
+      {activeTab === "items" && (
+        <VStack as="main" flex="1" spacing={4} align="stretch" w="full" mt={10}>
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            flexWrap="wrap"
+            gap={4}
+          >
+            <Heading size="lg">{t("items")}</Heading>
+            {(canEditItems || canManageInventory || isDesktop) && (
+              <Flex
+                gap={2}
+                flexWrap="wrap"
+                justifyContent={{ base: "flex-start", md: "flex-end" }}
+              >
+                <Menu>
+                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                    {t("actions")}
+                  </MenuButton>
+                  <MenuList>
+                    {canEditItems && selectedItems.length > 0 && (
+                      <>
+                        <MenuItem
+                          icon={<DeleteIcon />}
+                          onClick={handleDeleteRequest}
+                          color="red.500"
+                        >
+                          {t("deleteItems.button", {
+                            count: selectedItems.length,
+                          })}
+                        </MenuItem>
+                        <MenuDivider />
+                      </>
+                    )}
+                    {canEditItems && (
                       <MenuItem
                         icon={<AddIcon />}
-                        onClick={onCustomFieldCreateOpen}
+                        onClick={onItemCreateModalOpen}
                       >
-                        {t("customFieldCreateModal.createButton")}
+                        {t("createItemModal.createButton")}
                       </MenuItem>
-                      <MenuDivider />
-                      <MenuItem
-                        icon={<SettingsIcon />}
-                        onClick={onManageFieldsOpen}
-                      >
-                        {t("manageCustomFieldsModal.manageMenuItem")}
-                      </MenuItem>
-                      <MenuItem icon={<FaUsers />} onClick={onManageUsersOpen}>
-                        {t("manageUsersModal.manageMenuItem")}
-                      </MenuItem>
-                    </>
-                  )}
-                  {isDesktop && (
-                    <>
-                      <MenuDivider />
-                      <MenuItem
-                        icon={
-                          itemViewMode === "card" ? (
-                            <ViewOffIcon />
-                          ) : (
-                            <ViewIcon />
-                          )
-                        }
-                        onClick={toggleItemViewMode}
-                      >
-                        {t(
-                          itemViewMode === "card"
-                            ? "switchToTableView"
-                            : "switchToCardView"
-                        )}
-                      </MenuItem>
-                    </>
-                  )}
-                </MenuList>
-              </Menu>
-            </Flex>
+                    )}
+                    {canManageInventory && (
+                      <>
+                        <MenuItem
+                          icon={<AddIcon />}
+                          onClick={onCustomFieldCreateOpen}
+                        >
+                          {t("customFieldCreateModal.createButton")}
+                        </MenuItem>
+                        <MenuDivider />
+                        <MenuItem
+                          icon={<SettingsIcon />}
+                          onClick={onManageFieldsOpen}
+                        >
+                          {t("manageCustomFieldsModal.manageMenuItem")}
+                        </MenuItem>
+                        <MenuItem
+                          icon={<FaUsers />}
+                          onClick={onManageUsersOpen}
+                        >
+                          {t("manageUsersModal.manageMenuItem")}
+                        </MenuItem>
+                      </>
+                    )}
+                    {isDesktop && (
+                      <>
+                        <MenuDivider />
+                        <MenuItem
+                          icon={
+                            itemViewMode === "card" ? (
+                              <ViewOffIcon />
+                            ) : (
+                              <ViewIcon />
+                            )
+                          }
+                          onClick={toggleItemViewMode}
+                        >
+                          {t(
+                            itemViewMode === "card"
+                              ? "switchToTableView"
+                              : "switchToCardView",
+                          )}
+                        </MenuItem>
+                      </>
+                    )}
+                  </MenuList>
+                </Menu>
+              </Flex>
+            )}
+          </Flex>
+          {effectiveItemViewMode === "card" ? (
+            <ItemCardList
+              items={itemsList.items}
+              customFieldsDefinition={inventory.customFieldsDefinition}
+              onEditItem={handleEditItem}
+              onDeleteItem={handleDeleteSingleItem}
+              canEditItems={canEditItems}
+            />
+          ) : (
+            <ItemTable
+              items={itemsList.items}
+              customFieldsDefinition={inventory.customFieldsDefinition}
+              onEditItem={handleEditItem}
+              onDeleteItem={handleDeleteSingleItem}
+              selectedItems={selectedItems}
+              onSelectItem={handleSelectItem}
+              onSelectAll={handleSelectAll}
+              canEditItems={canEditItems}
+            />
           )}
-        </Flex>
-        {effectiveItemViewMode === "card" ? (
-          <ItemCardList
-            items={list.items}
-            customFieldsDefinition={inventory.customFieldsDefinition}
-            onEditItem={handleEditItem}
-            onDeleteItem={handleDeleteSingleItem}
-            canEditItems={canEditItems}
-          />
-        ) : (
-          <ItemTable
-            items={list.items}
-            customFieldsDefinition={inventory.customFieldsDefinition}
-            onEditItem={handleEditItem}
-            onDeleteItem={handleDeleteSingleItem}
-            selectedItems={selectedItems}
-            onSelectItem={handleSelectItem}
-            onSelectAll={handleSelectAll}
-            canEditItems={canEditItems}
-          />
-        )}
 
-        {!isLoadingInventory && (
-          <Center ref={ref} h="100px">
-            {list.isLoading && hasNextPage && <Spinner size="xl" />}
-            {!list.isLoading && !hasNextPage && <Text>{t("noMoreItems")}</Text>}
-          </Center>
-        )}
-      </VStack>
+          {!isLoadingInventory && (
+            <Center ref={itemsRef} h="100px">
+              {itemsList.isLoading && hasNextPage && <Spinner size="xl" />}
+              {!itemsList.isLoading && !hasNextPage && (
+                <Text>{t("noMoreItems")}</Text>
+              )}
+            </Center>
+          )}
+        </VStack>
+      )}
+
+      {activeTab === "comments" && (
+        <VStack as="section" spacing={6} align="stretch" w="full" mt={10}>
+          <CommentsSection
+            inventoryId={id || ""}
+            comments={commentsList.items}
+            onCommentAdded={commentsList.reload}
+            onDeleteComment={handleDeleteComment}
+          />
+          <Box ref={commentsRef} h="1px" mt={4}>
+            {commentsList.isLoading && (
+              <Center>
+                <Spinner />
+              </Center>
+            )}
+          </Box>
+        </VStack>
+      )}
 
       <ItemUpdateModal
         isOpen={isUpdateModalOpen}
@@ -463,7 +549,7 @@ const InventoryPage = () => {
         customFieldsDefinition={inventory.customFieldsDefinition}
         onItemUpdated={() => {
           onUpdateModalClose();
-          list.reload();
+          itemsList.reload();
         }}
       />
       <DeleteConfirmationModal
@@ -507,7 +593,7 @@ const InventoryPage = () => {
         onClose={onItemCreateModalClose}
         inventoryId={id || ""}
         customFieldsDefinition={inventory.customFieldsDefinition}
-        onItemCreated={list.reload}
+        onItemCreated={itemsList.reload}
       />
       <CustomFieldCreateModal
         onClose={onCustomFieldCreateClose}

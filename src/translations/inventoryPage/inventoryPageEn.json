@@ -16,6 +16,20 @@
   "inventoryNotFound": "Inventory not found",
   "switchToTableView": "Switch to Table View",
   "switchToCardView": "Switch to Card View",
+  "comments": {
+    "sectionTitle": "Comments",
+    "placeholder": "Write a comment...",
+    "submit": "Comment",
+    "addSuccess": "Comment added successfully!",
+    "addError": "Failed to add comment.",
+    "loadError": "Failed to load comments.",
+    "deleteSuccess": "Comment deleted successfully!",
+    "deleteError": "Failed to delete comment.",
+    "deleteAriaLabel": "Delete comment",
+    "noMoreComments": "No more comments.",
+    "noCommentsYet": "No comments yet. Be the first to comment!",
+    "addComment": "Add a comment"
+  },
   "itemModal": {
     "validation": {
       "numberType": "Must be a number",

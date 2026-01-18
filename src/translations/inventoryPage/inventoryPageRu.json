@@ -16,6 +16,20 @@
   "inventoryNotFound": "Инвентарь не найден",
   "switchToTableView": "Переключить на таблицу",
   "switchToCardView": "Переключить на карточки",
+  "comments": {
+    "sectionTitle": "Комментарии",
+    "placeholder": "Напишите комментарий...",
+    "submit": "Отправить",
+    "addSuccess": "Комментарий успешно добавлен!",
+    "addError": "Не удалось добавить комментарий.",
+    "loadError": "Не удалось загрузить комментарии.",
+    "deleteSuccess": "Комментарий успешно удален!",
+    "deleteError": "Не удалось удалить комментарий.",
+    "deleteAriaLabel": "Удалить комментарий",
+    "noMoreComments": "Больше нет комментариев.",
+    "noCommentsYet": "Комментариев пока нет. Будьте первым, кто оставит комментарий!",
+    "addComment": "Добавить комментарий"
+  },
   "itemModal": {
     "validation": {
       "numberType": "Должно быть числом",
