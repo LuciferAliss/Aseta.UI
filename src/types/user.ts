@@ -48,3 +48,20 @@ export interface JwtPayload {
   iat: number;
   exp: number;
 }
+
+export interface UserProfileResponse {
+  id: string;
+  userName: string;
+  email: string;
+  isLocked: boolean;
+  role: string;
+  createdAt: Date;
+  inventories: InventoryProfileResponse[];
+}
+
+export interface InventoryProfileResponse {
+  id: string;
+  name: string;
+  imageUrl: string;
+  createdAt: Date;
+}

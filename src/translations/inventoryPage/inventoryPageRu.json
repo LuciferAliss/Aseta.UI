@@ -16,6 +16,25 @@
   "inventoryNotFound": "Инвентарь не найден",
   "switchToTableView": "Переключить на таблицу",
   "switchToCardView": "Переключить на карточки",
+  "editInventoryMenuItem": "Редактировать инвентарь",
+  "name_label": "Название",
+  "name_placeholder": "Введите название",
+  "description_label": "Описание",
+  "description_placeholder": "Введите описание",
+  "category_id_label": "Категория",
+  "category_id_placeholder": "Выберите категорию",
+  "tags_label": "Теги",
+  "image_label": "Изображение",
+  "submit_button": "Сохранить",
+  "update_success_title": "Инвентарь обновлен",
+  "update_success_description": "Изменения успешно сохранены",
+  "validation_errors": {
+    "name_required": "Название обязательно",
+    "name_min": "Название слишком короткое",
+    "name_max": "Название слишком длинное",
+    "description_max": "Описание слишком длинное",
+    "category_required": "Категория обязательна"
+  },
   "comments": {
     "sectionTitle": "Комментарии",
     "placeholder": "Напишите комментарий...",
@@ -60,6 +79,19 @@
       "generic": "Произошла ошибка. Пожалуйста, попробуйте еще раз."
     }
   },
+  "updateInventoryModal": {
+    "title": "Обновить инвентарь",
+    "nameLabel": "Название",
+    "descriptionLabel": "Описание",
+    "isPublicLabel": "Публичный инвентарь",
+    "categoryLabel": "Категория",
+    "tagsLabel": "Теги",
+    "imageLabel": "Изображение",
+    "updateButton": "Обновить",
+    "cancelButton": "Отмена",
+    "success": "Инвентарь успешно обновлен!",
+    "error": "Не удалось обновить инвентарь."
+  },
   "deleteItems": {
     "button": "Удалить ({{count}})",
     "title": "Удалить предметы",
@@ -103,6 +135,7 @@
     "deleteError": "Не удалось удалить поле."
   },
   "manageUsersModal": {
+    "currentUsers": "Текущие пользователи",
     "manageMenuItem": "Управление пользователями",
     "title": "Управление пользователями инвентаря",
     "addUserLabel": "Добавить пользователя по email:",

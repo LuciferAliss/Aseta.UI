@@ -5,6 +5,7 @@ import InventoryCatalogPage from "../../pages/InventoryCatalogPage";
 import InventoryPage from "../../pages/InventoryPage";
 import AdminPanelPage from "../../pages/AdminPanelPage";
 import PrivateRoute from "./PrivateRoute";
+import ProfilePage from "../../pages/ProfilePage";
 
 const AppRouters = () => {
   return (
@@ -17,6 +18,14 @@ const AppRouters = () => {
         element={
           <PrivateRoute allowedRoles={["Admin"]}>
             <AdminPanelPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.profile}
+        element={
+          <PrivateRoute>
+            <ProfilePage />
           </PrivateRoute>
         }
       />

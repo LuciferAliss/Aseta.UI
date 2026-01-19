@@ -16,6 +16,25 @@
   "inventoryNotFound": "Inventory not found",
   "switchToTableView": "Switch to Table View",
   "switchToCardView": "Switch to Card View",
+  "editInventoryMenuItem": "Edit Inventory",
+  "name_label": "Name",
+  "name_placeholder": "Enter name",
+  "description_label": "Description",
+  "description_placeholder": "Enter description",
+  "category_id_label": "Category",
+  "category_id_placeholder": "Select category",
+  "tags_label": "Tags",
+  "image_label": "Image",
+  "submit_button": "Save",
+  "update_success_title": "Inventory Updated",
+  "update_success_description": "Changes saved successfully",
+  "validation_errors": {
+    "name_required": "Name is required",
+    "name_min": "Name is too short",
+    "name_max": "Name is too long",
+    "description_max": "Description is too long",
+    "category_required": "Category is required"
+  },
   "comments": {
     "sectionTitle": "Comments",
     "placeholder": "Write a comment...",
@@ -60,6 +79,19 @@
       "generic": "An error occurred. Please try again."
     }
   },
+  "updateInventoryModal": {
+    "title": "Update Inventory",
+    "nameLabel": "Name",
+    "descriptionLabel": "Description",
+    "isPublicLabel": "Public Inventory",
+    "categoryLabel": "Category",
+    "tagsLabel": "Tags",
+    "imageLabel": "Image",
+    "updateButton": "Update",
+    "cancelButton": "Cancel",
+    "success": "Inventory updated successfully!",
+    "error": "Failed to update inventory."
+  },
   "deleteItems": {
     "button": "Delete ({{count}})",
     "title": "Delete Items",
@@ -103,6 +135,7 @@
     "deleteError": "Failed to delete custom field."
   },
   "manageUsersModal": {
+    "currentUsers": "Current Users",
     "manageMenuItem": "Manage users",
     "title": "Manage Inventory Users",
     "addUserLabel": "Add user by email:",

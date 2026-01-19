@@ -4,6 +4,7 @@ import type {
   InventoryCreateRequest,
   InventoryCatalogItem,
   InventoryResponse,
+  InventoryUpdateRequest,
 } from "../../types/inventory";
 import apiClient from "../axios";
 
@@ -47,6 +48,19 @@ export const getInventoryById = async (
     return response.data;
   } catch (error) {
     console.error("Get inventory by id failed:", error);
+    throw error;
+  }
+};
+
+export const updateInventory = async (
+  id: string,
+  data: InventoryUpdateRequest
+) => {
+  try {
+    const response = await apiClient.patch(`/inventories/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Update inventory failed:", error);
     throw error;
   }
 };

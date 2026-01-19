@@ -4,8 +4,19 @@ import type {
   LoginResponse,
   RegisterRequest,
   UserSearchResponse,
+  UserProfileResponse,
 } from "../../types/user";
 import apiClient from "../axios";
+
+export const getUserProfile = async (): Promise<UserProfileResponse> => {
+  try {
+    const response = await apiClient.get<UserProfileResponse>(`/users`);
+    return response.data;
+  } catch (error) {
+    console.error("Get user profile failed:", error);
+    throw error;
+  }
+};
 
 export const getAllUsers = async (): Promise<UsersResponse> => {
   try {

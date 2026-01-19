@@ -3,6 +3,7 @@ export const ROUTES = {
   inventories: "/inventories",
   inventory: "/inventories/:id",
   admin: "/admin",
+  profile: "/profile",
 };
 
 const generatePath = (

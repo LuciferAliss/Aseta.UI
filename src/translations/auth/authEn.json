@@ -23,6 +23,7 @@
     "placeholder": "Enter password",
     "confirm_placeholder": "Enter confirm password"
   },
+  "button_title": "Sign in",
   "register": {
     "title": "Sign up",
     "email_label": "Email",

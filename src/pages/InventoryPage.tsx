@@ -29,6 +29,7 @@ import {
   ChevronDownIcon,
   AddIcon,
   SettingsIcon,
+  EditIcon,
 } from "@chakra-ui/icons";
 import { FaUsers } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
@@ -57,6 +58,7 @@ import type { CustomFieldData } from "../types/customField";
 import { useAuth } from "../lib/contexts/AuthContext";
 import ManageInventoryUsersModal from "../components/inventoryPage/ManageInventoryUsersModal";
 import CommentsSection from "../components/comments/CommentsSection";
+import InventoryUpdateModal from "../components/inventoryPage/InventoryUpdateModal";
 
 type ItemViewMode = "card" | "table";
 
@@ -129,6 +131,11 @@ const InventoryPage = () => {
     isOpen: isCustomFieldCreateOpen,
     onOpen: onCustomFieldCreateOpen,
     onClose: onCustomFieldCreateClose,
+  } = useDisclosure();
+  const {
+    isOpen: isInventoryUpdateModalOpen,
+    onOpen: onInventoryUpdateModalOpen,
+    onClose: onInventoryUpdateModalClose,
   } = useDisclosure();
 
   const [selectedItemForEdit, setSelectedItemForEdit] = useState<Item | null>(
@@ -452,6 +459,13 @@ const InventoryPage = () => {
                         </MenuItem>
                         <MenuDivider />
                         <MenuItem
+                          icon={<EditIcon />}
+                          onClick={onInventoryUpdateModalOpen}
+                        >
+                          {t("editInventoryMenuItem")}
+                        </MenuItem>
+                        <MenuDivider />
+                        <MenuItem
                           icon={<SettingsIcon />}
                           onClick={onManageFieldsOpen}
                         >
@@ -600,6 +614,12 @@ const InventoryPage = () => {
         isOpen={isCustomFieldCreateOpen}
         inventoryId={id || ""}
         onCustomFieldCreated={loadInventory}
+      />
+      <InventoryUpdateModal
+        isOpen={isInventoryUpdateModalOpen}
+        onClose={onInventoryUpdateModalClose}
+        inventory={inventory}
+        onInventoryUpdated={loadInventory}
       />
     </Box>
   );

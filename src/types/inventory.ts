@@ -55,6 +55,15 @@ export interface InventoryCreateRequest {
   isPublic: boolean;
 }
 
+export interface InventoryUpdateRequest {
+  name?: string;
+  description?: string;
+  imageUrl?: string;
+  isPublic?: boolean;
+  categoryId?: string;
+  tagIds?: string[];
+}
+
 export interface Tag {
   id: string;
   name: string;

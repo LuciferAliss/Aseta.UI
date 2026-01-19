@@ -23,6 +23,7 @@
     "placeholder": "Введите пароль",
     "confirm_placeholder": "Введите подтверждение пароля"
   },
+  "button_title": "Вход",
   "register": {
     "title": "Регистрация",
     "email_label": "Email",

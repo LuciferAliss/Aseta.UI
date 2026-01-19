@@ -9,14 +9,13 @@ import {
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../lib/contexts/AuthContext";
 import { useAppToast } from "../../lib/hooks/useAppToast";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "../../lib/routes";
 
 const UserMenu = () => {
   const { t } = useTranslation("common");
   const { user, logout, isLoading, isAuth } = useAuth();
   const { showSuccess, showError } = useAppToast();
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -36,11 +35,11 @@ const UserMenu = () => {
         <Avatar name={user?.name} size="sm" />
       </MenuButton>
       <MenuList>
-        <MenuItem>
+        <MenuItem as={Link} to={ROUTES.profile}>
           <Text fontWeight="bold">{t("header.user_menu.profile")}</Text>
         </MenuItem>
         {isAuth && user?.role === "Admin" && (
-          <MenuItem onClick={() => navigate(ROUTES.admin)}>
+          <MenuItem as={Link} to={ROUTES.admin}>
             {t("header.admin_panel")}
           </MenuItem>
         )}

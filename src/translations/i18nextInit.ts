@@ -23,6 +23,9 @@ import adminRu from "./admin/adminRu.json";
 import mainPageEn from "./main/mainPageEn.json";
 import mainPageRu from "./main/mainPageRu.json";
 
+import profileEn from "./profile/profileEn.json";
+import profileRu from "./profile/profileRu.json";
+
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -43,6 +46,7 @@ i18next
         inventoryPage: inventoryPageEn,
         admin: adminEn,
         main: mainPageEn,
+        profile: profileEn,
       },
       ru: {
         auth: authRu,
@@ -52,6 +56,7 @@ i18next
         inventoryPage: inventoryPageRu,
         admin: adminRu,
         main: mainPageRu,
+        profile: profileRu,
       },
     },
   });

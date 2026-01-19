@@ -1,0 +1,16 @@
+{
+  "inventoryCard": {
+    "created": "Создано",
+    "viewButton": "Посмотреть"
+  },
+  "toasts": {
+    "load_error_title": "Не удалось загрузить профиль.",
+    "load_error_description": "Пожалуйста, попробуйте еще раз позже."
+  },
+  "loading_error": "Не удалось загрузить профиль.",
+  "profile_not_loaded": "Не удалось загрузить профиль.",
+  "memberSince": "Участник с",
+  "lockedBadge": "Заблокирован",
+  "myInventoriesTitle": "Мои инвентари",
+  "noInventories": "Вы еще не создали ни одного инвентаря."
+}

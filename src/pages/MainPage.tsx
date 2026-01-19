@@ -15,6 +15,7 @@ import { ROUTES } from "../lib/routes";
 import InventoryCreateModal from "../components/inventoriesCreate/InventoryCreateModal";
 import { useTranslation } from "react-i18next";
 import AuthModal from "../components/auth/AuthModal";
+import { Link } from "react-router-dom";
 
 const MainPage = () => {
   const { isAuth } = useAuth();
@@ -89,7 +90,9 @@ const MainPage = () => {
                 </Heading>
                 <Text>{t("actions.profile.description")}</Text>
                 <Spacer />
-                <Button w="100%">{t("actions.profile.button")}</Button>
+                <Button as={Link} to={ROUTES.profile} w="100%">
+                  {t("actions.profile.button")}
+                </Button>
               </VStack>
             </Container>
           ) : (

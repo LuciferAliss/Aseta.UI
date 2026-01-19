@@ -10,10 +10,13 @@ import {
 import React, { useState } from "react";
 import LoginView from "./LoginView";
 import RegisterView from "./RegisterView";
+import { useTranslation } from "react-i18next";
 
 const AuthModal = (props: ButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [initialView, setInitialView] = useState<"login" | "register">("login");
+
+  const { t } = useTranslation("auth");
 
   const [view, setView] = useState(initialView);
 
@@ -54,7 +57,7 @@ const AuthModal = (props: ButtonProps) => {
         variant="ghost"
         {...props}
       >
-        Sign in
+        {t("button_title")}
       </Button>
       <Modal
         initialFocusRef={

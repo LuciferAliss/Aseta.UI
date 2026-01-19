@@ -18,12 +18,14 @@ interface ImageUploaderProps {
   onFileChange: (file: File | null) => void;
   initialPreviewUrl?: string | null;
   onClearError?: () => void;
+  onRemove?: () => void;
 }
 
 export default function ImageUploader({
   onFileChange,
   initialPreviewUrl,
   onClearError,
+  onRemove,
 }: ImageUploaderProps) {
   const { t } = useTranslation("common");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -62,6 +64,7 @@ export default function ImageUploader({
     setPreviewUrl(null);
     onFileChange(null);
     onClearError?.();
+    onRemove?.();
   };
 
   return (
